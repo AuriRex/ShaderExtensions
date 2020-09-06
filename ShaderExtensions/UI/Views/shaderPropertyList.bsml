@@ -1,0 +1,9 @@
+﻿<horizontal xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <modal-keyboard value='keyboardValue' on-enter='keyboardEnter' clear-on-open='True' show-event='openKeyboard' click-off-closes='True'>
+  </modal-keyboard>
+  <vertical pad-left='50'>
+    <page-button event-click='shaderPropList#PageUp' direction='Up' />
+    <list id='shaderPropList' expand-cell='true' select-cell='shaderPropSelect' />
+    <page-button event-click='shaderPropList#PageDown' direction='Down' />
+  </vertical>
+</horizontal>

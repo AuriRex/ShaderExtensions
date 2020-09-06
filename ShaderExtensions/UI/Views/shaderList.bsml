@@ -1,0 +1,13 @@
+﻿<horizontal xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <vertical pad-left='20'>
+    <page-button event-click='shaderList#PageUp' direction='Up' />
+    <list id='shaderList' expand-cell='true' select-cell='shaderSelect' />
+    <page-button event-click='shaderList#PageDown' direction='Down' />
+  </vertical>
+  <vertical child-control-height='false'>
+    <button text='Reload all shaders' on-click='reloadShaders' />
+    <button text='Add' on-click='addShader' />
+    <button text='Select' on-click='selectShader' />
+    <button text='Clear' on-click='clearShader' />
+  </vertical>
+</horizontal>

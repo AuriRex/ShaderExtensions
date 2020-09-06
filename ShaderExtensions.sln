@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderExtensions", "ShaderExtensions\ShaderExtensions.csproj", "{1866EBB5-E63D-492C-B46D-B5AE28295DFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderExtensions-Editor", "ShaderExtensions-Editor\ShaderExtensions-Editor.csproj", "{C3138852-DF6B-4DD2-973A-2EE7C9382CFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1866EBB5-E63D-492C-B46D-B5AE28295DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1866EBB5-E63D-492C-B46D-B5AE28295DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1866EBB5-E63D-492C-B46D-B5AE28295DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1866EBB5-E63D-492C-B46D-B5AE28295DFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3138852-DF6B-4DD2-973A-2EE7C9382CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3138852-DF6B-4DD2-973A-2EE7C9382CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3138852-DF6B-4DD2-973A-2EE7C9382CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3138852-DF6B-4DD2-973A-2EE7C9382CFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ACA0ABDB-1693-400A-910F-F24588012D32}
+	EndGlobalSection
+EndGlobal
