@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage;
+﻿using BeatSaberMarkupLanguage;
 using HMUI;
+using System;
 
 namespace ShaderExtensions.UI
 {
@@ -13,6 +9,7 @@ namespace ShaderExtensions.UI
 
         private ShaderListViewController shaderListView;
         private ShaderPropertyListViewController shaderProperyListView;
+        private ShaderDetailsViewController shaderDetailsView;
 
         public void Awake() {
             if (!shaderListView) {
@@ -23,17 +20,21 @@ namespace ShaderExtensions.UI
                 shaderProperyListView = BeatSaberUI.CreateViewController<ShaderPropertyListViewController>();
             }
 
+            if (!shaderDetailsView) {
+                shaderDetailsView = BeatSaberUI.CreateViewController<ShaderDetailsViewController>();
+            }
+
             shaderListView.parent = this;
 
         }
 
-        protected override void DidActivate(bool firstActivation, ActivationType activationType) {
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
 
             try {
                 if (firstActivation) {
-                    title = "Screen Space Shaders";
+                    SetTitle("Screen Space Shaders");
                     showBackButton = true;
-                    ProvideInitialViewControllers(shaderListView, null, shaderProperyListView); //, left, right);
+                    ProvideInitialViewControllers(shaderListView, shaderDetailsView, shaderProperyListView); //, left, right);
                 }
             } catch (Exception ex) {
                 Logger.log.Error(ex);
@@ -41,19 +42,14 @@ namespace ShaderExtensions.UI
 
         }
 
-        internal void ShaderSelectionCleared() {
-            shaderProperyListView.ShaderSelectionCleared();
-        }
+        internal void ShaderSelectionCleared() => shaderProperyListView.ShaderSelectionCleared();
 
-        protected override void BackButtonWasPressed(ViewController topViewController) {
-
-            BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, false);
-
-        }
+        protected override void BackButtonWasPressed(ViewController topViewController) => BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, ViewController.AnimationDirection.Horizontal, false);
 
         public void ShaderSelected(ShaderEffect sfx) {
 
             shaderProperyListView.ShaderSelected(sfx.material);
+            shaderDetailsView.ShaderSelected(sfx);
 
         }
 

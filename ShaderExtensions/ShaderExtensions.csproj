@@ -48,6 +48,11 @@
       <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="BS_Utils, Version=1.4.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="CustomJSONData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Plugins\CustomJSONData.dll</HintPath>
@@ -139,6 +144,7 @@
     <Compile Include="ShaderToCamOutput.cs" />
     <Compile Include="UI\SettingsUI.cs" />
     <Compile Include="UI\ShaderListViewController.cs" />
+    <Compile Include="UI\ShaderDetailsViewController.cs" />
     <Compile Include="UI\ShaderPropertyListViewController.cs" />
     <Compile Include="UI\ShadersFlowCoordinator.cs" />
   </ItemGroup>
@@ -153,8 +159,14 @@
     <EmbeddedResource Include="UI\ShaderPropertyListViewController.bsml">
       <DependentUpon>ShaderPropertyListViewController.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Views\shaderDetails.bsml" />
+    <EmbeddedResource Include="UI\ShaderPropertyListViewController - Copy.bsml">
+      <DependentUpon>ShaderDetailsViewController.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\shader.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="BuildTargets.targets" />
   <PropertyGroup>

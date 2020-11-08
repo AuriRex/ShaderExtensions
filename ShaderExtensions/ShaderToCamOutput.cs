@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -53,7 +52,7 @@ public class ShaderToCamOutput : MonoBehaviour
     }
 
     public bool Contains(Material mat) {
-        foreach(Material material in camShaders) {
+        foreach (Material material in camShaders) {
             if (material == mat) return true;
         }
         return false;
@@ -62,7 +61,7 @@ public class ShaderToCamOutput : MonoBehaviour
     public void RemoveMaterial(Material mat) {
         camShaders.Remove(mat);
         temps[temps.Count - 2] = null;
-        temps.Remove(temps[temps.Count-1]);
+        temps.Remove(temps[temps.Count - 1]);
     }
 
     /*Vector2 prevScale = new Vector2(1, -1);

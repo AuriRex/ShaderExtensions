@@ -1,10 +1,5 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShaderExtensions.UI
 {
@@ -15,16 +10,14 @@ namespace ShaderExtensions.UI
 
         public static ShadersFlowCoordinator shadersFlowCoordinator;
 
-        public static void Enable() {
-            MenuButtons.instance.RegisterButton(menuButton);
-        }
+        public static void Enable() => MenuButtons.instance.RegisterButton(menuButton);
 
         private static void ShadersMenuButtonPressed() {
-            if(!shadersFlowCoordinator) {
+            if (!shadersFlowCoordinator) {
                 shadersFlowCoordinator = BeatSaberUI.CreateFlowCoordinator<ShadersFlowCoordinator>();
             }
 
-            BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(shadersFlowCoordinator, null, false, false);
+            BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(shadersFlowCoordinator, null, HMUI.ViewController.AnimationDirection.Horizontal, false, false);
 
         }
 

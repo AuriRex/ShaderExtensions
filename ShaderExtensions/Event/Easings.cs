@@ -103,30 +103,22 @@
         /// <summary>
         /// Modeled after the line y = x
         /// </summary>
-        internal static float EaseLinear(float p) {
-            return p;
-        }
+        internal static float EaseLinear(float p) => p;
 
         /// <summary>
         /// It's either 1, or it's not
         /// </summary>
-        internal static float EaseStep(float p) {
-            return Math.Floor(p);
-        }
+        internal static float EaseStep(float p) => Math.Floor(p);
 
         /// <summary>
         /// Modeled after the parabola y = x^2
         /// </summary>
-        internal static float EaseInQuad(float p) {
-            return p * p;
-        }
+        internal static float EaseInQuad(float p) => p * p;
 
         /// <summary>
         /// Modeled after the parabola y = -x^2 + 2x
         /// </summary>
-        internal static float EaseOutQuad(float p) {
-            return -(p * (p - 2));
-        }
+        internal static float EaseOutQuad(float p) => -(p * (p - 2));
 
         /// <summary>
         /// Modeled after the piecewise quad
@@ -144,9 +136,7 @@
         /// <summary>
         /// Modeled after the cubic y = x^3
         /// </summary>
-        internal static float EaseInCubic(float p) {
-            return p * p * p;
-        }
+        internal static float EaseInCubic(float p) => p * p * p;
 
         /// <summary>
         /// Modeled after the cubic y = (x - 1)^3 + 1
@@ -173,9 +163,7 @@
         /// <summary>
         /// Modeled after the quart x^4
         /// </summary>
-        internal static float EaseInQuart(float p) {
-            return p * p * p * p;
-        }
+        internal static float EaseInQuart(float p) => p * p * p * p;
 
         /// <summary>
         /// Modeled after the quart y = 1 - (x - 1)^4
@@ -202,9 +190,7 @@
         /// <summary>
         /// Modeled after the quint y = x^5
         /// </summary>
-        internal static float EaseInQuint(float p) {
-            return p * p * p * p * p;
-        }
+        internal static float EaseInQuint(float p) => p * p * p * p * p;
 
         /// <summary>
         /// Modeled after the quint y = (x - 1)^5 + 1
@@ -231,37 +217,27 @@
         /// <summary>
         /// Modeled after quarter-cycle of sine wave
         /// </summary>
-        internal static float EaseInSine(float p) {
-            return Math.Sin((p - 1) * HALFPI) + 1;
-        }
+        internal static float EaseInSine(float p) => Math.Sin((p - 1) * HALFPI) + 1;
 
         /// <summary>
         /// Modeled after quarter-cycle of sine wave (different phase)
         /// </summary>
-        internal static float EaseOutSine(float p) {
-            return Math.Sin(p * HALFPI);
-        }
+        internal static float EaseOutSine(float p) => Math.Sin(p * HALFPI);
 
         /// <summary>
         /// Modeled after half sine wave
         /// </summary>
-        internal static float EaseInOutSine(float p) {
-            return 0.5f * (1 - Math.Cos(p * PI));
-        }
+        internal static float EaseInOutSine(float p) => 0.5f * (1 - Math.Cos(p * PI));
 
         /// <summary>
         /// Modeled after shifted quadrant IV of unit circle
         /// </summary>
-        internal static float EaseInCirc(float p) {
-            return 1 - Math.Sqrt(1 - (p * p));
-        }
+        internal static float EaseInCirc(float p) => 1 - Math.Sqrt(1 - (p * p));
 
         /// <summary>
         /// Modeled after shifted quadrant II of unit circle
         /// </summary>
-        internal static float EaseOutCirc(float p) {
-            return Math.Sqrt((2 - p) * p);
-        }
+        internal static float EaseOutCirc(float p) => Math.Sqrt((2 - p) * p);
 
         /// <summary>
         /// Modeled after the piecewise circ function
@@ -279,16 +255,12 @@
         /// <summary>
         /// Modeled after the expo function y = 2^(10(x - 1))
         /// </summary>
-        internal static float EaseInExpo(float p) {
-            return (p == 0.0f) ? p : Math.Pow(2, 10 * (p - 1));
-        }
+        internal static float EaseInExpo(float p) => (p == 0.0f) ? p : Math.Pow(2, 10 * (p - 1));
 
         /// <summary>
         /// Modeled after the expo function y = -2^(-10x) + 1
         /// </summary>
-        internal static float EaseOutExpo(float p) {
-            return (p == 1.0f) ? p : 1 - Math.Pow(2, -10 * p);
-        }
+        internal static float EaseOutExpo(float p) => (p == 1.0f) ? p : 1 - Math.Pow(2, -10 * p);
 
         /// <summary>
         /// Modeled after the piecewise expo
@@ -310,16 +282,12 @@
         /// <summary>
         /// Modeled after the damped sine wave y = sin(13pi/2*x)*Math.Pow(2, 10 * (x - 1))
         /// </summary>
-        internal static float EaseInElastic(float p) {
-            return Math.Sin(13 * HALFPI * p) * Math.Pow(2, 10 * (p - 1));
-        }
+        internal static float EaseInElastic(float p) => Math.Sin(13 * HALFPI * p) * Math.Pow(2, 10 * (p - 1));
 
         /// <summary>
         /// Modeled after the damped sine wave y = sin(-13pi/2*(x + 1))*Math.Pow(2, -10x) + 1
         /// </summary>
-        internal static float EaseOutElastic(float p) {
-            return (Math.Sin(-13 * HALFPI * (p + 1)) * Math.Pow(2, -10 * p)) + 1;
-        }
+        internal static float EaseOutElastic(float p) => (Math.Sin(-13 * HALFPI * (p + 1)) * Math.Pow(2, -10 * p)) + 1;
 
         /// <summary>
         /// Modeled after the piecewise expoly-damped sine wave:
@@ -337,9 +305,7 @@
         /// <summary>
         /// Modeled after the overshooting cubic y = x^3-x*sin(x*pi)
         /// </summary>
-        internal static float EaseInBack(float p) {
-            return (p * p * p) - (p * Math.Sin(p * PI));
-        }
+        internal static float EaseInBack(float p) => (p * p * p) - (p * Math.Sin(p * PI));
 
         /// <summary>
         /// Modeled after overshooting cubic y = 1-((1-x)^3-(1-x)*sin((1-x)*pi))
@@ -364,9 +330,7 @@
             }
         }
 
-        internal static float EaseInBounce(float p) {
-            return 1 - EaseOutBounce(1 - p);
-        }
+        internal static float EaseInBounce(float p) => 1 - EaseOutBounce(1 - p);
 
         internal static float EaseOutBounce(float p) {
             if (p < 4 / 11.0f) {

@@ -1,15 +1,10 @@
-﻿using CustomJSONData;
-using CustomJSONData.CustomBeatmap;
-using ShaderExtensions.Event;
+﻿using ShaderExtensions.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using static CustomJSONData.CustomEventCallbackController;
 
 namespace ShaderExtensions
 {
@@ -39,8 +34,8 @@ namespace ShaderExtensions
         internal List<ShaderEffect> shaderEffectList = new List<ShaderEffect>();
 
         public ShaderEffect GetShaderEffectByReferenceName(string name) {
-            foreach(ShaderEffect sfx in shaderEffectList) {
-                if(sfx != null) {
+            foreach (ShaderEffect sfx in shaderEffectList) {
+                if (sfx != null) {
                     if (sfx.referenceName.Equals(name))
                         return sfx;
                 }
@@ -69,15 +64,15 @@ namespace ShaderExtensions
                 ShaderEffect shaderEffect = null;
 
                 try {
-                    shaderEffect  = LoadShaderEffectAssetBundleFromPath(sh);
+                    shaderEffect = LoadShaderEffectAssetBundleFromPath(sh);
                     Logger.log.Info("Loading Shader: " + sh);
                     LogShaderFX(shaderEffect);
                     shaderEffectList.Add(shaderEffect);
-                }catch(Exception ex) {
+                } catch (Exception ex) {
                     Logger.log.Error("Error loading shader \"" + sh + "\"! - " + ex.Message);
                     Logger.log.Error(ex.StackTrace);
                 }
-                
+
             }
 
         }
@@ -140,7 +135,7 @@ namespace ShaderExtensions
             //MainCamera mainCamera = GameObject.FindObjectOfType<Camera>();
             ShaderToCamOutput stco;
             foreach (Camera cam in cams) {
-                if(cam != null) {
+                if (cam != null) {
                     if (cam.name.Equals("UnityIPADebugger")) continue;
                     if (cam.name.Contains(".cfg")) continue;
 
@@ -173,7 +168,7 @@ namespace ShaderExtensions
 
         internal void AddNewMaterial(Material mat) {
             foreach (ShaderToCamOutput stco in stco_list) {
-                if(!stco.Contains(mat)) {
+                if (!stco.Contains(mat)) {
                     stco.AddMaterial(mat);
                 }
             }
@@ -225,23 +220,23 @@ namespace ShaderExtensions
                 //mainCam = GameObject.FindObjectOfType<MainCamera>();
                 mainCameras = FindObjectsOfType<MainCamera>();
                 //playerCamera = GameObject.FindObjectOfType<MainCamera>();//GameObject.Find("MenuCore/Wrapper/Origin/MenuMainCamera");
-                foreach(MainCamera mc in mainCameras) {
-                    if(mc.gameObject.name.Equals(camToLookFor)) {
+                foreach (MainCamera mc in mainCameras) {
+                    if (mc.gameObject.name.Equals(camToLookFor)) {
                         mainCam = mc;
                     }
                 }
 
                 return mainCam != null;
             });
-            
+
             playerCamera = mainCam.gameObject;
-            
+
             if (camToLookFor.Equals(GAMECAM)) {
                 mainGameCamera = playerCamera;
             } else {
                 mainCamera = playerCamera;
             }
-                
+
             Logger.log?.Info($"Main camera found: {playerCamera.name}");
             ShaderToCamOutput stco = playerCamera.GetComponent<ShaderToCamOutput>();
             if (stco == null) {
@@ -250,7 +245,7 @@ namespace ShaderExtensions
 
             Logger.log?.Info($"# of materials to add: {materialsToAdd.Count}");
             if (materialsToAdd != null && materialsToAdd.Count > 0) {
-                foreach(Material mat in materialsToAdd) {
+                foreach (Material mat in materialsToAdd) {
                     stco.AddMaterial(mat);
                 }
             }
@@ -270,9 +265,8 @@ namespace ShaderExtensions
         /// Called every frame if the script is enabled.
         /// </summary>
         private void Update() {
-            if(Input.GetKeyDown(KeyCode.K)) {
-                ShaderToCamOutput stco = mainCamera.GetComponent<ShaderToCamOutput>();
-                stco.ClearAllMaterials();
+            if (Input.GetKeyDown(KeyCode.K)) {
+                ClearShaders();
             }
         }
 

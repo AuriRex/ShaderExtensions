@@ -5,8 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
@@ -49,7 +47,7 @@ namespace ShaderExtensions.Event
         public void ShaderEventCallback(CustomEventData customEventData) {
             if (customEventData.data == null) return;
             if (customEventData.type == "Shader") {
-                if(materials == null) {
+                if (materials == null) {
                     materials = new List<Material>();
                 }
                 Logger.log?.Info("Shader event received!");
@@ -71,7 +69,7 @@ namespace ShaderExtensions.Event
                         clear = tmp;
                     }
 
-                    
+
                     /*try {
                         clear = (bool)tmp;
                     } catch (Exception) { }*/
@@ -95,17 +93,17 @@ namespace ShaderExtensions.Event
 
                     foreach (ShaderCommand sc in scList) {
 
-                        if(materialLookUp.ContainsKey(sc.id)) {
+                        if (materialLookUp.ContainsKey(sc.id)) {
                             if (materialLookUp.TryGetValue(sc.id, out Material mat)) {
                                 sc.mat = mat;
-                                if(sc.clear) {
+                                if (sc.clear) {
                                     MQRemove(mat);
                                 } else {
                                     MQAdd(mat);
                                 }
-                                
+
                             }
-                                
+
                         } else {
                             // Add Material to LookUp
 
@@ -138,18 +136,18 @@ namespace ShaderExtensions.Event
                     }
 
 
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     Logger.log.Error("ShaderEventController encountered an exception: " + ex.Message);
                     Logger.log.Error(ex.StackTrace);
                 }
-                
+
 
             }
         }
 
         private List<Material> materialQueue = new List<Material>();
         private void MQAdd(Material mat) {
-            if(!materialQueue.Contains(mat)) {
+            if (!materialQueue.Contains(mat)) {
                 materialQueue.Add(mat);
             }
         }
@@ -164,22 +162,22 @@ namespace ShaderExtensions.Event
 
         internal static void StartEventCoroutine(ShaderCommand shaderCommand, float startTime) {
 
-            if(shaderCommand.mat == null) {
+            if (shaderCommand.mat == null) {
                 Logger.log.Error("ShaderCommand with null material!");
                 return;
             }
 
             shaderCommand.properties.getProps().ForEach(sp => {
                 float duration = sp.duration;
-                duration = 60f * duration / Instance.BeatmapObjectSpawnController.currentBPM;
+                duration = 60f * duration / Instance.BeatmapObjectSpawnController.currentBpm;
 
                 if (!shaderCommand.mat.HasProperty(sp.property)) {
-                    Logger.log.Error("ShaderCommand \""+shaderCommand.id+"\" wants to set a nonexistant property \""+sp.property+"\" for material \""+shaderCommand.reference+"\"!");
+                    Logger.log.Error("ShaderCommand \"" + shaderCommand.id + "\" wants to set a nonexistant property \"" + sp.property + "\" for material \"" + shaderCommand.reference + "\"!");
                     return;
                 }
 
                 // TODO: this probably wont work the way it's supposed to because a new Object is created each time and sp.Coroutine will always be null
-                if(sp.Coroutine != null) {
+                if (sp.Coroutine != null) {
                     Instance.StopCoroutine(sp.Coroutine);
                     sp.Coroutine = null;
                 }
@@ -191,7 +189,7 @@ namespace ShaderExtensions.Event
         }
 
         private static IEnumerator ShaderEventCoroutine(ShaderProperty property, float startTime, float duration, Functions easing) {
-            if(property == null) {
+            if (property == null) {
                 Logger.log.Error("ShaderEventCoroutine received null ShaderProperty!");
                 yield return null;
             }
@@ -201,7 +199,7 @@ namespace ShaderExtensions.Event
 
                 PointDefinition points = property.points;
 
-                if(points != null) {
+                if (points != null) {
                     switch (property.PropertyType) {
                         case PropertyType.Linear:
                             property.SetValue(points.InterpolateLinear(time));
@@ -220,7 +218,7 @@ namespace ShaderExtensions.Event
                             break;
                     }
                 } else {
-                    Logger.log.Error("ShaderEventCoroutine: ShaderCommand with id \""+property.parent.id+"\" and _ref \"" + property.parent.reference+"\" has invalid points at \""+property.property+"\"!");
+                    Logger.log.Error("ShaderEventCoroutine: ShaderCommand with id \"" + property.parent.id + "\" and _ref \"" + property.parent.reference + "\" has invalid points at \"" + property.property + "\"!");
                 }
 
                 if (elapsedTime < duration) {

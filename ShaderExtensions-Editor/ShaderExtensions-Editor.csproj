@@ -41,14 +41,26 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\UnityEditor\2019.3.2f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SteamLibraryBig\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SteamLibraryBig\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor\AssetBuilderEditor.cs" />
     <Compile Include="ShaderEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

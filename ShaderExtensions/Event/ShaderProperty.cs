@@ -1,6 +1,4 @@
 ﻿using NoodleExtensions.Animation;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ShaderExtensions.Event
 {
@@ -17,23 +15,19 @@ namespace ShaderExtensions.Event
         public ShaderCommand parent { get; private set; }
 
         public ShaderProperty(string property, float duration, dynamic value, Functions easing, ShaderCommand parent) : base(PropertyType.Linear) {
-            
+
             this.property = property;
             this.duration = duration;
             this.easing = easing;
             this.parent = parent;
-            if(value is string) {
+            if (value is string) {
                 this.Value = value;
             }
             points = PointDefinition.DynamicToPointData(value);
-            Logger.log.Info("ShaderProperty: Points: "+points);
+            Logger.log.Info("ShaderProperty: Points: " + points);
         }
 
-        public void SetValue(float val) {
-
-            parent.mat.SetFloat(property, val);
-
-        }
+        public void SetValue(float val) => parent.mat.SetFloat(property, val);
 
     }
 }

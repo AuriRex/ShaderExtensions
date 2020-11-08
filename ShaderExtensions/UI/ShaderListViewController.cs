@@ -1,12 +1,10 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
+using BS_Utils.Utilities;
 using HMUI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShaderExtensions.UI
 {
@@ -22,7 +20,7 @@ namespace ShaderExtensions.UI
         [UIAction("shaderSelect")]
         public void Select(TableView tv, int row) {
 
-            
+
             selection = row;
             ShaderEffect sfx = ShaderExtensionsController.instance.shaderEffectList[selection];
             Logger.log.Info("Selected: " + sfx.name + " by " + sfx.author);
@@ -30,17 +28,36 @@ namespace ShaderExtensions.UI
 
         }
 
+        Texture2D defaultImage = UIUtilities.LoadTextureFromResources("ShaderExtensions.Resources.Icons.shader.png");
+
+        Dictionary<Texture2D, Sprite> Images = new Dictionary<Texture2D, Sprite>();
+
         [UIAction("#post-parse")]
         public void SetupList() {
             customListTableData.data.Clear();
+            Images.Clear();
             selection = -1;
             parent.ShaderSelectionCleared();
+
             // Loop thorugh all shaders and add to list
 
             List<ShaderEffect> sfxList = ShaderExtensionsController.instance.shaderEffectList;
 
             foreach (ShaderEffect sfx in sfxList) {
-                CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.name, sfx.author, sfx.previewImage);
+
+                if (sfx.previewImage == null) {
+                    sfx.previewImage = defaultImage;
+                }
+                Sprite icon;
+                if (Images.ContainsKey(sfx.previewImage)) {
+                    Images.TryGetValue(sfx.previewImage, out Sprite image);
+                    icon = image;
+                } else {
+                    icon = Sprite.Create(sfx.previewImage, new Rect(0.0f, 0.0f, sfx.previewImage.width, sfx.previewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    Images.Add(sfx.previewImage, icon);
+                }
+
+                CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.name, sfx.author, icon);
                 customListTableData.data.Add(customCellInfo);
             }
 
@@ -62,7 +79,7 @@ namespace ShaderExtensions.UI
         [UIAction("addShader")]
         public void AddShader() {
 
-            if(selection > -1) {
+            if (selection > -1) {
 
                 ShaderExtensionsController.instance.AddShader(ShaderExtensionsController.instance.shaderEffectList[selection]);
 
@@ -83,9 +100,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("clearShader")]
-        public void ClearShader() {
-            ShaderExtensionsController.instance.ClearShaders();
-        }
+        public void ClearShader() => ShaderExtensionsController.instance.ClearShaders();
 
     }
 }

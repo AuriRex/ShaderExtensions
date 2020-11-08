@@ -1,9 +1,5 @@
 ﻿using CustomJSONData;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
@@ -18,7 +14,7 @@ namespace ShaderExtensions.Event
 
         public bool clear { get; private set; } = false;
 
-    public ShaderPropertiesCommand properties { get; private set; }
+        public ShaderPropertiesCommand properties { get; private set; }
 
         public Material mat;
 
@@ -39,11 +35,11 @@ namespace ShaderExtensions.Event
                 clear = tmp;
             }
 
-            Logger.log.Info("ShaderCommand: _id: "+id+" _ref:"+reference);
+            Logger.log.Info("ShaderCommand: _id: " + id + " _ref:" + reference);
 
             object ret = Trees.At(dict, "_props");
             List<object> props;
-            if(ret != null) {
+            if (ret != null) {
                 props = ret as List<object>;
             } else {
                 props = new List<object>();

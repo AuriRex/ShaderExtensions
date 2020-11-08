@@ -1,9 +1,6 @@
 ﻿using CustomJSONData;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
 namespace ShaderExtensions.Event
@@ -19,7 +16,7 @@ namespace ShaderExtensions.Event
             foreach (TreeDict d in list) {
 
                 string property = "" + Trees.At(d, "_prop");
-               
+
                 float duration;
 
                 dynamic value = Trees.At(d, "_value");
@@ -28,7 +25,7 @@ namespace ShaderExtensions.Event
 
                 try {
                     duration = (float) tmp;
-                } catch(Exception) {
+                } catch (Exception) {
                     duration = -1;
                 }
 
@@ -37,10 +34,10 @@ namespace ShaderExtensions.Event
 
                 string easingString = Trees.At(d, "_easing");
                 if (easingString != null) {
-                    easing = (Functions)Enum.Parse(typeof(Functions), easingString);
+                    easing = (Functions) Enum.Parse(typeof(Functions), easingString);
                 }
 
-                Logger.log.Info("ShaderPropertiesCommand: p:"+property+" d: "+duration+" e: "+easing+" v:"+value);
+                Logger.log.Info("ShaderPropertiesCommand: p:" + property + " d: " + duration + " e: " + easing + " v:" + value);
 
                 propList.Add(new ShaderProperty(property, duration, value, easing, parent));
 
@@ -48,9 +45,7 @@ namespace ShaderExtensions.Event
 
         }
 
-        public List<ShaderProperty> getProps() {
-            return propList;
-        }
+        public List<ShaderProperty> getProps() => propList;
 
     }
 }

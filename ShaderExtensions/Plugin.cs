@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BeatSaberMarkupLanguage.MenuButtons;
 using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
-using UnityEngine.SceneManagement;
-using UnityEngine;
-using IPALogger = IPA.Logging.Logger;
-using System.IO;
 using IPA.Utilities;
-using BeatSaberMarkupLanguage.MenuButtons;
 using ShaderExtensions.UI;
+using System;
+using System.IO;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using IPALogger = IPA.Logging.Logger;
 
 namespace ShaderExtensions
 {
@@ -24,7 +21,6 @@ namespace ShaderExtensions
 
         public static string PluginAssetPath => Path.Combine(UnityGame.InstallPath, "CustomShaders");
 
-        /*private static readonly MenuButton menuButton = new MenuButton("Reload shadertest", "Debug <3", DebugButtonPressed, true);*/
         private static readonly MenuButton clearEffectButton = new MenuButton("[SE] Clear", "Clear all camera effects", ClearAllMaterialsButton, true);
 
         [Init]
@@ -41,8 +37,7 @@ namespace ShaderExtensions
 
         #region BSIPA Config
         [Init]
-        public void InitWithConfig(Config conf)
-        {
+        public void InitWithConfig(Config conf) {
             Configuration.PluginConfig.Instance = conf.Generated<Configuration.PluginConfig>();
             Logger.log.Debug("Config loaded");
         }
@@ -52,45 +47,36 @@ namespace ShaderExtensions
         public void OnApplicationStart() {
             Logger.log.Debug("OnApplicationStart");
 
-            SceneManager.activeSceneChanged += this.OnActiveSceneChanged;
+            //SceneManager.activeSceneChanged += this.OnActiveSceneChanged;
+
+            BS_Utils.Utilities.BSEvents.gameSceneLoaded += OnGameSceneLoaded;
+            BS_Utils.Utilities.BSEvents.earlyMenuSceneLoadedFresh += OnEarlyMenuSceneLoadedFresh;
+            BS_Utils.Utilities.BSEvents.menuSceneLoaded += OnMenuSceneLoaded;
         }
 
-        Boolean first = true;
+        bool first = true;
 
-        public void OnActiveSceneChanged(Scene from, Scene to) {
-            Logger.log.Info($"Shader Test SceneChanged: {from.name} to {to.name}");
-            if (to.name.Equals("MenuViewControllers")) {
-                Logger.log.Info("Shader Test MenuCore loaded");
-                if(first) {
-                    //MenuButtons.instance.RegisterButton(menuButton);
-                    MenuButtons.instance.RegisterButton(clearEffectButton);
-                    SettingsUI.Enable();
-                    new GameObject("ShaderExtensionsController").AddComponent<ShaderExtensionsController>();
-                    first = false;
-                } else {
-                    ShaderExtensionsController.instance.ClearShaders();
-                }
-                
+        public void OnMenuSceneLoaded() {
+            Logger.log.Info("Menu Scene loaded");
+            if (first) {
+                first = false;
+            } else {
+                ShaderExtensionsController.instance.ClearShaders();
             }
-            if (to.name.Equals("GameCore")) {
-                ShaderExtensionsController.instance.OnLevelStart();
-            }
+        }
+
+        private void OnGameSceneLoaded() => ShaderExtensionsController.instance.OnLevelStart();
+
+        private void OnEarlyMenuSceneLoadedFresh(ScenesTransitionSetupDataSO so) {
+            MenuButtons.instance.RegisterButton(clearEffectButton);
+            SettingsUI.Enable();
+            new GameObject("ShaderExtensionsController").AddComponent<ShaderExtensionsController>();
         }
 
         [OnExit]
-        public void OnApplicationQuit() {
-            Logger.log.Debug("OnApplicationQuit");
+        public void OnApplicationQuit() => Logger.log.Debug("OnApplicationQuit");
 
-        }
-
-        /*private static void DebugButtonPressed() {
-            Logger.log.Debug("Debug button was pressed!");
-            ShaderExtensionsController.instance.SetNewShader("fancy_color.bsfx");
-        }*/
-
-        private static void ClearAllMaterialsButton() {
-            ShaderExtensionsController.instance.ClearShaders();
-        }
+        private static void ClearAllMaterialsButton() => ShaderExtensionsController.instance.ClearShaders();
 
     }
 }
