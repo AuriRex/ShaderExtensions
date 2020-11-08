@@ -45,14 +45,15 @@ namespace ShaderExtensions.UI
 
             foreach (ShaderEffect sfx in sfxList) {
 
-                if (sfx.previewImage == null) {
+                /*if (sfx.previewImage == null) {
                     sfx.previewImage = defaultImage;
-                }
-                Sprite icon;
-                if (Images.ContainsKey(sfx.previewImage)) {
+                }*/
+                Sprite icon = Util.SEUtilities.GetDefaultShaderIcon();
+
+                if (sfx.previewImage != null && Images.ContainsKey(sfx.previewImage)) {
                     Images.TryGetValue(sfx.previewImage, out Sprite image);
                     icon = image;
-                } else {
+                } else if(sfx.previewImage != null) {
                     icon = Sprite.Create(sfx.previewImage, new Rect(0.0f, 0.0f, sfx.previewImage.width, sfx.previewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
                     Images.Add(sfx.previewImage, icon);
                 }

@@ -5,7 +5,7 @@
   </modal-color-picker>
   <vertical pad-left='50'>
     <page-button event-click='shaderPropList#PageUp' direction='Up' />
-    <list id='shaderPropList' expand-cell='true' select-cell='shaderPropSelect' />
+    <list id='shader-prop-list' expand-cell='true' select-cell='shaderPropSelect' />
     <page-button event-click='shaderPropList#PageDown' direction='Down' />
   </vertical>
 </horizontal>

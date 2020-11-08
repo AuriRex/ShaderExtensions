@@ -2,12 +2,14 @@
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
+using BS_Utils.Utilities;
 using HMUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 namespace ShaderExtensions.UI
 {
@@ -15,7 +17,7 @@ namespace ShaderExtensions.UI
     {
         public override string ResourceName => "ShaderExtensions.UI.Views.shaderPropertyList.bsml";
 
-        [UIComponent("shaderPropList")]
+        [UIComponent("shader-prop-list")]
         public CustomListTableData customListTableData;
 
         [UIValue("keyboardValue")]
@@ -24,46 +26,29 @@ namespace ShaderExtensions.UI
         [UIValue("colorPickerValue")]
         public Color colorPickerValue = Color.white;
 
-        int selection = -1;
+        public int selection { get; private set; } = -1;
+
+        private Dictionary<string, int> _properties = new Dictionary<string, int>();
+        
+        private Material _currentMat;
+
 
         [UIParams]
         BSMLParserParams parserParams;
 
-        [UIAction("shaderPropSelect")]
-        public void Select(TableView tv, int row) {
-
-            //Logger.log.Info("Selected Property: " + row);
-            selection = row;
-            if (currentMat != null) {
-                string propName = properties.Keys.ToArray()[selection];
-                int propID = properties[propName];
-                Logger.log.Info("Selected Property: " + propName);
-                if (currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
-                    keyboardValue = "" + currentMat.GetFloat(propName);
-                    parserParams.EmitEvent("openKeyboard");
-                } else if (currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
-                    colorPickerValue = currentMat.GetColor(propName);
-                    parserParams.EmitEvent("openColorPicker");
-                } else {
-                    keyboardValue = "";
-                }
-
-            }
-
-
-        }
-
         [UIAction("#post-parse")]
         public void PostParse() => SetupList(null);
 
-        private Dictionary<string, int> properties = new Dictionary<string, int>();
-        private Material currentMat;
+        internal void ShaderSelected(Material material) => SetupList(material);
+
+        internal void ShaderSelectionCleared() => SetupList(null);
 
         private void SetupList(Material mat) {
             customListTableData.data.Clear();
+            customListTableData.tableView.ClearSelection();
             selection = -1;
-            properties = new Dictionary<string, int>();
-            currentMat = mat;
+            _properties = new Dictionary<string, int>();
+            _currentMat = mat;
 
             if (mat != null) {
                 int propCount = mat.shader.GetPropertyCount();
@@ -83,7 +68,7 @@ namespace ShaderExtensions.UI
                     }*/
 
                     if (spt == ShaderPropertyType.Float || spt == ShaderPropertyType.Range) {
-                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName + " : " + mat.GetFloat(propName), spt.ToString());
+                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName + " : " + mat.GetFloat(propName), spt.ToString(), Util.SEUtilities.GetDefaultFloatIcon());
                         customListTableData.data.Add(customCellInfo);
                     } else if (spt == ShaderPropertyType.Color) {
                         Texture2D tex = new Texture2D(1, 1);
@@ -99,12 +84,12 @@ namespace ShaderExtensions.UI
                         customListTableData.data.Add(customCellInfo);
                     } else {
                         // Vector
-                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString());
+                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), Util.SEUtilities.GetDefaultVectorIcon());
                         customListTableData.data.Add(customCellInfo);
                     }
 
 
-                    properties.Add(propName, i);
+                    _properties.Add(propName, i);
 
                 }
             }
@@ -113,32 +98,51 @@ namespace ShaderExtensions.UI
 
         }
 
-        internal void ShaderSelected(Material material) => SetupList(material);
+        [UIAction("shaderPropSelect")]
+        public void Select(TableView tv, int row) {
+            //Logger.log.Info("Selected Property: " + row);
+            selection = row;
 
-        internal void ShaderSelectionCleared() => SetupList(null);
+            if (_currentMat != null) {
+                string propName = _properties.Keys.ToArray()[selection];
+                int propID = _properties[propName];
+                Logger.log.Info("Selected Property: " + propName);
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
+                    keyboardValue = "" + _currentMat.GetFloat(propName);
+                    parserParams.EmitEvent("openKeyboard");
+                } else if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
+                    colorPickerValue = _currentMat.GetColor(propName);
+                    parserParams.EmitEvent("openColorPicker");
+                } else {
+                    keyboardValue = "";
+                }
+
+            }
+
+        }
 
         [UIAction("keyboardEnter")]
         public void OnKeyboardEnterPressed(string text) {
             if (selection <= -1) return;
 
-            if (currentMat != null) {
-                string propName = properties.Keys.ToArray()[selection];
-                int propID = properties[propName];
-                if (currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
+            if (_currentMat != null) {
+                string propName = _properties.Keys.ToArray()[selection];
+                int propID = _properties[propName];
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
                     float value = 1;
                     try {
                         value = float.Parse(text);
                     } catch (Exception) {
                         value = 1;
                     }
-                    currentMat.SetFloat(propName, value);
+                    _currentMat.SetFloat(propName, value);
                 } else {
                     // Todo?
                 }
 
             }
 
-            SetupList(currentMat);
+            SetupList(_currentMat);
 
         }
 
@@ -146,21 +150,21 @@ namespace ShaderExtensions.UI
         public void OnColorPickerDone(Color col) {
             if (selection <= -1) return;
 
-            if (currentMat != null) {
+            if (_currentMat != null) {
 
-                string propName = properties.Keys.ToArray()[selection];
-                int propID = properties[propName];
-                if (currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
-                    currentMat.SetColor(propName, col);
+                string propName = _properties.Keys.ToArray()[selection];
+                int propID = _properties[propName];
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
+                    _currentMat.SetColor(propName, col);
                 }
 
             }
 
-            SetupList(currentMat);
+            SetupList(_currentMat);
         }
 
         [UIAction("colorPickerCancel")]
-        public void OnColorPickerCancel() => SetupList(currentMat);
+        public void OnColorPickerCancel() => SetupList(_currentMat);
 
     }
 }
