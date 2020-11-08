@@ -17,26 +17,34 @@ namespace ShaderExtensions.UI
         public void PostParse() => SetupDetails(null);
 
         //private Dictionary<string, int> properties = new Dictionary<string, int>();
-        private ShaderEffect currentShaderFX;
+        private ShaderEffect _currentShaderFX;
+
+        private bool _usesPreviousFrameData = false;
+        private int _customPropertyCount = 0;
 
         private void SetupDetails(ShaderEffect sfx) {
             if (sfx == null) return;
 
             Material mat = sfx.material;
-            currentShaderFX = sfx;
+            _currentShaderFX = sfx;
+
+            _usesPreviousFrameData = false;
+            _customPropertyCount = 0;
 
             if (mat != null) {
                 int propCount = mat.shader.GetPropertyCount();
-
+                _customPropertyCount = propCount - 2;
                 ShaderPropertyType spt;
                 string propName = "";
 
                 for (int i = 0; i < propCount; i++) {
                     spt = mat.shader.GetPropertyType(i);
                     propName = mat.shader.GetPropertyName(i);
-                    if (propName.Equals("_MainTex") || propName.Equals("_PrevMainTex")) continue;
-
-
+                    if (propName.Equals("_MainTex")) continue;
+                    if(propName.Equals("_PrevMainTex")) {
+                        _usesPreviousFrameData = true;
+                        continue;
+                    }
 
                 }
             }

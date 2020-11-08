@@ -4,7 +4,7 @@ public class ShaderEffect : MonoBehaviour
 {
     public string referenceName = "";
 
-    public string name = "";
+    new public string name = "";
     public string author = "";
     public string description = "";
 
