@@ -28,14 +28,17 @@ namespace ShaderExtensions.UI
 
         }
 
-        Texture2D defaultImage = UIUtilities.LoadTextureFromResources("ShaderExtensions.Resources.Icons.shader.png");
-
-        Dictionary<Texture2D, Sprite> Images = new Dictionary<Texture2D, Sprite>();
+        Dictionary<Texture2D, Sprite> Images = null;
 
         [UIAction("#post-parse")]
         public void SetupList() {
             customListTableData.data.Clear();
-            Images.Clear();
+            if(Images != null) {
+                Images.Clear();
+            } else {
+                Images = new Dictionary<Texture2D, Sprite>();
+            }
+            
             selection = -1;
             parent.ShaderSelectionCleared();
 
