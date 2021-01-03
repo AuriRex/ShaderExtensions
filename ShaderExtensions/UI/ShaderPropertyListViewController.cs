@@ -39,7 +39,7 @@ namespace ShaderExtensions.UI
         [UIAction("#post-parse")]
         public void PostParse() => SetupList(null);
 
-        internal void ShaderSelected(Material material) => SetupList(material);
+        internal void ShaderSelected(ShaderEffect sfx) => SetupList(sfx.material);
 
         internal void ShaderSelectionCleared() => SetupList(null);
 

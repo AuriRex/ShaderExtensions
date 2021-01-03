@@ -16,32 +16,7 @@ namespace ShaderExtensions
     {
         public static ShaderExtensionsController instance { get; private set; }
 
-        static ShaderEffect LoadShaderEffectAssetBundleFromPath(string path) {
-            AssetBundle bundle = AssetBundle.LoadFromFile(path);
-            var loadAsset = bundle.LoadAsset<Material>("Assets/ShaderEffect.mat");
-            var shaderEffectMetadataGOPrefab = bundle.LoadAsset<GameObject>("Assets/ShaderEffectMetadata.prefab");
-            Logger.log.Info("shaderEffectMetadataGOPrefab: " + shaderEffectMetadataGOPrefab);
-            GameObject shaderEffectMetadataGO = Instantiate(shaderEffectMetadataGOPrefab);
-            Logger.log.Info("shaderEffectMetadataGO: " + shaderEffectMetadataGO);
-            ShaderEffect shaderEffect = shaderEffectMetadataGO.GetComponent<ShaderEffect>();
-            Logger.log.Info("shaderEffect: " + shaderEffect);
-            GameObject.DontDestroyOnLoad(shaderEffectMetadataGO);
-            bundle.Unload(false);
-            //GameObject.DestroyImmediate(shaderEffectMetadataGO);
-            return shaderEffect;
-        }
-
-        internal List<ShaderEffect> shaderEffectList = new List<ShaderEffect>();
-
-        public ShaderEffect GetShaderEffectByReferenceName(string name) {
-            foreach (ShaderEffect sfx in shaderEffectList) {
-                if (sfx != null) {
-                    if (sfx.referenceName.Equals(name))
-                        return sfx;
-                }
-            }
-            return null;
-        }
+        
 
         List<ShaderToCamOutput> stco_list;
 
@@ -53,39 +28,6 @@ namespace ShaderExtensions
         }
 
 
-        IEnumerable<string> shaderFiles = Enumerable.Empty<string>();
-
-        public void LoadShaders() {
-            shaderFiles = Directory.GetFiles(Plugin.PluginAssetPath, "*.bsfx");
-
-            shaderEffectList = new List<ShaderEffect>();
-
-            foreach (string sh in shaderFiles) {
-                ShaderEffect shaderEffect = null;
-
-                try {
-                    shaderEffect = LoadShaderEffectAssetBundleFromPath(sh);
-                    Logger.log.Info("Loading Shader: " + sh);
-                    LogShaderFX(shaderEffect);
-                    shaderEffectList.Add(shaderEffect);
-                } catch (Exception ex) {
-                    Logger.log.Error("Error loading shader \"" + sh + "\"! - " + ex.Message);
-                    Logger.log.Error(ex.StackTrace);
-                }
-
-            }
-
-        }
-
-        private void LogShaderFX(ShaderEffect shaderEffect) {
-            Logger.log?.Info("ShaderEffect.material: " + shaderEffect.material);
-            Logger.log?.Info("ShaderEffect.referenceName: " + shaderEffect.referenceName);
-            Logger.log?.Info("ShaderEffect.name: " + shaderEffect.name);
-            Logger.log?.Info("ShaderEffect.author: " + shaderEffect.author);
-            Logger.log?.Info("ShaderEffect.description: " + shaderEffect.description);
-            Logger.log?.Info("ShaderEffect.isScreenSpace: " + shaderEffect.isScreenSpace);
-            Logger.log?.Info("ShaderEffect.previewImage: " + shaderEffect.previewImage);
-        }
 
         #region Monobehaviour Messages
         /// <summary>
@@ -93,7 +35,7 @@ namespace ShaderExtensions
         /// </summary>
         private void Awake() {
             // For this particular MonoBehaviour, we only want one instance to exist at any time, so store a reference to it in a static property
-            //   and destroy any that are created while one already exists.
+            //   and destroy any that are created while one already exists. yesh, guud
             if (instance != null) {
                 Logger.log?.Warn($"Instance of {this.GetType().Name} already exists, destroying.");
                 GameObject.DestroyImmediate(this);
@@ -118,7 +60,7 @@ namespace ShaderExtensions
 
             Logger.log?.Info("Cool Shader Variables Log spam UwU");
 
-            LoadShaders();
+            // LoadShaders();
 
             //ShaderEffect shaderEffect = LoadShaderEffectAssetBundleFromPath("fancy_color.bsfx"); // TODO: remove this bs
             //Material cancer = shaderEffect.material;

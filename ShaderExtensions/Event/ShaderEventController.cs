@@ -1,6 +1,7 @@
 ﻿using CustomJSONData;
 using CustomJSONData.CustomBeatmap;
 using NoodleExtensions.Animation;
+using ShaderExtensions.Managers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -107,7 +108,8 @@ namespace ShaderExtensions.Event
                         } else {
                             // Add Material to LookUp
 
-                            ShaderEffect sfx = ShaderExtensionsController.instance.GetShaderEffectByReferenceName(sc.reference);
+                            // reeeeeeeeeeeeeeeeeeeeeeee
+                            ShaderEffect sfx = null;// _shaderAssetLoader.GetShaderEffectByReferenceName(sc.reference); // TODO!
 
                             if (sfx != null) {
 

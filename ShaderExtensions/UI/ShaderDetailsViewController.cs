@@ -11,7 +11,7 @@ namespace ShaderExtensions.UI
         public override string ResourceName => "ShaderExtensions.UI.Views.shaderDetails.bsml";
 
         [UIParams]
-        BSMLParserParams parserParams;
+        BSMLParserParams parserParams = null;
 
         [UIAction("#post-parse")]
         public void PostParse() => SetupDetails(null);
