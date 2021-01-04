@@ -1,16 +1,11 @@
-﻿using BeatSaberMarkupLanguage.MenuButtons;
-using IPA;
+﻿using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Utilities;
-using ShaderExtensions.Util;
 using ShaderExtensions.Installers;
-using ShaderExtensions.UI;
+using ShaderExtensions.Util;
 using SiraUtil.Zenject;
-using System;
 using System.IO;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
 
 namespace ShaderExtensions

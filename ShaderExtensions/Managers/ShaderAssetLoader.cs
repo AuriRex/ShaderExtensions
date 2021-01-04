@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -18,9 +16,7 @@ namespace ShaderExtensions.Managers
             _pluginConfig = pluginConfig;
         }
 
-        public void Initialize() {
-            LoadShaders();
-        }
+        public void Initialize() => LoadShaders();
 
         public void Dispose() {
 

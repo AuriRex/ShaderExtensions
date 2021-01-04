@@ -5,9 +5,6 @@ using ShaderExtensions.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using TreeDict = System.Collections.Generic.IDictionary<string, object>;
@@ -67,13 +64,13 @@ namespace ShaderExtensions.Managers
 
                         ShaderEffect sfx = _shaderManager.GetShaderEffectByReferenceName(sc.Reference);
 
-                        if(sfx != null) {
+                        if (sfx != null) {
 
                             string id = "";
 
                             Material mat = _shaderManager.GetMaterial(id, sfx);
 
-                            if(mat == null) {
+                            if (mat == null) {
                                 mat = _shaderManager.AddMaterial(id, sfx);
                             }
 
@@ -164,9 +161,7 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public void Initialize() {
-            CustomEventCallbackController.customEventCallbackControllerInit += CustomEventCallbackInit;
-        }
+        public void Initialize() => CustomEventCallbackController.customEventCallbackControllerInit += CustomEventCallbackInit;
 
         public void Dispose() {
             CustomEventCallbackController.customEventCallbackControllerInit -= CustomEventCallbackInit;

@@ -24,9 +24,7 @@ namespace ShaderExtensions.UI
         }
 
         [Inject]
-        public void Construct(PluginConfig pluginConfig) {
-            _pluginConfig = pluginConfig;
-        }
+        public void Construct(PluginConfig pluginConfig) => _pluginConfig = pluginConfig;
 
         [UIAction("#post-parse")]
         public void PostParse() => SetupDetails(null);
@@ -56,7 +54,7 @@ namespace ShaderExtensions.UI
                     spt = mat.shader.GetPropertyType(i);
                     propName = mat.shader.GetPropertyName(i);
                     if (propName.Equals("_MainTex")) continue;
-                    if(propName.Equals("_PrevMainTex")) {
+                    if (propName.Equals("_PrevMainTex")) {
                         _usesPreviousFrameData = true;
                         continue;
                     }

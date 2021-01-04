@@ -1,7 +1,6 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BS_Utils.Utilities;
 using HMUI;
 using ShaderExtensions.Managers;
 using System;
@@ -43,12 +42,12 @@ namespace ShaderExtensions.UI
         [UIAction("#post-parse")]
         public void SetupList() {
             customListTableData.data.Clear();
-            if(Images != null) {
+            if (Images != null) {
                 Images.Clear();
             } else {
                 Images = new Dictionary<Texture2D, Sprite>();
             }
-            
+
             selection = -1;
             shadersCleared?.Invoke();
 
@@ -66,7 +65,7 @@ namespace ShaderExtensions.UI
                 if (sfx.previewImage != null && Images.ContainsKey(sfx.previewImage)) {
                     Images.TryGetValue(sfx.previewImage, out Sprite image);
                     icon = image;
-                } else if(sfx.previewImage != null) {
+                } else if (sfx.previewImage != null) {
                     icon = Sprite.Create(sfx.previewImage, new Rect(0.0f, 0.0f, sfx.previewImage.width, sfx.previewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
                     Images.Add(sfx.previewImage, icon);
                 }

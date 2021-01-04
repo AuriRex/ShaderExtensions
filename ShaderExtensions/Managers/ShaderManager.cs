@@ -1,9 +1,6 @@
 ﻿using ShaderExtensions.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +8,6 @@ namespace ShaderExtensions.Managers
 {
     public class ShaderManager : IInitializable, IDisposable
     {
-
         private ShaderAssetLoader _shaderAssetLoader;
         private PluginConfig _pluginConfig;
 
@@ -22,11 +18,11 @@ namespace ShaderExtensions.Managers
         public ICameraManager CameraManager {
             get => _currentCameraManager;
             internal set {
-                if(_menuCameraManager == null) {
+                if (_menuCameraManager == null) {
                     _menuCameraManager = value;
                     _currentCameraManager = value;
                 } else {
-                    if(value == null) {
+                    if (value == null) {
                         _currentCameraManager = _menuCameraManager;
                         OnMenuCameraManagerReset();
                     } else {
@@ -63,13 +59,9 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public ShaderEffect GetShaderEffectByReferenceName(string name) {
-            return _shaderAssetLoader.GetShaderEffectByReferenceName(name);
-        }
+        public ShaderEffect GetShaderEffectByReferenceName(string name) => _shaderAssetLoader.GetShaderEffectByReferenceName(name);
 
-        private string GetFID(string id, ShaderEffect sfx) {
-            return sfx.referenceName + "_" + id;
-        }
+        private string GetFID(string id, ShaderEffect sfx) => sfx.referenceName + "_" + id;
 
         public Material AddMaterial(string id, ShaderEffect sfx) {
             string fullId = GetFID(id, sfx);
@@ -77,7 +69,7 @@ namespace ShaderExtensions.Managers
             if (!_materialCache.ContainsKey(fullId)) {
                 mat = new Material(sfx.material);
                 _materialCache.Add(fullId, mat);
-            }else {
+            } else {
                 return GetMaterial(id, sfx);
             }
             CameraManager?.AddMaterial(mat);
@@ -108,13 +100,9 @@ namespace ShaderExtensions.Managers
             CameraManager?.ClearAllMaterials();
             _materialCache = new Dictionary<string, Material>();
         }
-        
-        public void Initialize() {
-            _materialCache = new Dictionary<string, Material>();
-        }
 
-        public void Dispose() {
-            _materialCache = null;
-        }
+        public void Initialize() => _materialCache = new Dictionary<string, Material>();
+
+        public void Dispose() => _materialCache = null;
     }
 }

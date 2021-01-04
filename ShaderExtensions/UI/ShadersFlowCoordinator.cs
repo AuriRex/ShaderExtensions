@@ -1,6 +1,5 @@
 ﻿using BeatSaberMarkupLanguage;
 using HMUI;
-using System;
 using Zenject;
 
 namespace ShaderExtensions.UI
@@ -24,7 +23,7 @@ namespace ShaderExtensions.UI
             if (firstActivation) {
                 SetTitle("Screen Space Shaders");
                 showBackButton = true;
-                    
+
             }
             ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
             _shaderListView.shaderSelected += _shaderDetailsView.ShaderSelected;
