@@ -9,41 +9,36 @@ using Zenject;
 
 namespace ShaderExtensions.Managers
 {
-    internal class MenuCameraManager : ICameraManager, IInitializable, IDisposable
+    internal class CameraManager : ICameraManager, IInitializable, IDisposable
     {
-        private ShaderManager _shaderManager;
+        protected ShaderManager _shaderManager;
 
         [Inject]
-        internal MenuCameraManager(ShaderManager shaderManager) {
+        internal CameraManager(ShaderManager shaderManager) {
             _shaderManager = shaderManager;
         }
 
-        private MainCamera[] _mainCameras = null;
-        private List<ShaderToCamOutput> _shaderToCamOutputList;
+        protected Camera[] _mainCameras = null;
+        protected List<ShaderToCamOutput> _shaderToCamOutputList;
 
         public Action onCameraRefreshDone { get; set; }
 
         public void Initialize() {
-            _shaderManager.CameraManager = this;
+            Logger.log.Debug("Initializing new CameraManager!");
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
             Refresh();
+            _shaderManager.CameraManager = this;
         }
         public void Dispose() {
-            foreach (MainCamera cam in _mainCameras) {
-                ShaderToCamOutput stco = cam.gameObject.GetComponent<ShaderToCamOutput>();
-                if (stco != null) {
-                    UnityEngine.Object.Destroy(stco);
-                }
-            }
+            Logger.log.Debug("Disposing CameraManager!");
+            Clean();
             _shaderManager.CameraManager = null;
         }
 
         public void OnCameraRefreshDone() {
-            Logger.log.Debug("callback called!");
-
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
 
-            foreach (MainCamera cam in _mainCameras) {
+            foreach (Camera cam in _mainCameras) {
                 ShaderToCamOutput stco = cam.gameObject.GetComponent<ShaderToCamOutput>();
                 if (stco == null) {
                     stco = cam.gameObject.AddComponent<ShaderToCamOutput>();
@@ -54,11 +49,10 @@ namespace ShaderExtensions.Managers
             onCameraRefreshDone?.Invoke();
         }
 
-        public virtual MainCamera[] GetCameras() {
+        public Camera[] GetCameras() {
             return _mainCameras;
         }
-        public virtual void AddMaterial(Material mat) {
-            Logger.log.Debug("Adding a Material");
+        public void AddMaterial(Material mat) {
             foreach(ShaderToCamOutput stco in _shaderToCamOutputList) {
                 if (!stco.Contains(mat)) {
                     stco.AddMaterial(mat);
@@ -66,13 +60,13 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public virtual void ApplyMaterials(List<Material> matList) {
+        public void ApplyMaterials(List<Material> matList) {
             foreach (Material mat in matList) {
                 AddMaterial(mat);
             }
         }
 
-        public virtual void RemoveMaterial(Material mat) {
+        public void RemoveMaterial(Material mat) {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
                 if(stco.Contains(mat)) {
                     stco.RemoveMaterial(mat);
@@ -80,27 +74,27 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public virtual void ClearAllMaterials() {
+        public void ClearAllMaterials() {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
                 stco.ClearAllMaterials();
             }
         }
 
-        public virtual void Refresh() {
-            Logger.log.Debug("Starting Refresh Coroutine");
-            SharedCoroutineStarter.instance.StartCoroutine(RefreshCameras(OnCameraRefreshDone));
-
+        public void Refresh() {
+            _mainCameras = Camera.allCameras;
+            OnCameraRefreshDone();
         }
 
-        public IEnumerator RefreshCameras(Action callback) {
-            Logger.log.Debug("Refreshing Cameras");
-            MainCamera[] mainCameras = null;
-            yield return new WaitUntil(() => {
-                mainCameras = UnityEngine.Object.FindObjectsOfType<MainCamera>();
-                return mainCameras != null;
-            });
-            _mainCameras = mainCameras;
-            callback();
+        internal void Clean() {
+            if (_mainCameras != null) {
+                foreach (Camera cam in _mainCameras) {
+                    if (cam == null) continue;
+                    ShaderToCamOutput stco = cam.gameObject.GetComponent<ShaderToCamOutput>();
+                    if (stco != null) {
+                        UnityEngine.Object.Destroy(stco);
+                    }
+                }
+            }
         }
     }
 }

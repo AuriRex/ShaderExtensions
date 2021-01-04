@@ -11,12 +11,11 @@ namespace ShaderExtensions.Managers
     public interface ICameraManager
     {
         Action onCameraRefreshDone { get; set; }
-        MainCamera[] GetCameras();
+        Camera[] GetCameras();
         void AddMaterial(Material mat);
         void RemoveMaterial(Material mat);
         void ApplyMaterials(List<Material> matList);
         void ClearAllMaterials();
         void Refresh();
-        IEnumerator RefreshCameras(Action callback);
     }
 }

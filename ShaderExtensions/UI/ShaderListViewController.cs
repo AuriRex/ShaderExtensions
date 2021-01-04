@@ -28,7 +28,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIComponent("shaderList")]
-        public CustomListTableData customListTableData;
+        public CustomListTableData customListTableData = null;
 
         [UIAction("shaderSelect")]
         public void Select(TableView tv, int row) {
@@ -85,7 +85,8 @@ namespace ShaderExtensions.UI
 
             _shaderAssetLoader.Reload();
             SetupList();
-
+            _shaderManager.RefreshCameras();
+            _shaderManager.ClearAllMaterials();
         }
 
         int selection = -1;
@@ -95,8 +96,8 @@ namespace ShaderExtensions.UI
 
             if (selection > -1) {
 
-                _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
                 _shaderManager.RefreshCameras();
+                _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
 
             }
 
@@ -106,15 +107,18 @@ namespace ShaderExtensions.UI
         public void SelectShader() {
 
             if (selection > -1) {
+                _shaderManager.RefreshCameras();
                 _shaderManager.ClearAllMaterials();
                 _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
-                _shaderManager.RefreshCameras();
             }
 
         }
 
         [UIAction("clearShader")]
-        public void ClearShader() => _shaderManager.ClearAllMaterials();
+        public void ClearShader() {
+            _shaderManager.RefreshCameras();
+            _shaderManager.ClearAllMaterials();
+        }
 
     }
 }

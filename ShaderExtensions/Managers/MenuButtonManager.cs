@@ -16,10 +16,12 @@ namespace ShaderExtensions.Managers
         private readonly MenuButton _clearEffectButton;
         private readonly MainFlowCoordinator _mainFlowCoordinator;
         private readonly ShadersFlowCoordinator _shadersFlowCoordinator;
+        private readonly ShaderManager _shaderManager;
 
-        public MenuButtonManager(MainFlowCoordinator mainFlowCoordinator, ShadersFlowCoordinator shadersFlowCoordinator) {
+        public MenuButtonManager(MainFlowCoordinator mainFlowCoordinator, ShadersFlowCoordinator shadersFlowCoordinator, ShaderManager shaderManager) {
             _mainFlowCoordinator = mainFlowCoordinator;
             _shadersFlowCoordinator = shadersFlowCoordinator;
+            _shaderManager = shaderManager;
             _menuButton = new MenuButton("Shaders", "Change Screen Space Shaders Here!", ShowNotesFlow, true);
             _clearEffectButton = new MenuButton("[SE] Clear", "Clear all camera effects", ClearAllMaterialsButton, true);
         }
@@ -40,8 +42,8 @@ namespace ShaderExtensions.Managers
             _mainFlowCoordinator.PresentFlowCoordinator(_shadersFlowCoordinator);
         }
 
-        private static void ClearAllMaterialsButton() {
-            // Clear all shaders
+        private void ClearAllMaterialsButton() {
+            _shaderManager.ClearAllMaterials();
         }
 
     }

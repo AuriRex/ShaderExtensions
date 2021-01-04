@@ -8,34 +8,34 @@ namespace ShaderExtensions.Event
     class ShaderCommand
     {
 
-        public string id { get; private set; }
+        public string ID { get; private set; }
 
-        public string reference { get; private set; }
+        public string Reference { get; private set; }
 
-        public bool clear { get; private set; } = false;
+        public bool Clear { get; private set; } = false;
 
-        public ShaderPropertiesCommand properties { get; private set; }
+        public ShaderPropertiesCommand Properties { get; private set; }
 
-        public Material mat;
+        public Material material;
 
         public ShaderCommand(TreeDict dict) {
 
-            reference = Trees.At(dict, "_ref");
-            if (reference == null) {
-                reference = "Error";
+            Reference = Trees.At(dict, "_ref");
+            if (Reference == null) {
+                Reference = "Error";
             }
 
-            id = Trees.At(dict, "_id");
-            if (id == null) {
-                id = reference;
+            ID = Trees.At(dict, "_id");
+            if (ID == null) {
+                ID = Reference;
             }
 
             dynamic tmp = Trees.At(dict, "_clear");
             if (tmp != null && tmp.GetType() == typeof(bool)) {
-                clear = tmp;
+                Clear = tmp;
             }
 
-            Logger.log.Info("ShaderCommand: _id: " + id + " _ref:" + reference);
+            Logger.log.Info("ShaderCommand: _id: " + ID + " _ref:" + Reference);
 
             object ret = Trees.At(dict, "_props");
             List<object> props;
@@ -45,7 +45,7 @@ namespace ShaderExtensions.Event
                 props = new List<object>();
             }
 
-            properties = new ShaderPropertiesCommand(props, this);
+            Properties = new ShaderPropertiesCommand(props, this);
 
         }
 

@@ -20,7 +20,7 @@ namespace ShaderExtensions.Installers
 
             Container.BindInterfacesTo<MenuButtonManager>().AsSingle();
 
-            Container.BindInterfacesAndSelfTo<MenuCameraManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle();
         }
     }
 }

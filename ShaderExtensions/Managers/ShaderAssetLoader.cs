@@ -1,4 +1,4 @@
-﻿using ShaderExtensions.Configuration;
+﻿using ShaderExtensions.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;

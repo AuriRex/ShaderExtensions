@@ -1,4 +1,4 @@
-﻿using ShaderExtensions.Configuration;
+﻿using ShaderExtensions.Util;
 using ShaderExtensions.Managers;
 using Zenject;
 using SiraUtil.Interfaces;

@@ -1,8 +1,10 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
+using ShaderExtensions.Util;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Zenject;
 
 namespace ShaderExtensions.UI
 {
@@ -10,8 +12,21 @@ namespace ShaderExtensions.UI
     {
         public override string ResourceName => "ShaderExtensions.UI.Views.shaderDetails.bsml";
 
+        private PluginConfig _pluginConfig;
+
         [UIParams]
         BSMLParserParams parserParams = null;
+
+        [UIValue("clear-on-beat")]
+        public bool _clearOnBeat {
+            get => _pluginConfig.ClearEffectsOnLevelCompletion;
+            set => _pluginConfig.ClearEffectsOnLevelCompletion = value;
+        }
+
+        [Inject]
+        public void Construct(PluginConfig pluginConfig) {
+            _pluginConfig = pluginConfig;
+        }
 
         [UIAction("#post-parse")]
         public void PostParse() => SetupDetails(null);

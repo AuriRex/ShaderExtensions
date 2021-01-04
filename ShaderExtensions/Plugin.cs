@@ -3,7 +3,7 @@ using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Utilities;
-using ShaderExtensions.Configuration;
+using ShaderExtensions.Util;
 using ShaderExtensions.Installers;
 using ShaderExtensions.UI;
 using SiraUtil.Zenject;
@@ -26,6 +26,7 @@ namespace ShaderExtensions
             Logger.log = logger;
             zenjector.OnApp<ShaderExtensionsCoreInstaller>().WithParameters(config.Generated<PluginConfig>());
             zenjector.OnMenu<ShaderExtensionsMenuInstaller>();
+            zenjector.OnGame<ShaderExtensionsGameInstaller>().ShortCircuitForTutorial();
         }
 
         [OnEnable, OnDisable]
