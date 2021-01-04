@@ -2,14 +2,12 @@
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BS_Utils.Utilities;
 using HMUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 namespace ShaderExtensions.UI
 {
@@ -29,7 +27,7 @@ namespace ShaderExtensions.UI
         public int selection { get; private set; } = -1;
 
         private Dictionary<string, int> _properties = new Dictionary<string, int>();
-        
+
         private Material _currentMat;
 
 
@@ -39,7 +37,7 @@ namespace ShaderExtensions.UI
         [UIAction("#post-parse")]
         public void PostParse() => SetupList(null);
 
-        internal void ShaderSelected(Material material) => SetupList(material);
+        internal void ShaderSelected(ShaderEffect sfx) => SetupList(sfx.material);
 
         internal void ShaderSelectionCleared() => SetupList(null);
 

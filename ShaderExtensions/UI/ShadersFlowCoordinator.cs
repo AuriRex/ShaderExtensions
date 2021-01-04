@@ -1,57 +1,45 @@
 ﻿using BeatSaberMarkupLanguage;
 using HMUI;
-using System;
+using Zenject;
 
 namespace ShaderExtensions.UI
 {
     class ShadersFlowCoordinator : FlowCoordinator
     {
+        private MainFlowCoordinator _mainFlow;
+        private ShaderListViewController _shaderListView;
+        private ShaderPropertyListViewController _shaderProperyListView;
+        private ShaderDetailsViewController _shaderDetailsView;
 
-        private ShaderListViewController shaderListView;
-        private ShaderPropertyListViewController shaderProperyListView;
-        private ShaderDetailsViewController shaderDetailsView;
-
-        public void Awake() {
-            if (!shaderListView) {
-                shaderListView = BeatSaberUI.CreateViewController<ShaderListViewController>();
-            }
-
-            if (!shaderProperyListView) {
-                shaderProperyListView = BeatSaberUI.CreateViewController<ShaderPropertyListViewController>();
-            }
-
-            if (!shaderDetailsView) {
-                shaderDetailsView = BeatSaberUI.CreateViewController<ShaderDetailsViewController>();
-            }
-
-            shaderListView.parent = this;
-
+        [Inject]
+        public void Construct(MainFlowCoordinator mainFlow, ShaderListViewController shaderListViewController, ShaderPropertyListViewController shaderPropertyListViewController, ShaderDetailsViewController shaderDetailsViewController) {
+            _mainFlow = mainFlow;
+            _shaderListView = shaderListViewController;
+            _shaderProperyListView = shaderPropertyListViewController;
+            _shaderDetailsView = shaderDetailsViewController;
         }
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
+            if (firstActivation) {
+                SetTitle("Screen Space Shaders");
+                showBackButton = true;
 
-            try {
-                if (firstActivation) {
-                    SetTitle("Screen Space Shaders");
-                    showBackButton = true;
-                    ProvideInitialViewControllers(shaderListView, shaderDetailsView, shaderProperyListView); //, left, right);
-                }
-            } catch (Exception ex) {
-                Logger.log.Error(ex);
             }
-
+            ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
+            _shaderListView.shaderSelected += _shaderDetailsView.ShaderSelected;
+            _shaderListView.shaderSelected += _shaderProperyListView.ShaderSelected;
+            _shaderListView.shadersCleared += _shaderProperyListView.ShaderSelectionCleared;
         }
 
-        internal void ShaderSelectionCleared() => shaderProperyListView.ShaderSelectionCleared();
-
-        protected override void BackButtonWasPressed(ViewController topViewController) => BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, ViewController.AnimationDirection.Horizontal, false);
-
-        public void ShaderSelected(ShaderEffect sfx) {
-
-            shaderProperyListView.ShaderSelected(sfx.material);
-            shaderDetailsView.ShaderSelected(sfx);
-
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) {
+            _shaderListView.shaderSelected -= _shaderDetailsView.ShaderSelected;
+            _shaderListView.shaderSelected -= _shaderProperyListView.ShaderSelected;
+            _shaderListView.shadersCleared -= _shaderProperyListView.ShaderSelectionCleared;
+            base.DidDeactivate(removedFromHierarchy, screenSystemDisabling);
         }
+
+        protected override void BackButtonWasPressed(ViewController topViewController) => _mainFlow.DismissFlowCoordinator(this, null);
+
 
     }
 }

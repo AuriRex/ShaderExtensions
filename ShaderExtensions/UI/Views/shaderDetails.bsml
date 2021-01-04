@@ -1,13 +1,24 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <vertical>
+  <tab-selector tab-tag='new-tab'/>
+  <tab tags='new-tab' tab-name='Shader Description'>
+    <horizontal horizontal-fit='Unconstrained'>
+      <vertical pref-height='60' pref-width='100' vertical-fit='Unconstrained' pad='5'>
+        <!-- bg='round-rect-panel' -->
+        
+        <!-- Shader Icon (if not null) & Shader Title & Author name -->
+        <!-- UsesPrevFrameData checkmark & number of properties -->
+        <!-- Text Box with shader description -->
+        <text-page id='shader-description' />
+      </vertical>
+    </horizontal>
+  </tab>
+  <tab tags='new-tab' tab-name='Settings'>
     <horizontal>
-      <!-- Shader Icon (if not null) & Shader Title & Author name -->
+      <vertical spacing='1' horizontal-fit='PreferredSize' pad='5'>
+
+        <checkbox-setting text='Clear effects on level cleared' value='clear-on-beat' apply-on-change='true' hover-hint='Boop'/>
+
+      </vertical>
     </horizontal>
-    <horizontal pad-top='10'>
-      <!-- UsesPrevFrameData checkmark & number of properties -->
-    </horizontal>
-    <horizontal pad-top='20'>
-      <!-- Text Box with shader description -->
-    </horizontal>
-  </vertical>
+  </tab>
 </bg>

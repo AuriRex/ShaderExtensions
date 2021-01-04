@@ -1,10 +1,12 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BS_Utils.Utilities;
 using HMUI;
+using ShaderExtensions.Managers;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace ShaderExtensions.UI
 {
@@ -12,20 +14,27 @@ namespace ShaderExtensions.UI
     {
         public override string ResourceName => "ShaderExtensions.UI.Views.shaderList.bsml";
 
-        public ShadersFlowCoordinator parent;
+        private ShaderAssetLoader _shaderAssetLoader;
+        private ShaderManager _shaderManager;
+
+        public Action<ShaderEffect> shaderSelected;
+        public Action shadersCleared;
+
+        [Inject]
+        public void Construct(ShaderAssetLoader shaderAssetLoader, ShaderManager shaderManager) {
+            _shaderAssetLoader = shaderAssetLoader;
+            _shaderManager = shaderManager;
+        }
 
         [UIComponent("shaderList")]
-        public CustomListTableData customListTableData;
+        public CustomListTableData customListTableData = null;
 
         [UIAction("shaderSelect")]
         public void Select(TableView tv, int row) {
-
-
             selection = row;
-            ShaderEffect sfx = ShaderExtensionsController.instance.shaderEffectList[selection];
+            ShaderEffect sfx = _shaderAssetLoader.ShaderEffectList[selection];
             Logger.log.Info("Selected: " + sfx.name + " by " + sfx.author);
-            parent.ShaderSelected(sfx);
-
+            shaderSelected?.Invoke(sfx);
         }
 
         Dictionary<Texture2D, Sprite> Images = null;
@@ -33,18 +42,18 @@ namespace ShaderExtensions.UI
         [UIAction("#post-parse")]
         public void SetupList() {
             customListTableData.data.Clear();
-            if(Images != null) {
+            if (Images != null) {
                 Images.Clear();
             } else {
                 Images = new Dictionary<Texture2D, Sprite>();
             }
-            
+
             selection = -1;
-            parent.ShaderSelectionCleared();
+            shadersCleared?.Invoke();
 
             // Loop thorugh all shaders and add to list
 
-            List<ShaderEffect> sfxList = ShaderExtensionsController.instance.shaderEffectList;
+            List<ShaderEffect> sfxList = _shaderAssetLoader.ShaderEffectList;
 
             foreach (ShaderEffect sfx in sfxList) {
 
@@ -56,7 +65,7 @@ namespace ShaderExtensions.UI
                 if (sfx.previewImage != null && Images.ContainsKey(sfx.previewImage)) {
                     Images.TryGetValue(sfx.previewImage, out Sprite image);
                     icon = image;
-                } else if(sfx.previewImage != null) {
+                } else if (sfx.previewImage != null) {
                     icon = Sprite.Create(sfx.previewImage, new Rect(0.0f, 0.0f, sfx.previewImage.width, sfx.previewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
                     Images.Add(sfx.previewImage, icon);
                 }
@@ -73,9 +82,10 @@ namespace ShaderExtensions.UI
         [UIAction("reloadShaders")]
         public void ReloadShaders() {
 
-            ShaderExtensionsController.instance.LoadShaders();
+            _shaderAssetLoader.Reload();
             SetupList();
-
+            _shaderManager.RefreshCameras();
+            _shaderManager.ClearAllMaterials();
         }
 
         int selection = -1;
@@ -85,7 +95,8 @@ namespace ShaderExtensions.UI
 
             if (selection > -1) {
 
-                ShaderExtensionsController.instance.AddShader(ShaderExtensionsController.instance.shaderEffectList[selection]);
+                _shaderManager.RefreshCameras();
+                _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
 
             }
 
@@ -95,16 +106,18 @@ namespace ShaderExtensions.UI
         public void SelectShader() {
 
             if (selection > -1) {
-
-                ShaderExtensionsController.instance.ClearShaders();
-                ShaderExtensionsController.instance.AddShader(ShaderExtensionsController.instance.shaderEffectList[selection]);
-
+                _shaderManager.RefreshCameras();
+                _shaderManager.ClearAllMaterials();
+                _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
             }
 
         }
 
         [UIAction("clearShader")]
-        public void ClearShader() => ShaderExtensionsController.instance.ClearShaders();
+        public void ClearShader() {
+            _shaderManager.RefreshCameras();
+            _shaderManager.ClearAllMaterials();
+        }
 
     }
 }

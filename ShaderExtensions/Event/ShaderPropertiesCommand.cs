@@ -8,10 +8,10 @@ namespace ShaderExtensions.Event
     class ShaderPropertiesCommand
     {
 
-        private List<ShaderProperty> propList;
+        private List<ShaderProperty> _propList;
 
         public ShaderPropertiesCommand(List<object> list, ShaderCommand parent) {
-            propList = new List<ShaderProperty>();
+            _propList = new List<ShaderProperty>();
 
             foreach (TreeDict d in list) {
 
@@ -39,13 +39,13 @@ namespace ShaderExtensions.Event
 
                 Logger.log.Info("ShaderPropertiesCommand: p:" + property + " d: " + duration + " e: " + easing + " v:" + value);
 
-                propList.Add(new ShaderProperty(property, duration, value, easing, parent));
+                _propList.Add(new ShaderProperty(property, duration, value, easing, parent));
 
             }
 
         }
 
-        public List<ShaderProperty> getProps() => propList;
+        public List<ShaderProperty> getProps() => _propList;
 
     }
 }
