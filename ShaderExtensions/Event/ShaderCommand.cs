@@ -5,37 +5,39 @@ using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
 namespace ShaderExtensions.Event
 {
-    class ShaderCommand
+    internal class ShaderCommand
     {
 
         public string ID { get; private set; }
 
-        public string Reference { get; private set; }
+        public string ReferenceName { get; private set; }
 
-        public bool Clear { get; private set; } = false;
+        public bool ClearAfterLastPropIsDone { get; private set; } = false;
 
         public ShaderPropertiesCommand Properties { get; private set; }
 
-        public Material material;
+        public ShaderEffect ShaderEffect { get; internal set; }
+
+        public Material Material { get; internal set; }
 
         public ShaderCommand(TreeDict dict) {
 
-            Reference = Trees.At(dict, "_ref");
-            if (Reference == null) {
-                Reference = "Error";
+            ReferenceName = Trees.At(dict, "_ref");
+            if (ReferenceName == null) {
+                ReferenceName = "Error";
             }
 
             ID = Trees.At(dict, "_id");
             if (ID == null) {
-                ID = Reference;
+                ID = ReferenceName;
             }
 
-            dynamic tmp = Trees.At(dict, "_clear");
+            dynamic tmp = Trees.At(dict, "_clearAfterDone");
             if (tmp != null && tmp.GetType() == typeof(bool)) {
-                Clear = tmp;
+                ClearAfterLastPropIsDone = tmp;
             }
 
-            Logger.log.Info("ShaderCommand: _id: " + ID + " _ref:" + Reference);
+            //Logger.log.Debug("ShaderCommand: _id: " + ID + " _ref:" + Reference);
 
             object ret = Trees.At(dict, "_props");
             List<object> props;
@@ -47,6 +49,14 @@ namespace ShaderExtensions.Event
 
             Properties = new ShaderPropertiesCommand(props, this);
 
+            ShaderProperty longest = null;
+            Properties.getProps().ForEach(sp => {
+                if(sp.Duration > longest?.Duration) {
+                    longest = sp;
+                }
+            });
+            if(longest != null)
+                longest.IsLast = true;
         }
 
     }

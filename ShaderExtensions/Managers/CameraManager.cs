@@ -29,7 +29,7 @@ namespace ShaderExtensions.Managers
             _shaderManager.CameraManager = null;
         }
 
-        public void OnCameraRefreshDone() {
+        private void OnCameraRefreshDone() {
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
 
             foreach (Camera cam in Cameras) {

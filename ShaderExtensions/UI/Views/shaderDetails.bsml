@@ -6,6 +6,7 @@
         <!-- bg='round-rect-panel' -->
         
         <!-- Shader Icon (if not null) & Shader Title & Author name -->
+        <clickable-image id='shader-icon' />
         <!-- UsesPrevFrameData checkmark & number of properties -->
         <!-- Text Box with shader description -->
         <text-page id='shader-description' />
@@ -15,8 +16,9 @@
   <tab tags='new-tab' tab-name='Settings'>
     <horizontal>
       <vertical spacing='1' horizontal-fit='PreferredSize' pad='5'>
-
-        <checkbox-setting text='Clear effects on level cleared' value='clear-on-beat' apply-on-change='true' hover-hint='Boop'/>
+        
+        <checkbox-setting text='Clear Effects after returning to Menu' value='clear-on-beat' apply-on-change='true' hover-hint='Boop'/>
+        <checkbox-setting text='Clear Preview Effects' value='clear-on-back-button' apply-on-change='true' hover-hint='Disable this if you want to play a map/chart with shaders selected here!'/>
 
       </vertical>
     </horizontal>

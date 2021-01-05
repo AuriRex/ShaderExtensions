@@ -4,5 +4,9 @@
     {
         public virtual bool ClearEffectsOnLevelCompletion { get; set; } = true;
 
+        public virtual bool ClearPreviewEffects { get; set; } = true;
+
+        public virtual bool DebugLogging { get; set; } = false;
+
     }
 }

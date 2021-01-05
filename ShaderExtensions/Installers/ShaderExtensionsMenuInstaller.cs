@@ -9,8 +9,8 @@ namespace ShaderExtensions.Installers
     {
         public override void InstallBindings() {
             Container.BindViewController<ShaderPropertyListViewController>();
-            Container.BindViewController<ShaderDetailsViewController>();
             Container.BindViewController<ShaderListViewController>();
+            Container.BindViewController<ShaderDetailsViewController>();
             Container.BindFlowCoordinator<ShadersFlowCoordinator>();
 
             Container.BindInterfacesTo<MenuButtonManager>().AsSingle();

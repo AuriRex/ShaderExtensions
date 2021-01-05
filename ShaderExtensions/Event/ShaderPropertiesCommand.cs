@@ -5,7 +5,7 @@ using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
 namespace ShaderExtensions.Event
 {
-    class ShaderPropertiesCommand
+    internal class ShaderPropertiesCommand
     {
 
         private List<ShaderProperty> _propList;
@@ -37,7 +37,7 @@ namespace ShaderExtensions.Event
                     easing = (Functions) Enum.Parse(typeof(Functions), easingString);
                 }
 
-                Logger.log.Info("ShaderPropertiesCommand: p:" + property + " d: " + duration + " e: " + easing + " v:" + value);
+                //Logger.log.Debug("ShaderPropertiesCommand: p:" + property + " d: " + duration + " e: " + easing + " v:" + value);
 
                 _propList.Add(new ShaderProperty(property, duration, value, easing, parent));
 

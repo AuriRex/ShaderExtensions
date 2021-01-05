@@ -42,6 +42,7 @@ namespace ShaderExtensions.Managers
         internal List<ShaderEffect> ShaderEffectList { get; private set; } = new List<ShaderEffect>();
 
         public ShaderEffect GetShaderEffectByReferenceName(string name) {
+            if (name == null) return null;
             foreach (ShaderEffect sfx in ShaderEffectList) {
                 if (sfx != null) {
                     if (sfx.referenceName.Equals(name))

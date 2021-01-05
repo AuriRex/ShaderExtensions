@@ -14,6 +14,8 @@ namespace ShaderExtensions.Event
 
         public ShaderCommand ParentCommand { get; private set; }
 
+        public bool IsLast { get; internal set; } = false;
+
         public ShaderProperty(string property, float duration, dynamic value, Functions easing, ShaderCommand parent) : base(PropertyType.Linear) {
 
             this.Property = property;
@@ -24,10 +26,10 @@ namespace ShaderExtensions.Event
                 this.Value = value;
             }
             Points = PointDefinition.DynamicToPointData(value);
-            Logger.log.Info("ShaderProperty: Points: " + Points);
+            //Logger.log.Debug("ShaderProperty: Points: " + Points);
         }
 
-        public void SetValue(float val) => ParentCommand.material.SetFloat(Property, val);
+        public void SetValue(float val) => ParentCommand.Material.SetFloat(Property, val);
 
     }
 }

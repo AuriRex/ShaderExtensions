@@ -39,6 +39,14 @@ namespace ShaderExtensions.UI
 
         Dictionary<Texture2D, Sprite> Images = null;
 
+        public Sprite GetPreviewImage(ShaderEffect sfx) {
+            if(sfx == null || sfx.previewImage == null) return Util.SEUtilities.GetDefaultShaderIcon();
+            if (Images.TryGetValue(sfx.previewImage, out Sprite image)) {
+                return image;
+            }
+            return Util.SEUtilities.GetDefaultShaderIcon();
+        }
+
         [UIAction("#post-parse")]
         public void SetupList() {
             customListTableData.data.Clear();
@@ -84,7 +92,7 @@ namespace ShaderExtensions.UI
 
             _shaderAssetLoader.Reload();
             SetupList();
-            _shaderManager.RefreshCameras();
+            _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();
         }
 
@@ -95,7 +103,7 @@ namespace ShaderExtensions.UI
 
             if (selection > -1) {
 
-                _shaderManager.RefreshCameras();
+                _shaderManager.RefreshCameraManager();
                 _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
 
             }
@@ -106,7 +114,7 @@ namespace ShaderExtensions.UI
         public void SelectShader() {
 
             if (selection > -1) {
-                _shaderManager.RefreshCameras();
+                _shaderManager.RefreshCameraManager();
                 _shaderManager.ClearAllMaterials();
                 _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[selection]);
             }
@@ -115,7 +123,7 @@ namespace ShaderExtensions.UI
 
         [UIAction("clearShader")]
         public void ClearShader() {
-            _shaderManager.RefreshCameras();
+            _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();
         }
 
