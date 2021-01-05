@@ -1,11 +1,70 @@
-﻿<horizontal xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <modal-keyboard value='keyboardValue' on-enter='keyboardEnter' clear-on-open='True' show-event='openKeyboard' click-off-closes='True'>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <modal-keyboard value='keyboard-value' on-enter='keyboard-enter' clear-on-open='true' show-event='show-keyboard' hide-event='hide-keyboard' clickerino-offerino-closerino='true'>
   </modal-keyboard>
-  <modal-color-picker value='colorPickerValue' on-done='colorPickerDone' on-cancel='colorPickerCancel' show-event='openColorPicker' click-off-closes='True'>
+  <modal-color-picker value='color-picker-value' on-done='color-picker-done' on-cancel='color-picker-cancel' show-event='show-color-picker' hide-event='hide-color-picker' clickerino-offerino-closerino='true'>
   </modal-color-picker>
-  <vertical pad-left='50'>
-    <page-button event-click='shaderPropList#PageUp' direction='Up' />
-    <list id='shader-prop-list' expand-cell='true' select-cell='shaderPropSelect' />
-    <page-button event-click='shaderPropList#PageDown' direction='Down' />
+  <modal id='range-modal-root' size-delta-x='50' size-delta-y='30' show-event='show-range-modal' hide-event='hide-range-modal' clickerino-offerino-closerino='true'>
+    <horizontal size-delta-x='50' size-delta-y='30' pref-width='50' pref-height='30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+      <vertical>
+        <horizontal size-delta-y='5' pad='1' pref-height='5' horizontal-fit='PreferredSize' >
+          <text text='~range-property-name' align='Center' />
+          <vertical size-delta-x='8' size-delta-y='5' pref-width='8' pref-height='5'>
+            <button text='OK' on-click='range-event-enter' />
+          </vertical>
+        </horizontal>
+        <slider-setting id='range-slider' text='' value='range-slider-value' min='~range-slider-min' max='~range-slider-max' increment='0.05' pref-width='50' size-delta-x='50' apply-on-change='true' on-change='range-slider-update' />
+        <button text='Use Numpad' on-click='range-use-num' pref-width='50' size-delta-x='50' />
+      </vertical>
+    </horizontal>
+
+  </modal>
+
+  <modal id='numpad-modal-root' size-delta-x='40' size-delta-y='50' show-event='show-numpad-modal' hide-event='hide-numpad-modal' clickerino-offerino-closerino='true'>
+    <vertical>
+      <horizontal size-delta-y='5' pref-height='5' >
+        <text text='~numpad-property-name' align='Left' />
+      </horizontal>
+      <horizontal size-delta-y='5' pref-height='5' >
+        <text text='~numpad-sign' align='Left' />
+        <text text='~numpad-value' align='Left' />
+      </horizontal>
+      <horizontal>
+        <button text='&lt;' on-click='num-event-back' />
+        <button text='C' on-click='num-event-clear' />
+        <button text='OK' on-click='num-event-enter' />
+      </horizontal>
+      <horizontal>
+        <button text='1' on-click='num-event-one' />
+        <button text='2' on-click='num-event-two' />
+        <button text='3' on-click='num-event-three' />
+      </horizontal>
+      <horizontal>
+        <button text='4' on-click='num-event-four' />
+        <button text='5' on-click='num-event-five' />
+        <button text='6' on-click='num-event-six' />
+      </horizontal>
+      <horizontal>
+        <button text='7' on-click='num-event-seven' />
+        <button text='8' on-click='num-event-eight' />
+        <button text='9' on-click='num-event-nine' />
+      </horizontal>
+      <horizontal>
+        <button text='0' on-click='num-event-zero' />
+        <button text='.' on-click='num-event-period' />
+        <button text='~numpad-sign-button' on-click='num-event-minus' />
+      </horizontal>
+    </vertical>
+  </modal>
+  <vertical preferred-width='60' preferred-height='70' size-delta-x='60' size-delta-y='70' vertical-fit='PreferredSize'>
+    <horizontal anchor-pos-y='-5' size-delta-y='5' preferred-height='5' bg='panel-fade-gradient' pad='1' bg-color='magenta'>
+      <text text='Shader Properties' align='Center' />
+    </horizontal>
+    <horizontal vertical-fit='Unconstrained'>
+      <vertical bg='round-rect-panel' bg-color='#151515'>
+        <page-button event-click='shader-prop-list#PageUp' direction='Up' />
+        <list id='shader-prop-list' expand-cell='true' select-cell='shader-prop-select' list-style='List' />
+        <page-button event-click='shader-prop-list#PageDown' direction='Down' />
+      </vertical>
+    </horizontal>
   </vertical>
-</horizontal>
+</bg>

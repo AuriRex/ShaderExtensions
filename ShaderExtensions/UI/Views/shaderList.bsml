@@ -1,13 +1,22 @@
-﻿<horizontal xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <vertical pad-left='20'>
-    <page-button event-click='shaderList#PageUp' direction='Up' />
-    <list id='shaderList' expand-cell='true' select-cell='shaderSelect' />
-    <page-button event-click='shaderList#PageDown' direction='Down' />
+﻿<horizontal horizontal-fit='PreferredSize' vertical-fit='PreferredSize' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <vertical size-delta-x='20'></vertical>
+  <vertical pad='2' bg='round-rect-panel' bg-color='purple'>
+    <page-button event-click='shader-list#PageUp' direction='Up' />
+    <list id='shader-list' expand-cell='true' select-cell='shader-select' />
+    <page-button event-click='shader-list#PageDown' direction='Down' />
   </vertical>
   <vertical child-control-height='false'>
-    <button text='Reload all shaders' on-click='reloadShaders' />
-    <button text='Add' on-click='addShader' />
-    <button text='Select' on-click='selectShader' />
-    <button text='Clear' on-click='clearShader' />
+    <button text='Reload all shaders' on-click='reload-shaders' />
+    <button text='Add' on-click='add-shader' />
+    <button text='Select' on-click='select-shader' />
+    <button text='Clear' on-click='clear-shader' />
+  </vertical>
+  <vertical size-delta-x='30' pref-width='30'>
+    <horizontal size-delta-y='5' pref-height='5' pad='1' bg='round-rect-panel' bg-color='magenta'>
+      <text text='Active Shader Stack' align='Center' />
+    </horizontal>
+    <vertical size-delta-x='30' pref-width='30' pad='2' bg='round-rect-panel' bg-color='red'>
+      <list id='shader-stack-list' align-to-center='true' />
+    </vertical>
   </vertical>
 </horizontal>

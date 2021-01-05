@@ -1,21 +1,38 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <tab-selector tab-tag='new-tab'/>
+  <tab-selector tab-tag='new-tab' size-delta-y='7' />
   <tab tags='new-tab' tab-name='Shader Description'>
-    <horizontal horizontal-fit='Unconstrained'>
-      <vertical pref-height='60' pref-width='100' vertical-fit='Unconstrained' pad='5'>
+    <horizontal pref-height='50' pref-width='90' anchor-pos-y='1' size-delta-y='50' size-delta-x='90' horizontal-fit='Unconstrained'>
+      <vertical vertical-fit='Unconstrained' pad='5' bg='round-rect-panel' bg-color='#151515'>
         <!-- bg='round-rect-panel' -->
+
+
+        <horizontal pref-width='90' pref-height='10' pad='1' size-delta-x='90' size-delta-y='10' vertical-fit='PreferredSize' horizontal-fit='Unconstrained' >
+          <!-- Shader Icon (if not null) & Shader Title & Author name -->
+
+          <image id='shader-icon' size-delta-x='10' size-delta-y='10' pref-height='10' pref-width='10' preserve-aspect='true'/>
+          <vertical pref-height='10' pref-width='50' size-delta-y='10' size-delta-x='50' pad-left='5' vertical-fit='PreferredSize' horizontal-fit='PreferredSize'>
+            <text text='~name' align='Left' />
+            <text text='~author' font-color='grey' font-size='3' align='Left' />
+          </vertical>
+
+          <vertical pref-height='10' pref-width='35' size-delta-y='10' size-delta-x='35' pad='0' vertical-fit='PreferredSize' horizontal-fit='PreferredSize'>
+            <text text='# of props: yes' align='Left' />
+            <text text='_PrevMainTex : check' align='Left' />
+          </vertical>
+          <!-- UsesPrevFrameData checkmark & number of properties -->
+          
+        </horizontal>
+        <horizontal pref-width='90' pref-height='40' pad='5' pad-top='5' size-delta-x='90' size-delta-y='60' vertical-fit='PreferredSize' horizontal-fit='PreferredSize'>
+          <!-- Text Box with shader description -->
+          <text-page id='shader-description' />
+        </horizontal>
         
-        <!-- Shader Icon (if not null) & Shader Title & Author name -->
-        <clickable-image id='shader-icon' />
-        <!-- UsesPrevFrameData checkmark & number of properties -->
-        <!-- Text Box with shader description -->
-        <text-page id='shader-description' />
       </vertical>
     </horizontal>
   </tab>
   <tab tags='new-tab' tab-name='Settings'>
-    <horizontal>
-      <vertical spacing='1' horizontal-fit='PreferredSize' pad='5'>
+    <horizontal pref-height='30' pref-width='60' anchor-pos-y='1' size-delta-y='30' size-delta-x='60'>
+      <vertical spacing='1' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad='5' bg='round-rect-panel' bg-color='purple'>
         
         <checkbox-setting text='Clear Effects after returning to Menu' value='clear-on-beat' apply-on-change='true' hover-hint='Boop'/>
         <checkbox-setting text='Clear Preview Effects' value='clear-on-back-button' apply-on-change='true' hover-hint='Disable this if you want to play a map/chart with shaders selected here!'/>

@@ -10,9 +10,11 @@ using Zenject;
 
 namespace ShaderExtensions.UI
 {
-    class ShaderListViewController : BSMLResourceViewController
+    [ViewDefinition("ShaderExtensions.UI.Views.shaderList.bsml")]
+    [HotReload(RelativePathToLayout = @"Views\shaderList.bsml")]
+    class ShaderListViewController : BSMLAutomaticViewController
     {
-        public override string ResourceName => "ShaderExtensions.UI.Views.shaderList.bsml";
+        //public override string ResourceName => "ShaderExtensions.UI.Views.shaderList.bsml";
 
         private ShaderAssetLoader _shaderAssetLoader;
         private ShaderManager _shaderManager;
@@ -26,10 +28,13 @@ namespace ShaderExtensions.UI
             _shaderManager = shaderManager;
         }
 
-        [UIComponent("shaderList")]
+        [UIComponent("shader-list")]
         public CustomListTableData customListTableData = null;
 
-        [UIAction("shaderSelect")]
+        [UIComponent("shader-stack-list")]
+        public CustomListTableData shaderStackList = null;
+
+        [UIAction("shader-select")]
         public void Select(TableView tv, int row) {
             selection = row;
             ShaderEffect sfx = _shaderAssetLoader.ShaderEffectList[selection];
@@ -87,7 +92,7 @@ namespace ShaderExtensions.UI
         }
 
 
-        [UIAction("reloadShaders")]
+        [UIAction("reload-shaders")]
         public void ReloadShaders() {
 
             _shaderAssetLoader.Reload();
@@ -98,7 +103,7 @@ namespace ShaderExtensions.UI
 
         int selection = -1;
 
-        [UIAction("addShader")]
+        [UIAction("add-shader")]
         public void AddShader() {
 
             if (selection > -1) {
@@ -110,7 +115,7 @@ namespace ShaderExtensions.UI
 
         }
 
-        [UIAction("selectShader")]
+        [UIAction("select-shader")]
         public void SelectShader() {
 
             if (selection > -1) {
@@ -121,7 +126,7 @@ namespace ShaderExtensions.UI
 
         }
 
-        [UIAction("clearShader")]
+        [UIAction("clear-shader")]
         public void ClearShader() {
             _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();

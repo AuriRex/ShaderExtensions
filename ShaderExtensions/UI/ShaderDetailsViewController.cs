@@ -11,9 +11,11 @@ using Zenject;
 
 namespace ShaderExtensions.UI
 {
-    internal class ShaderDetailsViewController : BSMLResourceViewController
+    [ViewDefinition("ShaderExtensions.UI.Views.shaderDetails.bsml")]
+    [HotReload(RelativePathToLayout = @"Views\shaderDetails.bsml")]
+    internal class ShaderDetailsViewController : BSMLAutomaticViewController
     {
-        public override string ResourceName => "ShaderExtensions.UI.Views.shaderDetails.bsml";
+        //public override string ResourceName => "ShaderExtensions.UI.Views.shaderDetails.bsml";
 
         private PluginConfig _pluginConfig;
         private ShaderListViewController _shaderListViewController;
@@ -43,8 +45,28 @@ namespace ShaderExtensions.UI
             _shaderListViewController = shaderListViewController;
         }
 
+        private string _shadername = string.Empty;
+        [UIValue("name")]
+        public string ShaderName {
+            get => _shadername;
+            set {
+                _shadername = value;
+                NotifyPropertyChanged(nameof(ShaderName));
+            }
+        }
+
+        private string _authorName = string.Empty;
+        [UIValue("author")]
+        public string AuthorName {
+            get => _authorName;
+            set {
+                _authorName = value;
+                NotifyPropertyChanged(nameof(AuthorName));
+            }
+        }
+
         [UIComponent("shader-icon")]
-        private ClickableImage _shaderIcon;
+        private ImageView _shaderIcon = null!;
 
         [UIAction("#post-parse")]
         public void PostParse() => SetupDetails(null);
@@ -89,6 +111,8 @@ namespace ShaderExtensions.UI
                 }
             }
 
+            ShaderName = sfx.name;
+            AuthorName = sfx.author;
             _shaderIcon.sprite = _shaderListViewController.GetPreviewImage(_currentShaderFX);
             shaderDescription.SetText(sfx.description);
 
