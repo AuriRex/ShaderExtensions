@@ -86,7 +86,6 @@ namespace ShaderExtensions.UI
 
         [UIAction("#post-parse")]
         public void PostParse() {
-            Logger.log.Debug("PostParse");
             SetupDetails(null);
         }
        

@@ -163,6 +163,8 @@
     <Compile Include="ShaderEffect.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="UI\Elements\ActiveShaderElement.cs" />
+    <Compile Include="UI\Elements\CustomListElement.cs" />
     <Compile Include="Util\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShaderToCamOutput.cs" />

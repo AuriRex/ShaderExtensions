@@ -2,9 +2,13 @@
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
+using ShaderExtensions.Event;
 using ShaderExtensions.Managers;
+using ShaderExtensions.UI.Elements;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Zenject;
 
@@ -33,7 +37,71 @@ namespace ShaderExtensions.UI
         public CustomListTableData customListTableData = null;
 
         [UIComponent("shader-stack-list")]
-        public CustomListTableData shaderStackList = null;
+        public CustomCellListTableData shaderStackList = null;
+
+        [UIComponent("scroll-indicator")]
+        public BSMLScrollIndicator scrollIndicator = null;
+
+        private Coroutine _scrollIndicatorCoroutine;
+
+        internal IEnumerator ScrollIndicatorAnimator(float startValue, float endValue, float lerpDuration = 1f, Action onDone = null) {
+            float timeElapsed = 0f;
+            while (timeElapsed < lerpDuration) {
+                scrollIndicator.progress = Mathf.Lerp(startValue, endValue, Easings.EaseOutCubic(timeElapsed / lerpDuration));
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+            scrollIndicator.progress = endValue;
+            onDone?.Invoke();
+        }
+
+        [UIAction("update-scroll-indicator-up")]
+        public void ScrollUp() => Scroll(true);
+
+        [UIAction("update-scroll-indicator-down")]
+        public void ScrollDown() => Scroll(false);
+
+        public void Scroll(bool up) {
+            TableView tableView = customListTableData.tableView;
+
+            Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
+
+            float rangeUpper;
+            float pageSize = range.Item2 - range.Item1;
+            float numOfCells = tableView.numberOfCells;
+
+            if (up) {
+                rangeUpper = Mathf.Max(0, range.Item2 - pageSize);
+            } else {
+                rangeUpper = Mathf.Min(numOfCells, range.Item2 + pageSize);
+            }
+
+            float progress = (rangeUpper - pageSize) / (numOfCells - pageSize);
+
+            if (_scrollIndicatorCoroutine != null) {
+                tableView.StopCoroutine(_scrollIndicatorCoroutine);
+            }
+
+            _scrollIndicatorCoroutine = tableView.StartCoroutine(ScrollIndicatorAnimator(scrollIndicator.progress, progress, 0.3f, () => {
+                tableView.StopCoroutine(_scrollIndicatorCoroutine);
+                _scrollIndicatorCoroutine = null;
+            }));
+        }
+
+        private async void UpdateScrollIndicator() {
+
+            await SiraUtil.Utilities.AwaitSleep(10);
+
+            TableView tableView = customListTableData.tableView;
+
+            Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
+
+            int pageSize = range.Item2 - range.Item1;
+            float numOfCells = tableView.numberOfCells;
+
+            scrollIndicator.normalizedPageHeight = (pageSize * 1f) / numOfCells;
+            scrollIndicator.progress = (range.Item2 - pageSize) / (numOfCells - pageSize);
+        }
 
         [UIAction("shader-select")]
         public void Select(TableView _, int row) {
@@ -43,6 +111,13 @@ namespace ShaderExtensions.UI
             shaderSelected?.Invoke(sfx);
         }
 
+        [UIAction("active-shader-select")]
+        public void ActiveShaderStackSelect(TableView _, ActiveShaderElement ase) {
+            Logger.log.Debug($"selcted ase: {ase}");
+            _shaderManager.RemoveMaterial(ase.ID);
+            SetupActiveShaderStackList();
+        }
+
         [UIAction("reload-shaders")]
         public void ReloadShaders() {
             _shaderAssetLoader.Reload();
@@ -50,6 +125,7 @@ namespace ShaderExtensions.UI
             _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();
             SetupActiveShaderStackList();
+            UpdateScrollIndicator();
         }
 
         [UIAction("add-shader")]
@@ -82,6 +158,7 @@ namespace ShaderExtensions.UI
         public void PostParse() {
             SetupShaderList();
             SetupActiveShaderStackList();
+            UpdateScrollIndicator();
         }
 
         public void SetupShaderList() {
@@ -116,21 +193,24 @@ namespace ShaderExtensions.UI
 
         public void SetupActiveShaderStackList() {
             shaderStackList.data.Clear();
-            List<Material> matList = _shaderManager.GetAllMaterials();
+            Dictionary<string, Material> matCache = _shaderManager.MaterialCache;
 
-            foreach(Material mat in matList) {
+            foreach (string id in matCache.Keys) {
+
+                matCache.TryGetValue(id, out Material mat);
+
                 ShaderEffect sfx = _shaderManager.GetShaderEffectByMaterial(mat);
 
                 if (sfx == null) continue;
 
-                Sprite icon = Util.SEUtilities.GetDefaultShaderIcon();
+                /*Sprite icon = Util.SEUtilities.GetDefaultShaderIcon();
 
                 if (sfx.previewImage != null && _spriteCache.TryGetValue(sfx.previewImage, out Sprite image)) {
                     icon = image;
                 }
 
-                CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.name, sfx.author, icon);
-                shaderStackList.data.Add(customCellInfo);
+                //CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.name, sfx.author, icon);*/
+                shaderStackList.data.Add(new ActiveShaderElement(sfx.referenceName, id));
             }
 
             shaderStackList.tableView.ReloadData();

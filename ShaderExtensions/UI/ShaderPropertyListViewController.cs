@@ -51,7 +51,6 @@ namespace ShaderExtensions.UI
             get => _rangeSliderValue;
             set {
                 _rangeSliderValue = value;
-                //NotifyPropertyChanged(nameof(RangeSliderValue));
                 RangeSliderText = value.ToString();
                 parserParams.EmitEvent("range-slider-get");
             }
@@ -155,10 +154,6 @@ namespace ShaderExtensions.UI
 
         [UIComponent("numpad-modal-root")]
         protected ModalView numpadModalRoot = null!;
-
-        // Events:
-        // show-numpad-modal
-        // hide-numpad-modal
 
         private string _numpadPropertyName = string.Empty;
         [UIValue("numpad-property-name")]
@@ -331,7 +326,6 @@ namespace ShaderExtensions.UI
 
         [UIAction("#post-parse")]
         public void PostParse() {
-            Logger.log.Debug("PostParse");
             SetupList(null);
         }
 

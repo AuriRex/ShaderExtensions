@@ -1,22 +1,41 @@
 ﻿<horizontal horizontal-fit='PreferredSize' vertical-fit='PreferredSize' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <vertical size-delta-x='20'></vertical>
-  <vertical pad='2' bg='round-rect-panel' bg-color='purple'>
-    <page-button event-click='shader-list#PageUp' direction='Up' />
-    <list id='shader-list' expand-cell='true' select-cell='shader-select' />
-    <page-button event-click='shader-list#PageDown' direction='Down' />
-  </vertical>
-  <vertical child-control-height='false'>
-    <button text='Reload all shaders' on-click='reload-shaders' />
-    <button text='Add' on-click='add-shader' />
-    <button text='Select' on-click='select-shader' />
-    <button text='Clear' on-click='clear-shader' />
-  </vertical>
+  <horizontal pad='2' bg='round-rect-panel' bg-color='purple'>
+    <vertical>
+      <horizontal>
+        <list id='shader-list' expand-cell='true' select-cell='shader-select' />
+        <vertical preferred-width='10' size-delta-x='10'>
+          <page-button event-click='shader-list#PageUp' on-click='update-scroll-indicator-up' direction='Up' />
+          <vertical pref-width='1.5' size-delta-x='1.5' pref-height='30' size-delta-y='30'>
+            <vertical-scroll-indicator id='scroll-indicator' handle-color='white' size-delta-x='1.5' size-delta-y='30'></vertical-scroll-indicator>
+          </vertical>
+          <page-button event-click='shader-list#PageDown' on-click='update-scroll-indicator-down' direction='Down' />
+        </vertical>
+      </horizontal>
+      <button text='Reload all shaders' on-click='reload-shaders' />
+    </vertical>
+    <vertical>
+      <horizontal pad='2' >
+        <button text='Add' size-delta-x='16' size-delta-y='16' pref-width='16' pref-height='16' on-click='add-shader' />
+      </horizontal>
+      <horizontal pad='2' >
+        <button text='Select' size-delta-x='16' size-delta-y='16' pref-width='16' pref-height='16' on-click='select-shader' />
+      </horizontal>
+    </vertical>
+  </horizontal>
   <vertical size-delta-x='30' pref-width='30'>
-    <horizontal size-delta-y='5' pref-height='5' pad='1' bg='round-rect-panel' bg-color='magenta'>
+    <horizontal size-delta-y='5' pref-height='5' pad='1' bg='panel-top-gradient' bg-color='magenta'>
       <text text='Active Shader Stack' align='Center' />
     </horizontal>
+    <horizontal pref-width='30' size-delta-x='30' pref-height='20' size-delta-y='20' pad='2'>
+      <button text='Clear' font-size='8' pref-width='26' size-delta-x='26' pref-height='16' size-delta-y='16' on-click='clear-shader' />
+    </horizontal>
     <vertical size-delta-x='30' pref-width='30' pad='2' bg='round-rect-panel' bg-color='red'>
-      <list id='shader-stack-list' cell-size='3' />
+      <custom-list id='shader-stack-list' cell-size='4' clickable-cells='true' visible-cells='10' select-cell='active-shader-select'>
+        <horizontal bg='panel-top-gradient' bg-color='black' pad='1'>
+          <text text='~reference-name' font-size='2' size-delta-y='4' align='Left' />
+        </horizontal>
+      </custom-list>
     </vertical>
   </vertical>
 </horizontal>

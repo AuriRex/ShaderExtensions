@@ -10,7 +10,7 @@ namespace ShaderExtensions.Managers
         private ShaderAssetLoader _shaderAssetLoader;
         private PluginConfig _pluginConfig;
 
-        private Dictionary<string, Material> _materialCache;
+        internal Dictionary<string, Material> MaterialCache { get; private set; }
 
         private ICameraManager _currentCameraManager;
         private ICameraManager _menuCameraManager;
@@ -43,21 +43,28 @@ namespace ShaderExtensions.Managers
         private void OnMenuCameraManagerReset() {
             CameraManager?.ClearAllMaterials();
             if (_pluginConfig.ClearEffectsOnLevelCompletion) {
-                _materialCache = new Dictionary<string, Material>();
+                MaterialCache = new Dictionary<string, Material>();
             }
+        }
+
+        /// <summary>
+        /// Refreshes all active cameras
+        /// </summary>
+        public void RefreshCameraManager() {
+            CameraManager?.Refresh();
         }
 
         /// <summary>
         /// Re-applies all added Materials to every rendering cameras
         /// </summary>
-        public void RefreshCameraManager() {
-            CameraManager?.Refresh();
+        public void Refresh() {
+            RefreshCameraManager();
             CameraManager?.ClearAllMaterials();
             RefreshMaterials();
         }
 
         private void RefreshMaterials() {
-            foreach (Material mat in _materialCache.Values) {
+            foreach (Material mat in MaterialCache.Values) {
                 CameraManager?.AddMaterial(mat);
             }
         }
@@ -87,9 +94,9 @@ namespace ShaderExtensions.Managers
         public Material AddMaterial(string id, ShaderEffect sfx) {
             string fullId = GetFID(id, sfx);
             Material mat;
-            if (!_materialCache.ContainsKey(fullId)) {
+            if (!MaterialCache.ContainsKey(fullId)) {
                 mat = new Material(sfx.material);
-                _materialCache.Add(fullId, mat);
+                MaterialCache.Add(fullId, mat);
             } else {
                 return GetMaterial(id, sfx);
             }
@@ -98,7 +105,7 @@ namespace ShaderExtensions.Managers
         }
 
         public List<Material> GetAllMaterials() {
-            return new List<Material>(_materialCache.Values);
+            return new List<Material>(MaterialCache.Values);
         }
 
         /// <summary>
@@ -111,11 +118,11 @@ namespace ShaderExtensions.Managers
             return RemoveMaterial(GetFID(id, sfx));
         }
 
-        private bool RemoveMaterial(string fullId) {
+        internal bool RemoveMaterial(string fullId) {
             if (fullId == null) return false;
-            if (_materialCache.TryGetValue(fullId, out Material mat)) {
+            if (MaterialCache.TryGetValue(fullId, out Material mat)) {
                 CameraManager?.RemoveMaterial(mat);
-                return _materialCache.Remove(fullId);
+                return MaterialCache.Remove(fullId);
             }
             return false;
         }
@@ -127,7 +134,7 @@ namespace ShaderExtensions.Managers
         /// <returns>A List of materials that have been removed</returns>
         public List<Material> RemoveAllMaterialsStartingWithId(string id) {
             Stack<string> removeStack = new Stack<string>();
-            foreach (KeyValuePair<string, Material> entry in _materialCache) {
+            foreach (KeyValuePair<string, Material> entry in MaterialCache) {
                 if(entry.Key.StartsWith(id, StringComparison.InvariantCulture)) {
                     removeStack.Push(entry.Key);
                 }
@@ -151,8 +158,8 @@ namespace ShaderExtensions.Managers
         }
 
         private Material GetMaterial(string fullId) {
-            if (_materialCache.ContainsKey(fullId)) {
-                if (_materialCache.TryGetValue(fullId, out Material mat)) {
+            if (MaterialCache.ContainsKey(fullId)) {
+                if (MaterialCache.TryGetValue(fullId, out Material mat)) {
                     return mat;
                 }
             }
@@ -165,13 +172,13 @@ namespace ShaderExtensions.Managers
         /// <returns>All the removed Materials</returns>
         public List<Material> ClearAllMaterials() {
             CameraManager?.ClearAllMaterials();
-            List<Material> oldMaterials = new List<Material>(_materialCache.Values);
-            _materialCache = new Dictionary<string, Material>();
+            List<Material> oldMaterials = new List<Material>(MaterialCache.Values);
+            MaterialCache = new Dictionary<string, Material>();
             return oldMaterials;
         }
 
-        public void Initialize() => _materialCache = new Dictionary<string, Material>();
+        public void Initialize() => MaterialCache = new Dictionary<string, Material>();
 
-        public void Dispose() => _materialCache = null;
+        public void Dispose() => MaterialCache = null;
     }
 }

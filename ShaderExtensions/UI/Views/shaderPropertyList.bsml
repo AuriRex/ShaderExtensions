@@ -48,7 +48,7 @@
         <button text='1' on-click='num-event-one' />
         <button text='2' on-click='num-event-two' />
         <button text='3' on-click='num-event-three' />
-        <button text='&lt;color=#b3006e&gt;&lt;3' rich-text='true' on-click='num-event-heart' />
+        <button text='&lt;color=#b3006e&gt;❤' rich-text='true' on-click='num-event-heart' />
       </horizontal>
       <horizontal>
         <button text='0' on-click='num-event-zero' />
