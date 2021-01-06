@@ -16,10 +16,9 @@
           </vertical>
 
           <vertical pref-height='10' pref-width='35' size-delta-y='10' size-delta-x='35' pad='0' vertical-fit='PreferredSize' horizontal-fit='PreferredSize'>
-            <text text='# of props: yes' align='Left' />
-            <text text='_PrevMainTex : check' align='Left' />
+            <text text='~shader-reference-name' rich-text='true' align='Left' />
+            <text text='~shader-property-count' font-color='grey' font-size='3' align='Left' />
           </vertical>
-          <!-- UsesPrevFrameData checkmark & number of properties -->
           
         </horizontal>
         <horizontal pref-width='90' pref-height='40' pad='5' pad-top='5' size-delta-x='90' size-delta-y='60' vertical-fit='PreferredSize' horizontal-fit='PreferredSize'>

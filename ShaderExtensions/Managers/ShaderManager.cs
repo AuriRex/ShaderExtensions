@@ -65,9 +65,16 @@ namespace ShaderExtensions.Managers
         /// <summary>
         /// Finds the ShaderEffect with the given reference name from all loaded shader files 
         /// </summary>
-        /// <param name="name">the ShaderEffect to look up</param>
+        /// <param name="name">the ShaderEffect reference name to look up</param>
         /// <returns>The ShaderEffect with given reference name or null</returns>
         public ShaderEffect GetShaderEffectByReferenceName(string name) => _shaderAssetLoader.GetShaderEffectByReferenceName(name);
+
+        /// <summary>
+        /// Finds the ShaderEffect with the given material from all loaded shader files 
+        /// </summary>
+        /// <param name="mat">the ShaderEffects Material</param>
+        /// <returns>The ShaderEffect with given reference name or null</returns>
+        public ShaderEffect GetShaderEffectByMaterial(Material mat) => _shaderAssetLoader.GetShaderEffectByMaterial(mat);
 
         private string GetFID(string id, ShaderEffect sfx) => id + "_" + sfx.referenceName;
 
@@ -75,7 +82,7 @@ namespace ShaderExtensions.Managers
         /// Adds a Material based of the ShaderEffect sfx with the specified identifier id 
         /// </summary>
         /// <param name="id">the id assigned</param>
-        /// <param name="sfx">the shader use</param>
+        /// <param name="sfx">the shader used</param>
         /// <returns>The created Material</returns>
         public Material AddMaterial(string id, ShaderEffect sfx) {
             string fullId = GetFID(id, sfx);
@@ -88,6 +95,10 @@ namespace ShaderExtensions.Managers
             }
             CameraManager?.AddMaterial(mat);
             return mat;
+        }
+
+        public List<Material> GetAllMaterials() {
+            return new List<Material>(_materialCache.Values);
         }
 
         /// <summary>

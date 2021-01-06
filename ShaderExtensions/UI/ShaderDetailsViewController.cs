@@ -15,29 +15,8 @@ namespace ShaderExtensions.UI
     [HotReload(RelativePathToLayout = @"Views\shaderDetails.bsml")]
     internal class ShaderDetailsViewController : BSMLAutomaticViewController
     {
-        //public override string ResourceName => "ShaderExtensions.UI.Views.shaderDetails.bsml";
-
         private PluginConfig _pluginConfig;
         private ShaderListViewController _shaderListViewController;
-
-
-        [UIParams]
-        BSMLParserParams parserParams = null;
-
-        [UIValue("clear-on-beat")]
-        public bool _clearOnBeat {
-            get => _pluginConfig.ClearEffectsOnLevelCompletion;
-            set => _pluginConfig.ClearEffectsOnLevelCompletion = value;
-        }
-
-        [UIValue("clear-on-back-button")]
-        public bool _clearOnBackButton {
-            get => _pluginConfig.ClearPreviewEffects;
-            set => _pluginConfig.ClearPreviewEffects = value;
-        }
-
-        [UIComponent("shader-description")]
-        public TextPageScrollView shaderDescription = null;
 
         [Inject]
         public void Construct(PluginConfig pluginConfig, ShaderListViewController shaderListViewController) {
@@ -45,9 +24,26 @@ namespace ShaderExtensions.UI
             _shaderListViewController = shaderListViewController;
         }
 
+        [UIValue("clear-on-beat")]
+        protected bool ClearOnBeat {
+            get => _pluginConfig.ClearEffectsOnLevelCompletion;
+            set => _pluginConfig.ClearEffectsOnLevelCompletion = value;
+        }
+
+        [UIValue("clear-on-back-button")]
+        protected bool ClearOnBackButton {
+            get => _pluginConfig.ClearPreviewEffects;
+            set => _pluginConfig.ClearPreviewEffects = value;
+        }
+
+        [UIComponent("shader-description")]
+        protected TextPageScrollView shaderDescription = null;
+
+        
+
         private string _shadername = string.Empty;
         [UIValue("name")]
-        public string ShaderName {
+        protected string ShaderName {
             get => _shadername;
             set {
                 _shadername = value;
@@ -57,7 +53,7 @@ namespace ShaderExtensions.UI
 
         private string _authorName = string.Empty;
         [UIValue("author")]
-        public string AuthorName {
+        protected string AuthorName {
             get => _authorName;
             set {
                 _authorName = value;
@@ -65,15 +61,38 @@ namespace ShaderExtensions.UI
             }
         }
 
+        private string _shaderReferenceName = string.Empty;
+        [UIValue("shader-reference-name")]
+        protected string ShaderReferenceName {
+            get => _shaderReferenceName;
+            set {
+                _shaderReferenceName = value;
+                NotifyPropertyChanged(nameof(ShaderReferenceName));
+            }
+        }
+
+        private string _shaderPropertyCountText = string.Empty;
+        [UIValue("shader-property-count")]
+        protected string ShaderPropertyCountText {
+            get => _shaderPropertyCountText;
+            set {
+                _shaderPropertyCountText = value;
+                NotifyPropertyChanged(nameof(ShaderPropertyCountText));
+            }
+        }
+
         [UIComponent("shader-icon")]
         private ImageView _shaderIcon = null!;
 
         [UIAction("#post-parse")]
-        public void PostParse() => SetupDetails(null);
+        public void PostParse() {
+            Logger.log.Debug("PostParse");
+            SetupDetails(null);
+        }
+       
 
-        private ShaderEffect _currentShaderFX;
+        private ShaderEffect _currentShaderEffect;
 
-        private bool _usesPreviousFrameData = false;
         private int _customPropertyCount = 0;
 
         private void SetupDetails(ShaderEffect sfx) {
@@ -84,9 +103,9 @@ namespace ShaderExtensions.UI
             }
 
             Material mat = sfx.material;
-            _currentShaderFX = sfx;
+            _currentShaderEffect = sfx;
 
-            _usesPreviousFrameData = false;
+            //_usesPreviousFrameData = false;
             _customPropertyCount = 0;
 
             if (mat != null) {
@@ -104,7 +123,7 @@ namespace ShaderExtensions.UI
                     }
                     if (propName.Equals("_PrevMainTex")) {
                         _customPropertyCount--;
-                        _usesPreviousFrameData = true;
+                        //_usesPreviousFrameData = true;
                         continue;
                     }
 
@@ -113,7 +132,9 @@ namespace ShaderExtensions.UI
 
             ShaderName = sfx.name;
             AuthorName = sfx.author;
-            _shaderIcon.sprite = _shaderListViewController.GetPreviewImage(_currentShaderFX);
+            ShaderReferenceName = "<color=#901212>" + sfx.referenceName;
+            ShaderPropertyCountText = "Property count : " + _customPropertyCount;
+            _shaderIcon.sprite = _shaderListViewController.GetPreviewImage(_currentShaderEffect);
             shaderDescription.SetText(sfx.description);
 
         }

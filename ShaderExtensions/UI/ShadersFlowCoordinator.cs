@@ -31,10 +31,13 @@ namespace ShaderExtensions.UI
                 SetTitle("Screen Space Shaders");
                 showBackButton = true;
             }
+            Logger.log.Debug("DidActivate");
             ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
+            //ProvideInitialViewControllers(_shaderListView, null, null);
             _shaderListView.shaderSelected += _shaderDetailsView.ShaderSelected;
             _shaderListView.shaderSelected += _shaderProperyListView.ShaderSelected;
             _shaderListView.shadersCleared += _shaderProperyListView.ShaderSelectionCleared;
+            Logger.log.Debug("boop");
         }
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) {

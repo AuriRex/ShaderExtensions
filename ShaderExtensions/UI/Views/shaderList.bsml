@@ -16,7 +16,7 @@
       <text text='Active Shader Stack' align='Center' />
     </horizontal>
     <vertical size-delta-x='30' pref-width='30' pad='2' bg='round-rect-panel' bg-color='red'>
-      <list id='shader-stack-list' align-to-center='true' />
+      <list id='shader-stack-list' cell-size='3' />
     </vertical>
   </vertical>
 </horizontal>

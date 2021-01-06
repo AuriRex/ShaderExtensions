@@ -14,9 +14,19 @@ namespace ShaderExtensions.UI
 {
     [ViewDefinition("ShaderExtensions.UI.Views.shaderPropertyList.bsml")]
     [HotReload(RelativePathToLayout = @"Views\shaderPropertyList.bsml")]
-    internal class ShaderPropertyListViewController : BSMLResourceViewController
+    internal class ShaderPropertyListViewController : BSMLAutomaticViewController
     {
-        public override string ResourceName => "ShaderExtensions.UI.Views.shaderPropertyList.bsml";
+        public delegate void FloatValueEnterCallback(float val);
+        public delegate void CancelCallback();
+
+        private int _selection = -1;
+
+        private Dictionary<string, int> _properties = new Dictionary<string, int>();
+
+        private Material _currentMat;
+
+        [UIParams]
+        BSMLParserParams parserParams = null!;
 
         [UIComponent("shader-prop-list")]
         public CustomListTableData customListTableData = null!;
@@ -27,18 +37,13 @@ namespace ShaderExtensions.UI
         [UIValue("color-picker-value")]
         public Color colorPickerValue = Color.white;
 
-
-        public delegate void FloatValueEnterCallback(float val);
-
-        public delegate void CancelCallback();
-
         #region Range_Modal
 
         [UIComponent("range-modal-root")]
         protected ModalView rangeModalRoot = null!;
 
         [UIComponent("range-slider")]
-        protected SliderSetting slider = null!;
+        protected SliderSetting rangeSlider = null!;
 
         private float _rangeSliderValue = 0;
         [UIValue("range-slider-value")]
@@ -46,7 +51,19 @@ namespace ShaderExtensions.UI
             get => _rangeSliderValue;
             set {
                 _rangeSliderValue = value;
-                NotifyPropertyChanged(nameof(RangeSliderValue));
+                //NotifyPropertyChanged(nameof(RangeSliderValue));
+                RangeSliderText = value.ToString();
+                parserParams.EmitEvent("range-slider-get");
+            }
+        }
+
+        private string _rangeSliderText = string.Empty;
+        [UIValue("range-slider-text")]
+        protected string RangeSliderText {
+            get => _rangeSliderText;
+            set {
+                _rangeSliderText = value;
+                NotifyPropertyChanged(nameof(RangeSliderText));
             }
         }
 
@@ -88,17 +105,22 @@ namespace ShaderExtensions.UI
 
         [UIAction("range-event-enter")]
         public void RangeEventEnter() {
+            Logger.log.Debug($"RangeSliderValue: {RangeSliderValue}");
             _range_currentCallback(RangeSliderValue);
             CloseRangeModal();
         }
 
+        private bool _range_blockerClickedEventIsRegistered = false;
         private bool _range_cancelOnClickoff = true;
         private FloatValueEnterCallback _range_currentCallback;
         private CancelCallback _range_currentCancelCallback;
 
         public void OpenRangeModal(string description, float initialValue, float minValue, float maxValue, FloatValueEnterCallback callback, CancelCallback cancelCallback) => OpenRangeModal(description, initialValue, minValue, maxValue, callback, cancelCallback, true);
         public void OpenRangeModal(string description, float initialValue, float minValue, float maxValue, FloatValueEnterCallback callback, CancelCallback cancelCallback, bool cancelOnClickoff) {
-            rangeModalRoot.blockerClickedEvent += RangeModalRoot_blockerClickedEvent;
+            if(!_range_blockerClickedEventIsRegistered) {
+                rangeModalRoot.blockerClickedEvent += RangeModalRoot_blockerClickedEvent;
+                _range_blockerClickedEventIsRegistered = true;
+            }   
             _range_cancelOnClickoff = cancelOnClickoff;
             _range_currentCallback = callback;
             _range_currentCancelCallback = cancelCallback;
@@ -121,6 +143,10 @@ namespace ShaderExtensions.UI
 
         public void CloseRangeModal() {
             parserParams.EmitEvent("hide-range-modal");
+            if(_range_blockerClickedEventIsRegistered) {
+                rangeModalRoot.blockerClickedEvent -= RangeModalRoot_blockerClickedEvent;
+                _range_blockerClickedEventIsRegistered = false;
+            }
         }
 
         #endregion
@@ -206,18 +232,27 @@ namespace ShaderExtensions.UI
         public void NumEventZero() => NumpadAddCharacter('0');
         [UIAction("num-event-period")]
         public void NumEventPeriod() => NumpadAddCharacter('.');
+        [UIAction("num-event-heart")]
+        public void NumEventHeart() => Logger.log.Notice("You're a cutie! ;)  <3");
 
         private void NumpadAddCharacter(char c) {
             if (c == '.') {
-                if (!NumpadValue.Contains('.')) {
+                if(NumpadValue.Length == 0) {
+                    NumpadValue = "0.";
+                } else if (!NumpadValue.Contains('.')) {
                     NumpadValue += c;
                 }
             } else if (c == '0') {
-                if(NumpadValue.Length > 0) {
+                if (NumpadValue.Length == 0 || NumpadValue.Length > 1 || (NumpadValue.Length == 1 && NumpadValue.ElementAt(0) != '0')) {
                     NumpadValue += c;
                 }
             } else {
-                NumpadValue += c;
+                // 123456789
+                if(NumpadValue.Length == 1 && NumpadValue.ElementAt(0) == '0') {
+                    NumpadValue = c.ToString();
+                } else {
+                    NumpadValue += c;
+                }
             }
         }
 
@@ -258,13 +293,17 @@ namespace ShaderExtensions.UI
             }
         }
 
+        private bool _numpad_blockerClickedEventIsRegistered = false;
         private bool _numpad_cancelOnClickoff = true;
         private FloatValueEnterCallback _numpad_currentCallback;
         private CancelCallback _numpad_currentCancelCallback;
 
         public void OpenNumpad(string description, float initialValue, FloatValueEnterCallback callback, CancelCallback cancelCallback) => OpenNumpad(description, initialValue, callback, cancelCallback, true);
         public void OpenNumpad(string description, float initialValue, FloatValueEnterCallback callback, CancelCallback cancelCallback, bool cancelOnClickoff) {
-            numpadModalRoot.blockerClickedEvent += NumpadModalRoot_blockerClickedEvent;
+            if(!_numpad_blockerClickedEventIsRegistered) {
+                numpadModalRoot.blockerClickedEvent += NumpadModalRoot_blockerClickedEvent;
+                _numpad_blockerClickedEventIsRegistered = true;
+            }
             _numpad_cancelOnClickoff = cancelOnClickoff;
             string val = initialValue.ToString();
             if(val.StartsWith("-")) {
@@ -282,32 +321,29 @@ namespace ShaderExtensions.UI
 
         public void CloseNumpad() {
             parserParams.EmitEvent("hide-numpad-modal");
-            numpadModalRoot.blockerClickedEvent -= NumpadModalRoot_blockerClickedEvent;
+            if(_numpad_blockerClickedEventIsRegistered) {
+                numpadModalRoot.blockerClickedEvent -= NumpadModalRoot_blockerClickedEvent;
+                _numpad_blockerClickedEventIsRegistered = false;
+            }
         }
 
         #endregion
 
-        public int selection { get; private set; } = -1;
-
-        private Dictionary<string, int> _properties = new Dictionary<string, int>();
-
-        private Material _currentMat;
-
-
-        [UIParams]
-        BSMLParserParams parserParams = null!;
-
         [UIAction("#post-parse")]
-        public void PostParse() => SetupList(null);
+        public void PostParse() {
+            Logger.log.Debug("PostParse");
+            SetupList(null);
+        }
 
         internal void ShaderSelected(ShaderEffect sfx) => SetupList(sfx.material);
 
         internal void ShaderSelectionCleared() => SetupList(null);
 
         private void SetupList(Material mat) {
+            if (customListTableData == null) return;
             customListTableData.data.Clear();
             customListTableData.tableView.ClearSelection();
-            selection = -1;
+            _selection = -1;
             _properties = new Dictionary<string, int>();
             _currentMat = mat;
 
@@ -326,12 +362,6 @@ namespace ShaderExtensions.UI
                     spt = mat.shader.GetPropertyType(i);
                     propName = mat.shader.GetPropertyName(i);
                     if (propName.Equals("_MainTex") || propName.Equals("_PrevMainTex")) continue;
-
-                    //Texture2D tex = new Texture2D(16,16);
-
-                    /*if(spt == ShaderPropertyType.Texture || spt == ShaderPropertyType.Color) {
-
-                    }*/
 
                     if (spt == ShaderPropertyType.Float || spt == ShaderPropertyType.Range) {
                         CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName + " : " + mat.GetFloat(propName), spt.ToString(), Util.SEUtilities.GetDefaultFloatIcon());
@@ -361,16 +391,14 @@ namespace ShaderExtensions.UI
             }
 
             customListTableData.tableView.ReloadData();
-
         }
 
         [UIAction("shader-prop-select")]
         public void Select(TableView _, int row) {
-            //Logger.log.Info("Selected Property: " + row);
-            selection = row;
+            _selection = row;
 
             if (_currentMat != null) {
-                string propName = _properties.Keys.ToArray()[selection];
+                string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
                 Logger.log.Debug("Selected Property: " + propName);
                 if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float) {
@@ -386,7 +414,7 @@ namespace ShaderExtensions.UI
                     colorPickerValue = _currentMat.GetColor(propName);
                     parserParams.EmitEvent("show-color-picker");
                 } else {
-                    keyboardValue = "";
+                    keyboardValue = string.Empty;
                 }
 
             }
@@ -394,10 +422,10 @@ namespace ShaderExtensions.UI
         }
 
         public void OnFloatValueEnter(float val) {
-            if (selection <= -1) return;
+            if (_selection <= -1) return;
 
             if (_currentMat != null) {
-                string propName = _properties.Keys.ToArray()[selection];
+                string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
                 if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
                     _currentMat.SetFloat(propName, val);
@@ -413,10 +441,10 @@ namespace ShaderExtensions.UI
 
         [UIAction("keyboard-enter")]
         public void OnKeyboardEnterPressed(string text) {
-            if (selection <= -1) return;
+            if (_selection <= -1) return;
 
             if (_currentMat != null) {
-                string propName = _properties.Keys.ToArray()[selection];
+                string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
                 if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
                     float value = 1;
@@ -433,16 +461,15 @@ namespace ShaderExtensions.UI
             }
 
             SetupList(_currentMat);
-
         }
 
         [UIAction("color-picker-done")]
         public void OnColorPickerDone(Color col) {
-            if (selection <= -1) return;
+            if (_selection <= -1) return;
 
             if (_currentMat != null) {
 
-                string propName = _properties.Keys.ToArray()[selection];
+                string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
                 if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
                     _currentMat.SetColor(propName, col);
@@ -455,11 +482,6 @@ namespace ShaderExtensions.UI
 
         [UIAction("color-picker-cancel")]
         public void OnColorPickerCancel() => SetupList(_currentMat);
-
-        [UIAction("range-slider-update")]
-        public void OnRangeSliderUpdate(float value) {
-
-        }
 
     }
 }

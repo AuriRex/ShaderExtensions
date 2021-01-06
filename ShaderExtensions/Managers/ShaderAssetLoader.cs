@@ -52,6 +52,17 @@ namespace ShaderExtensions.Managers
             return null;
         }
 
+        public ShaderEffect GetShaderEffectByMaterial(Material mat) {
+            if (mat == null) return null;
+            foreach(ShaderEffect sfx in ShaderEffectList) {
+                if(sfx != null) {
+                    if (sfx.material.shader.Equals(mat.shader))
+                        return sfx;
+                }
+            }
+            return null;
+        }
+
         public void LoadShaders() {
             Directory.CreateDirectory(Plugin.PluginAssetPath);
 
