@@ -59,16 +59,22 @@
     </vertical>
   </modal>
   
-  <vertical preferred-width='60' preferred-height='70' size-delta-x='60' size-delta-y='70' vertical-fit='PreferredSize'>
-    <horizontal anchor-pos-y='-5' size-delta-y='5' preferred-height='5' bg='panel-fade-gradient' pad='1' bg-color='magenta'>
-      <text text='Shader Properties' align='Center' />
+  <vertical preferred-width='80' preferred-height='70' size-delta-x='80' size-delta-y='70' vertical-fit='PreferredSize' horizontal-fit='PreferredSize'>
+    <horizontal size-delta-y='5' preferred-height='5' bg='panel-fade-gradient' pad='1' bg-color='magenta'>
+      <text text='Shader Properties' size-delta-y='5' align='Center' />
     </horizontal>
-    <horizontal vertical-fit='Unconstrained'>
-      <vertical bg='round-rect-panel' bg-color='#151515'>
-        <page-button event-click='shader-prop-list#PageUp' direction='Up' />
-        <list id='shader-prop-list' expand-cell='true' select-cell='shader-prop-select' list-style='List' />
-        <page-button event-click='shader-prop-list#PageDown' direction='Down' />
+    <horizontal pad='2' preferred-height='65' size-delta-y='65' bg='round-rect-panel' bg-color='#151515'>
+
+      <list id='shader-prop-list' expand-cell='true' select-cell='shader-prop-select' list-style='List' />
+      
+      <vertical preferred-width='10' size-delta-x='10'>
+        <page-button event-click='shader-prop-list#PageUp' on-click='update-scroll-indicator-up' direction='Up' />
+        <vertical pref-width='1.5' size-delta-x='1.5' pref-height='30' size-delta-y='30'>
+          <vertical-scroll-indicator id='scroll-indicator' handle-color='white' size-delta-x='1.5' size-delta-y='30'></vertical-scroll-indicator>
+        </vertical>
+        <page-button event-click='shader-prop-list#PageDown' on-click='update-scroll-indicator-down' direction='Down' />
       </vertical>
+      
     </horizontal>
   </vertical>
 </bg>

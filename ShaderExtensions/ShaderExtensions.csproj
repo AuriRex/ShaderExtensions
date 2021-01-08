@@ -191,11 +191,19 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Icons\shader.png" />
+    <EmbeddedResource Include="Resources\Icons\Shader.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Icons\float.png" />
-    <EmbeddedResource Include="Resources\Icons\vector.png" />
+    <EmbeddedResource Include="Resources\Icons\Float.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\Vector2.png" />
+    <EmbeddedResource Include="Resources\Icons\Vector3.png" />
+    <EmbeddedResource Include="Resources\Icons\Vector4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\Range.png" />
+    <EmbeddedResource Include="Resources\Icons\Texture2D.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="BuildTargets.targets" />

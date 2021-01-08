@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using HMUI;
+using ShaderExtensions.Event;
+using System;
+using System.Collections;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 
@@ -6,57 +10,158 @@ namespace ShaderExtensions.Util
 {
     class SEUtilities
     {
+        public static IEnumerator ScrollIndicatorAnimator(float startValue, float endValue, VerticalScrollIndicator verticalScrollIndicator, float lerpDuration = 0.3f, Action onDone = null) {
+            float timeElapsed = 0f;
+            while (timeElapsed < lerpDuration) {
+                verticalScrollIndicator.progress = Mathf.Lerp(startValue, endValue, Easings.EaseOutCubic(timeElapsed / lerpDuration));
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+            verticalScrollIndicator.progress = endValue;
+            onDone?.Invoke();
+        }
 
-        private static Texture2D shaderTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.shader.png"));
-        private static Sprite shaderSprite = null;
+        public static void ScrollTheScrollIndicator(bool up, TableView tableView, VerticalScrollIndicator verticalScrollIndicator, Coroutine coroutine) {
+            Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
+
+            float rangeUpper;
+            float pageSize = range.Item2 - range.Item1;
+            float numOfCells = tableView.numberOfCells;
+
+            if (up) {
+                rangeUpper = Mathf.Max(0, range.Item2 - pageSize);
+            } else {
+                rangeUpper = Mathf.Min(numOfCells, range.Item2 + pageSize);
+            }
+
+            float progress = (rangeUpper - pageSize) / (numOfCells - pageSize);
+
+            if (coroutine != null) {
+                tableView.StopCoroutine(coroutine);
+            }
+
+            coroutine = tableView.StartCoroutine(ScrollIndicatorAnimator(verticalScrollIndicator.progress, progress, verticalScrollIndicator, 0.3f, () => {
+                tableView.StopCoroutine(coroutine);
+                coroutine = null;
+            }));
+        }
+
+        public static async void UpdateScrollIndicator(TableView tableView, VerticalScrollIndicator verticalScrollIndicator, bool doTheWaitThing = false) {
+
+            if (doTheWaitThing)
+                await SiraUtil.Utilities.AwaitSleep(10);
+
+            Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
+
+            float pageSize = range.Item2 - range.Item1;
+            float numOfCells = tableView.numberOfCells;
+
+            verticalScrollIndicator.normalizedPageHeight = pageSize / numOfCells;
+            verticalScrollIndicator.progress = (range.Item2 - pageSize) / (numOfCells - pageSize);
+        }
+
+
+        private static Texture2D _shaderTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Shader.png"));
+        private static Sprite _shaderSprite = null;
 
         /// <summary>
         /// Loads and caches the default icon for Shader files
         /// </summary>
         public static Sprite GetDefaultShaderIcon() {
-            if (shaderSprite != null) {
-                return shaderSprite;
+            if (_shaderSprite != null) {
+                return _shaderSprite;
             }
 
-            shaderSprite = Sprite.Create(shaderTex2D, new Rect(0.0f, 0.0f, shaderTex2D.width, shaderTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+            _shaderSprite = Sprite.Create(_shaderTex2D, new Rect(0.0f, 0.0f, _shaderTex2D.width, _shaderTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
 
-            return shaderSprite;
+            return _shaderSprite;
         }
 
-        private static Texture2D floatTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.float.png"));
-        private static Sprite floatSprite = null;
+        private static Texture2D _texture2dTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Texture2D.png"));
+        private static Sprite _texture2dSprite = null;
+
+        /// <summary>
+        /// Loads and caches the default icon for Shader files
+        /// </summary>
+        public static Sprite GetDefaultTexture2DIcon() {
+            if (_texture2dSprite != null) {
+                return _texture2dSprite;
+            }
+
+            _texture2dSprite = Sprite.Create(_texture2dTex2D, new Rect(0.0f, 0.0f, _texture2dTex2D.width, _texture2dTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+            return _texture2dSprite;
+        }
+
+        private static Texture2D _floatTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Float.png"));
+        private static Sprite _floatSprite = null;
 
         /// <summary>
         /// Loads and caches the default icon for material properties of the type Float
         /// </summary>
         public static Sprite GetDefaultFloatIcon() {
-            if (floatSprite != null) {
-                return floatSprite;
+            if (_floatSprite != null) {
+                return _floatSprite;
             }
 
-            floatSprite = Sprite.Create(floatTex2D, new Rect(0.0f, 0.0f, floatTex2D.width, floatTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+            _floatSprite = Sprite.Create(_floatTex2D, new Rect(0.0f, 0.0f, _floatTex2D.width, _floatTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
 
-            return floatSprite;
+            return _floatSprite;
         }
 
-        private static Texture2D vectorTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.vector.png"));
-        private static Sprite vectorSprite = null;
+        private static Texture2D _rangeTex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Range.png"));
+        private static Sprite _rangeSprite = null;
 
         /// <summary>
-        /// Loads and caches the default icon for material properties of the type Vector
+        /// Loads and caches the default icon for material properties of the type Range
         /// </summary>
-        public static Sprite GetDefaultVectorIcon() {
-            if (vectorSprite != null) {
-                return vectorSprite;
+        public static Sprite GetDefaultRangeIcon() {
+            if (_rangeSprite != null) {
+                return _rangeSprite;
             }
 
-            vectorSprite = Sprite.Create(vectorTex2D, new Rect(0.0f, 0.0f, vectorTex2D.width, vectorTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+            _rangeSprite = Sprite.Create(_rangeTex2D, new Rect(0.0f, 0.0f, _rangeTex2D.width, _rangeTex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
 
-            return vectorSprite;
+            return _rangeSprite;
+        }
+
+        private static Texture2D _vector2Tex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Vector2.png"));
+        private static Sprite _vector2Sprite = null;
+        private static Texture2D _vector3Tex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Vector3.png"));
+        private static Sprite _vector3Sprite = null;
+        private static Texture2D _vector4Tex2D = LoadTextureRaw(LoadFromResource("ShaderExtensions.Resources.Icons.Vector4.png"));
+        private static Sprite _vector4Sprite = null;
+
+        /// <summary>
+        /// Loads and caches the default icon for material properties of the type Vector2 / vector3 / vector4
+        /// </summary>
+        /// <param name="type">2, 3 or 4 - 3 is default</param>
+        public static Sprite GetDefaultVectorIcon(int type) {
+            switch(type) {
+                case 2:
+                    if (_vector2Sprite != null) {
+                        return _vector2Sprite;
+                    }
+                    _vector2Sprite = Sprite.Create(_vector2Tex2D, new Rect(0.0f, 0.0f, _vector2Tex2D.width, _vector2Tex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    return _vector2Sprite;
+                case 3:
+                default:
+                    if (_vector3Sprite != null) {
+                        return _vector3Sprite;
+                    }
+                    _vector3Sprite = Sprite.Create(_vector3Tex2D, new Rect(0.0f, 0.0f, _vector3Tex2D.width, _vector3Tex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    return _vector3Sprite;
+                case 4:
+                    if (_vector4Sprite != null) {
+                        return _vector4Sprite;
+                    }
+                    _vector4Sprite = Sprite.Create(_vector4Tex2D, new Rect(0.0f, 0.0f, _vector4Tex2D.width, _vector4Tex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    return _vector4Sprite;
+            }
         }
 
         /// <summary>
-        /// Loads an Texture2D from byte[]
+        /// Loads a Texture2D from byte[]
         /// </summary>
         /// <param name="file"></param>
         public static Texture2D LoadTextureRaw(byte[] file) {

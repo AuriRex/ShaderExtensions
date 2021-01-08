@@ -18,11 +18,20 @@ namespace ShaderExtensions.UI
         private PluginConfig _pluginConfig;
         private ShaderListViewController _shaderListViewController;
 
+        private ShaderEffect _currentShaderEffect;
+        private int _customPropertyCount = 0;
+
         [Inject]
         public void Construct(PluginConfig pluginConfig, ShaderListViewController shaderListViewController) {
             _pluginConfig = pluginConfig;
             _shaderListViewController = shaderListViewController;
         }
+
+        [UIComponent("shader-description")]
+        protected TextPageScrollView shaderDescription = null;
+
+        [UIComponent("shader-icon")]
+        private ImageView _shaderIcon = null!;
 
         [UIValue("clear-on-beat")]
         protected bool ClearOnBeat {
@@ -35,11 +44,6 @@ namespace ShaderExtensions.UI
             get => _pluginConfig.ClearPreviewEffects;
             set => _pluginConfig.ClearPreviewEffects = value;
         }
-
-        [UIComponent("shader-description")]
-        protected TextPageScrollView shaderDescription = null;
-
-        
 
         private string _shadername = string.Empty;
         [UIValue("name")]
@@ -81,18 +85,8 @@ namespace ShaderExtensions.UI
             }
         }
 
-        [UIComponent("shader-icon")]
-        private ImageView _shaderIcon = null!;
-
         [UIAction("#post-parse")]
-        public void PostParse() {
-            SetupDetails(null);
-        }
-       
-
-        private ShaderEffect _currentShaderEffect;
-
-        private int _customPropertyCount = 0;
+        protected void PostParse() => SetupDetails(null);
 
         private void SetupDetails(ShaderEffect sfx) {
             if (sfx == null) {
@@ -141,6 +135,5 @@ namespace ShaderExtensions.UI
         internal void ShaderSelected(ShaderEffect sfx) => SetupDetails(sfx);
 
         internal void ShaderSelectionCleared() => SetupDetails(null);
-
     }
 }

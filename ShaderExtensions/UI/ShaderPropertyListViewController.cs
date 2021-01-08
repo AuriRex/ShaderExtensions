@@ -4,6 +4,7 @@ using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
+using ShaderExtensions.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +30,24 @@ namespace ShaderExtensions.UI
         BSMLParserParams parserParams = null!;
 
         [UIComponent("shader-prop-list")]
-        public CustomListTableData customListTableData = null!;
+        protected CustomListTableData customListTableData = null!;
 
         [UIValue("keyboard-value")]
-        public string keyboardValue = string.Empty;
+        protected string keyboardValue = string.Empty;
 
         [UIValue("color-picker-value")]
-        public Color colorPickerValue = Color.white;
+        protected Color colorPickerValue = Color.white;
+
+        [UIComponent("scroll-indicator")]
+        protected BSMLScrollIndicator scrollIndicator = null;
+
+        private Coroutine _scrollIndicatorCoroutine = null!;
+
+        [UIAction("update-scroll-indicator-up")]
+        protected void ScrollUp() => SEUtilities.ScrollTheScrollIndicator(true, customListTableData.tableView, scrollIndicator, _scrollIndicatorCoroutine);
+
+        [UIAction("update-scroll-indicator-down")]
+        protected void ScrollDown() => SEUtilities.ScrollTheScrollIndicator(false, customListTableData.tableView, scrollIndicator, _scrollIndicatorCoroutine);
 
         #region Range_Modal
 
@@ -325,16 +337,16 @@ namespace ShaderExtensions.UI
         #endregion
 
         [UIAction("#post-parse")]
-        public void PostParse() {
-            SetupList(null);
-        }
+        protected void PostParse() => SetupList(null);
 
         internal void ShaderSelected(ShaderEffect sfx) => SetupList(sfx.material);
 
         internal void ShaderSelectionCleared() => SetupList(null);
 
-        private void SetupList(Material mat) {
+        private void SetupList(Material mat, bool ScrollToTopOnEnable = true) {
             if (customListTableData == null) return;
+            if(ScrollToTopOnEnable && customListTableData.tableView.numberOfCells >= 0)
+                customListTableData.tableView.ScrollToCellWithIdx(0,TableViewScroller.ScrollPositionType.Beginning, false);
             customListTableData.data.Clear();
             customListTableData.tableView.ClearSelection();
             _selection = -1;
@@ -358,7 +370,7 @@ namespace ShaderExtensions.UI
                     if (propName.Equals("_MainTex") || propName.Equals("_PrevMainTex")) continue;
 
                     if (spt == ShaderPropertyType.Float || spt == ShaderPropertyType.Range) {
-                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName + " : " + mat.GetFloat(propName), spt.ToString(), Util.SEUtilities.GetDefaultFloatIcon());
+                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName + " : " + mat.GetFloat(propName), spt.ToString(), spt == ShaderPropertyType.Float ? SEUtilities.GetDefaultFloatIcon() : SEUtilities.GetDefaultRangeIcon());
                         customListTableData.data.Add(customCellInfo);
                     } else if (spt == ShaderPropertyType.Color) {
                         Texture2D tex = new Texture2D(1, 1);
@@ -369,12 +381,17 @@ namespace ShaderExtensions.UI
                         customListTableData.data.Add(customCellInfo);
                     } else if (spt == ShaderPropertyType.Texture) {
                         Texture2D tex = mat.GetTexture(propName) as Texture2D;
-                        Sprite icon = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
+                        Sprite icon;
+                        if (tex != null) {
+                            icon = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
+                        } else {
+                            icon = SEUtilities.GetDefaultTexture2DIcon();
+                        }
                         CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), icon);
                         customListTableData.data.Add(customCellInfo);
                     } else {
                         // Vector
-                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), Util.SEUtilities.GetDefaultVectorIcon());
+                        CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), SEUtilities.GetDefaultVectorIcon(4));
                         customListTableData.data.Add(customCellInfo);
                     }
 
@@ -385,10 +402,11 @@ namespace ShaderExtensions.UI
             }
 
             customListTableData.tableView.ReloadData();
+            SEUtilities.UpdateScrollIndicator(customListTableData.tableView, scrollIndicator, true);
         }
 
         [UIAction("shader-prop-select")]
-        public void Select(TableView _, int row) {
+        protected void Select(TableView _, int row) {
             _selection = row;
 
             if (_currentMat != null) {
@@ -415,7 +433,7 @@ namespace ShaderExtensions.UI
 
         }
 
-        public void OnFloatValueEnter(float val) {
+        protected void OnFloatValueEnter(float val) {
             if (_selection <= -1) return;
 
             if (_currentMat != null) {
@@ -426,15 +444,15 @@ namespace ShaderExtensions.UI
                 }
             }
 
-            SetupList(_currentMat);
+            SetupList(_currentMat, false);
         }
-        
-        public void OnCanceled() {
-            SetupList(_currentMat);
+
+        protected void OnCanceled() {
+            customListTableData.tableView.ClearSelection();
         }
 
         [UIAction("keyboard-enter")]
-        public void OnKeyboardEnterPressed(string text) {
+        protected void OnKeyboardEnterPressed(string text) {
             if (_selection <= -1) return;
 
             if (_currentMat != null) {
@@ -454,11 +472,11 @@ namespace ShaderExtensions.UI
 
             }
 
-            SetupList(_currentMat);
+            SetupList(_currentMat, false);
         }
 
         [UIAction("color-picker-done")]
-        public void OnColorPickerDone(Color col) {
+        protected void OnColorPickerDone(Color col) {
             if (_selection <= -1) return;
 
             if (_currentMat != null) {
@@ -471,11 +489,13 @@ namespace ShaderExtensions.UI
 
             }
 
-            SetupList(_currentMat);
+            SetupList(_currentMat, false);
         }
 
         [UIAction("color-picker-cancel")]
-        public void OnColorPickerCancel() => SetupList(_currentMat);
+        protected void OnColorPickerCancel() {
+            customListTableData.tableView.ClearSelection();
+        }
 
     }
 }

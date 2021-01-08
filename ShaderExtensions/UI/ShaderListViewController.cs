@@ -5,6 +5,7 @@ using HMUI;
 using ShaderExtensions.Event;
 using ShaderExtensions.Managers;
 using ShaderExtensions.UI.Elements;
+using ShaderExtensions.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,11 +19,11 @@ namespace ShaderExtensions.UI
     [HotReload(RelativePathToLayout = @"Views\shaderList.bsml")]
     class ShaderListViewController : BSMLAutomaticViewController
     {
-        private ShaderAssetLoader _shaderAssetLoader;
-        private ShaderManager _shaderManager;
-
         public event Action<ShaderEffect> shaderSelected;
         public event Action shadersCleared;
+
+        private ShaderAssetLoader _shaderAssetLoader;
+        private ShaderManager _shaderManager;
 
         private Dictionary<Texture2D, Sprite> _spriteCache = null;
         private int _selection = -1;
@@ -34,77 +35,24 @@ namespace ShaderExtensions.UI
         }
 
         [UIComponent("shader-list")]
-        public CustomListTableData customListTableData = null;
+        protected CustomListTableData customListTableData = null;
 
         [UIComponent("shader-stack-list")]
-        public CustomCellListTableData shaderStackList = null;
+        protected CustomCellListTableData shaderStackList = null;
 
         [UIComponent("scroll-indicator")]
-        public BSMLScrollIndicator scrollIndicator = null;
+        protected BSMLScrollIndicator scrollIndicator = null;
 
-        private Coroutine _scrollIndicatorCoroutine;
-
-        internal IEnumerator ScrollIndicatorAnimator(float startValue, float endValue, float lerpDuration = 1f, Action onDone = null) {
-            float timeElapsed = 0f;
-            while (timeElapsed < lerpDuration) {
-                scrollIndicator.progress = Mathf.Lerp(startValue, endValue, Easings.EaseOutCubic(timeElapsed / lerpDuration));
-                timeElapsed += Time.deltaTime;
-                yield return null;
-            }
-            scrollIndicator.progress = endValue;
-            onDone?.Invoke();
-        }
+        private Coroutine _scrollIndicatorCoroutine = null!;
 
         [UIAction("update-scroll-indicator-up")]
-        public void ScrollUp() => Scroll(true);
+        protected void ScrollUp() => SEUtilities.ScrollTheScrollIndicator(true, customListTableData.tableView, scrollIndicator, _scrollIndicatorCoroutine);
 
         [UIAction("update-scroll-indicator-down")]
-        public void ScrollDown() => Scroll(false);
-
-        public void Scroll(bool up) {
-            TableView tableView = customListTableData.tableView;
-
-            Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
-
-            float rangeUpper;
-            float pageSize = range.Item2 - range.Item1;
-            float numOfCells = tableView.numberOfCells;
-
-            if (up) {
-                rangeUpper = Mathf.Max(0, range.Item2 - pageSize);
-            } else {
-                rangeUpper = Mathf.Min(numOfCells, range.Item2 + pageSize);
-            }
-
-            float progress = (rangeUpper - pageSize) / (numOfCells - pageSize);
-
-            if (_scrollIndicatorCoroutine != null) {
-                tableView.StopCoroutine(_scrollIndicatorCoroutine);
-            }
-
-            _scrollIndicatorCoroutine = tableView.StartCoroutine(ScrollIndicatorAnimator(scrollIndicator.progress, progress, 0.3f, () => {
-                tableView.StopCoroutine(_scrollIndicatorCoroutine);
-                _scrollIndicatorCoroutine = null;
-            }));
-        }
-
-        private async void UpdateScrollIndicator() {
-
-            await SiraUtil.Utilities.AwaitSleep(10);
-
-            TableView tableView = customListTableData.tableView;
-
-            Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
-
-            int pageSize = range.Item2 - range.Item1;
-            float numOfCells = tableView.numberOfCells;
-
-            scrollIndicator.normalizedPageHeight = (pageSize * 1f) / numOfCells;
-            scrollIndicator.progress = (range.Item2 - pageSize) / (numOfCells - pageSize);
-        }
+        protected void ScrollDown() => SEUtilities.ScrollTheScrollIndicator(false, customListTableData.tableView, scrollIndicator, _scrollIndicatorCoroutine);
 
         [UIAction("shader-select")]
-        public void Select(TableView _, int row) {
+        protected void Select(TableView _, int row) {
             _selection = row;
             ShaderEffect sfx = _shaderAssetLoader.ShaderEffectList[_selection];
             Logger.log.Info("Selected: " + sfx.name + " by " + sfx.author);
@@ -112,24 +60,24 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("active-shader-select")]
-        public void ActiveShaderStackSelect(TableView _, ActiveShaderElement ase) {
+        protected void ActiveShaderStackSelect(TableView _, ActiveShaderElement ase) {
             Logger.log.Debug($"selcted ase: {ase}");
             _shaderManager.RemoveMaterial(ase.ID);
             SetupActiveShaderStackList();
         }
 
         [UIAction("reload-shaders")]
-        public void ReloadShaders() {
+        protected void ReloadShaders() {
             _shaderAssetLoader.Reload();
             SetupShaderList();
             _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();
             SetupActiveShaderStackList();
-            UpdateScrollIndicator();
+            SEUtilities.UpdateScrollIndicator(customListTableData.tableView, scrollIndicator);
         }
 
         [UIAction("add-shader")]
-        public void AddShader() {
+        protected void AddShader() {
             if (_selection > -1) {
                 _shaderManager.RefreshCameraManager();
                 _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[_selection]);
@@ -138,7 +86,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("select-shader")]
-        public void SelectShader() {
+        protected void SelectShader() {
             if (_selection > -1) {
                 _shaderManager.RefreshCameraManager();
                 _shaderManager.ClearAllMaterials();
@@ -148,20 +96,19 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("clear-shader")]
-        public void ClearShader() {
+        protected void ClearShader() {
             _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();
             SetupActiveShaderStackList();
         }
 
         [UIAction("#post-parse")]
-        public void PostParse() {
+        protected void PostParse() {
             SetupShaderList();
             SetupActiveShaderStackList();
-            UpdateScrollIndicator();
         }
 
-        public void SetupShaderList() {
+        protected void SetupShaderList() {
             customListTableData.data.Clear();
             if (_spriteCache != null) {
                 _spriteCache.Clear();
@@ -175,7 +122,7 @@ namespace ShaderExtensions.UI
             List<ShaderEffect> sfxList = _shaderAssetLoader.ShaderEffectList;
 
             foreach (ShaderEffect sfx in sfxList) {
-                Sprite icon = Util.SEUtilities.GetDefaultShaderIcon();
+                Sprite icon = SEUtilities.GetDefaultShaderIcon();
 
                 if (sfx.previewImage != null && _spriteCache.TryGetValue(sfx.previewImage, out Sprite image)) {
                     icon = image;
@@ -189,9 +136,10 @@ namespace ShaderExtensions.UI
             }
 
             customListTableData.tableView.ReloadData();
+            SEUtilities.UpdateScrollIndicator(customListTableData.tableView, scrollIndicator, true);
         }
 
-        public void SetupActiveShaderStackList() {
+        protected void SetupActiveShaderStackList() {
             shaderStackList.data.Clear();
             Dictionary<string, Material> matCache = _shaderManager.MaterialCache;
 
@@ -217,7 +165,7 @@ namespace ShaderExtensions.UI
         }
 
         public Sprite GetPreviewImage(ShaderEffect sfx) {
-            if (sfx == null || sfx.previewImage == null) return Util.SEUtilities.GetDefaultShaderIcon();
+            if (sfx == null || sfx.previewImage == null) return SEUtilities.GetDefaultShaderIcon();
             if (_spriteCache.TryGetValue(sfx.previewImage, out Sprite image)) {
                 return image;
             }
