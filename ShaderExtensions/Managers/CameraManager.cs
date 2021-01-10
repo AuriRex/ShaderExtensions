@@ -33,6 +33,8 @@ namespace ShaderExtensions.Managers
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
 
             foreach (Camera cam in Cameras) {
+                Logger.log.Debug(cam.name);
+                if (cam.name.EndsWith(".cfg")) continue;
                 ShaderToCamOutput stco = cam.gameObject.GetComponent<ShaderToCamOutput>();
                 if (stco == null) {
                     stco = cam.gameObject.AddComponent<ShaderToCamOutput>();

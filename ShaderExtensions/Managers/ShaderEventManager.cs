@@ -12,24 +12,38 @@ using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
 namespace ShaderExtensions.Managers
 {
-    public class ShaderEventManager : IInitializable, IDisposable
-    {
+    public class ShaderEventManager : IInitializable, IDisposable {
+        private ShaderCore _shaderCore;
         private ShaderManager _shaderManager;
         private PluginConfig _pluginConfig;
 
         private CustomEventCallbackController _customEventCallbackController;
         private BeatmapObjectSpawnController _beatmapObjectSpawnController;
+        private IDifficultyBeatmap _difficultyBeatmap;
         private CustomEventCallbackController.CustomEventCallbackData _customEventCallbackData;
 
+        public bool IsEnabled { get; private set; } = false;
+
         [Inject]
-        internal ShaderEventManager(ShaderManager shaderManager, PluginConfig pluginConfig, BeatmapObjectSpawnController beatmapObjectSpawnController) {
+        internal ShaderEventManager(ShaderCore shaderCore, ShaderManager shaderManager, PluginConfig pluginConfig, BeatmapObjectSpawnController beatmapObjectSpawnController, IDifficultyBeatmap difficultyBeatmap) {
+            _shaderCore = shaderCore;
             _shaderManager = shaderManager;
             _pluginConfig = pluginConfig;
             _beatmapObjectSpawnController = beatmapObjectSpawnController;
+            _difficultyBeatmap = difficultyBeatmap;
         }
 
         internal void CustomEventCallbackInit(CustomEventCallbackController customEventCallbackController) {
             Logger.log.Debug("CustomEventCallbackController: " + customEventCallbackController);
+
+            if(!_shaderCore.ShouldEnableShaderEvents(_difficultyBeatmap)) {
+                IsEnabled = false;
+                Logger.log.Debug("Shader Extensions Requirement / Suggestion NOT set, disabling Shader Event Handler!");
+                return;
+            }
+
+            IsEnabled = true;
+            Logger.log.Debug("Shader Extensions Requirement / Suggestion set, enabling Shader Event Handler!");
 
             _customEventCallbackController = customEventCallbackController;
             _customEventCallbackData = _customEventCallbackController.AddCustomEventCallback(ShaderEventCallback);

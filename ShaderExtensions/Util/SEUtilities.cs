@@ -10,6 +10,15 @@ namespace ShaderExtensions.Util
 {
     class SEUtilities
     {
+        /// <summary>
+        /// Animates a Scroll Indicator
+        /// </summary>
+        /// <param name="startValue"></param>
+        /// <param name="endValue"></param>
+        /// <param name="verticalScrollIndicator"></param>
+        /// <param name="lerpDuration"></param>
+        /// <param name="onDone">Method to execute after it's done animating.</param>
+        /// <returns></returns>
         public static IEnumerator ScrollIndicatorAnimator(float startValue, float endValue, VerticalScrollIndicator verticalScrollIndicator, float lerpDuration = 0.3f, Action onDone = null) {
             float timeElapsed = 0f;
             while (timeElapsed < lerpDuration) {
@@ -21,6 +30,13 @@ namespace ShaderExtensions.Util
             onDone?.Invoke();
         }
 
+        /// <summary>
+        /// Scroll a ScrollIndicator
+        /// </summary>
+        /// <param name="up"></param>
+        /// <param name="tableView"></param>
+        /// <param name="verticalScrollIndicator"></param>
+        /// <param name="coroutine"></param>
         public static void ScrollTheScrollIndicator(bool up, TableView tableView, VerticalScrollIndicator verticalScrollIndicator, Coroutine coroutine) {
             Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
 
@@ -46,6 +62,12 @@ namespace ShaderExtensions.Util
             }));
         }
 
+        /// <summary>
+        /// Update the Scroll Indicators Graphics
+        /// </summary>
+        /// <param name="tableView"></param>
+        /// <param name="verticalScrollIndicator"></param>
+        /// <param name="doTheWaitThing">if it should wait for 10 ms (for bsml to initialize things)</param>
         public static async void UpdateScrollIndicator(TableView tableView, VerticalScrollIndicator verticalScrollIndicator, bool doTheWaitThing = false) {
 
             if (doTheWaitThing)

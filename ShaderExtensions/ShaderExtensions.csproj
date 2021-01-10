@@ -70,6 +70,11 @@
       <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="SongCore, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Plugins\SongCore.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -158,6 +163,7 @@
     <Compile Include="Managers\MenuButtonManager.cs" />
     <Compile Include="Managers\CameraManager.cs" />
     <Compile Include="Managers\ShaderAssetLoader.cs" />
+    <Compile Include="Managers\ShaderCore.cs" />
     <Compile Include="Managers\ShaderEventManager.cs" />
     <Compile Include="Managers\ShaderManager.cs" />
     <Compile Include="ShaderEffect.cs" />

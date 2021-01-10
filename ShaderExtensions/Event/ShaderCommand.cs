@@ -51,12 +51,14 @@ namespace ShaderExtensions.Event
 
             ShaderProperty longest = null;
             Properties.getProps().ForEach(sp => {
-                if(sp.Duration > longest?.Duration) {
+                if(sp.Duration > (longest?.Duration ?? 0)) {
                     longest = sp;
                 }
             });
-            if(longest != null)
+            if(longest != null) {
                 longest.IsLast = true;
+            }
+                
         }
 
     }

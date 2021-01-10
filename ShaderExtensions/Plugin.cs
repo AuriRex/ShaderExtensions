@@ -16,6 +16,8 @@ namespace ShaderExtensions
     {
         public static string PluginAssetPath => Path.Combine(UnityGame.InstallPath, "CustomShaders");
 
+        internal const string CAPABILITY = "Shader Extensions";
+
         [Init]
         public Plugin(IPALogger logger, Config config, Zenjector zenjector) {
             Logger.log = logger;
