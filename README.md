@@ -2,6 +2,14 @@
 
 **A Mod that adds (mapable!) screen space shaders onto the player camera!**
 
+![LSD?](https://cdn.discordapp.com/attachments/750106311902888011/795796437442232329/20210104194504_1.jpg)
+
+### Dependencies:
+ * SiraUtil : ^2.3.1
+ * BeatSaberMarkupLanguage : ^1.4.2
+ * CustomJSONData : ^1.1.2
+ * NoodleExtensions : ^1.3.4
+
 very crude, user unfriendly and wip how to use / example for mappers:
 
 ## info.dat
