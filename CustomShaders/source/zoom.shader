@@ -1,10 +1,12 @@
-﻿Shader "Camera/pixelate"
+Shader "Camera/zoom"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-		_height ("y-Pixel", int) = 1
-		_length ("x-Pixel", int) = 1
+        // _strength > 0 = zoom out
+        // _strength < 0 = zoom in
+        // _strength <= -.5 flip the screen!
+        _strength("Strength", float) = 0
     }
     SubShader
     {
@@ -30,24 +32,23 @@
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
             };
-            
-            half4 _MainTex_ST;
+
+            float _strength;
+
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
+                o.uv = v.uv * (2 * _strength + 1);
+                o.uv -= 1 * _strength + float2(-.2 * (unity_StereoEyeIndex * 2 - 1), 0) * _strength;
                 return o;
             }
 
             sampler2D _MainTex;
-            int _height;
-            int _length;
 
+            half4 _MainTex_ST;
             fixed4 frag (v2f i) : SV_Target
             {
-                i.uv.x = i.uv.x - i.uv.x % (1./_length) + 1./_length/2;
-                i.uv.y = i.uv.y - i.uv.y % (1./_height) + 1./_height/2;
                 return tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
             }
             ENDCG

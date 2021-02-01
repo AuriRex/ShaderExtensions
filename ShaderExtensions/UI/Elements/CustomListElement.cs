@@ -11,7 +11,9 @@ namespace ShaderExtensions.UI.Elements
 {
     internal class CustomListElement : INotifyPropertyChanged
     {
+#nullable enable annotations
         public event PropertyChangedEventHandler? PropertyChanged;
+#nullable restore annotations
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
             try {

@@ -27,6 +27,7 @@ namespace ShaderExtensions.Managers
         }
 
         internal bool ShouldEnableShaderEvents(IDifficultyBeatmap difficultyBeatmap) {
+            if (difficultyBeatmap == null) return false;
             if(difficultyBeatmap.beatmapData is CustomBeatmapData customBeatmapData) {
                 IEnumerable<string> requirements = ((List<object>) Trees.at(customBeatmapData.beatmapCustomData, "_requirements"))?.Cast<string>();
                 EnableShaderEvents = requirements?.Contains(Plugin.CAPABILITY) ?? false;

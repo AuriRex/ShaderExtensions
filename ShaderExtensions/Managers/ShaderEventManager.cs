@@ -17,6 +17,8 @@ namespace ShaderExtensions.Managers
         private ShaderManager _shaderManager;
         private PluginConfig _pluginConfig;
 
+        private DiContainer _container;
+
         private CustomEventCallbackController _customEventCallbackController;
         private BeatmapObjectSpawnController _beatmapObjectSpawnController;
         private IDifficultyBeatmap _difficultyBeatmap;
@@ -25,10 +27,13 @@ namespace ShaderExtensions.Managers
         public bool IsEnabled { get; private set; } = false;
 
         [Inject]
-        internal ShaderEventManager(ShaderCore shaderCore, ShaderManager shaderManager, PluginConfig pluginConfig, BeatmapObjectSpawnController beatmapObjectSpawnController, IDifficultyBeatmap difficultyBeatmap) {
+        internal ShaderEventManager(DiContainer Container, ShaderCore shaderCore, ShaderManager shaderManager, PluginConfig pluginConfig, [InjectOptional] BeatmapObjectSpawnController beatmapObjectSpawnController, [InjectOptional] IDifficultyBeatmap difficultyBeatmap) {
+            _container = Container;
+
             _shaderCore = shaderCore;
             _shaderManager = shaderManager;
             _pluginConfig = pluginConfig;
+
             _beatmapObjectSpawnController = beatmapObjectSpawnController;
             _difficultyBeatmap = difficultyBeatmap;
         }
@@ -148,7 +153,7 @@ namespace ShaderExtensions.Managers
                         break;
                 }
             } catch (Exception ex) {
-                Logger.log.Error($"ShaderEventController encountered an exception at time (in beats) {customEventData.time / 60 * _beatmapObjectSpawnController.currentBpm}: {ex.Message}");
+                Logger.log.Error($"{nameof(ShaderEventManager)} encountered an exception at time (in beats) {customEventData.time / 60 * _beatmapObjectSpawnController.currentBpm}: {ex.Message}");
                 Logger.log.Error(ex.StackTrace);
             }
         }

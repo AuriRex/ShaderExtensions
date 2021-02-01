@@ -23,7 +23,7 @@ namespace ShaderExtensions
             Logger.log = logger;
             zenjector.OnApp<ShaderExtensionsCoreInstaller>().WithParameters(config.Generated<PluginConfig>());
             zenjector.OnMenu<ShaderExtensionsMenuInstaller>();
-            zenjector.OnGame<ShaderExtensionsGameInstaller>().ShortCircuitForTutorial();
+            zenjector.OnGame<ShaderExtensionsGameInstaller>().ShortCircuitForTutorial().ShortCircuitForMultiplayer();
         }
 
         [OnEnable, OnDisable]
