@@ -1,10 +1,7 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Components;
-using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
 using ShaderExtensions.Util;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
@@ -25,6 +22,7 @@ namespace ShaderExtensions.UI
         public void Construct(PluginConfig pluginConfig, ShaderListViewController shaderListViewController) {
             _pluginConfig = pluginConfig;
             _shaderListViewController = shaderListViewController;
+            Logger.log.Debug("const");
         }
 
         [UIComponent("shader-description")]
@@ -85,8 +83,12 @@ namespace ShaderExtensions.UI
             }
         }
 
-        [UIAction("#post-parse")]
-        protected void PostParse() => SetupDetails(null);
+        [UIAction("#post-parse")] 
+        protected void PostParse() {
+            Logger.log.Debug("e");
+            SetupDetails(null);
+            Logger.log.Debug("f");
+        }
 
         private void SetupDetails(ShaderEffect sfx) {
             if (sfx == null) {

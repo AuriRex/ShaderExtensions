@@ -2,14 +2,11 @@
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
-using ShaderExtensions.Event;
 using ShaderExtensions.Managers;
 using ShaderExtensions.UI.Elements;
 using ShaderExtensions.Util;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using Zenject;
 
@@ -104,8 +101,10 @@ namespace ShaderExtensions.UI
 
         [UIAction("#post-parse")]
         protected void PostParse() {
+            Logger.log.Debug("c");
             SetupShaderList();
             SetupActiveShaderStackList();
+            Logger.log.Debug("d");
         }
 
         protected void SetupShaderList() {

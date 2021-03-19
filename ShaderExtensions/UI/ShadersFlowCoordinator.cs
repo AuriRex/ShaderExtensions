@@ -24,6 +24,10 @@ namespace ShaderExtensions.UI
             _shaderDetailsView = shaderDetailsViewController;
             _pluginConfig = pluginConfig;
             _shaderManager = shaderManager;
+            Logger.log.Debug("const");
+        }
+        protected override void InitialViewControllerWasPresented() {
+            Logger.log.Debug("InitialViewControllerWasPresented");
         }
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
@@ -31,10 +35,12 @@ namespace ShaderExtensions.UI
                 SetTitle("Screen Space Shaders");
                 showBackButton = true;
             }
-            ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
+            Logger.log.Debug("activating");
             _shaderListView.shaderSelected += _shaderDetailsView.ShaderSelected;
             _shaderListView.shaderSelected += _shaderProperyListView.ShaderSelected;
             _shaderListView.shadersCleared += _shaderProperyListView.ShaderSelectionCleared;
+            ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
+            Logger.log.Debug("boop");
         }
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) {

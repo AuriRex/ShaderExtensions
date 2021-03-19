@@ -1,4 +1,5 @@
-﻿using IPA;
+﻿using HarmonyLib;
+using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Utilities;
@@ -6,6 +7,7 @@ using ShaderExtensions.Installers;
 using ShaderExtensions.Util;
 using SiraUtil.Zenject;
 using System.IO;
+using System.Reflection;
 using IPALogger = IPA.Logging.Logger;
 
 namespace ShaderExtensions
@@ -18,6 +20,8 @@ namespace ShaderExtensions
 
         internal const string CAPABILITY = "Shader Extensions";
 
+        internal const string HARMONY_ID = "com.aurirex.shaderextensions";
+
         [Init]
         public Plugin(IPALogger logger, Config config, Zenjector zenjector) {
             Logger.log = logger;
@@ -26,8 +30,13 @@ namespace ShaderExtensions
             zenjector.OnGame<ShaderExtensionsGameInstaller>().ShortCircuitForTutorial().ShortCircuitForMultiplayer();
         }
 
-        [OnEnable, OnDisable]
-        public void OnState() {
+        [OnEnable]
+        public void OnEnable() {
+
+        }
+
+        [OnDisable]
+        public void OnDisable() {
 
         }
     }

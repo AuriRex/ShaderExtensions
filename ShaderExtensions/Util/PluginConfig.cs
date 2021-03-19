@@ -6,6 +6,8 @@
 
         public virtual bool ClearPreviewEffects { get; set; } = true;
 
+        public virtual bool ShowMenuButton { get; set; } = true;
+
         public virtual bool DebugLogging { get; set; } = false;
 
     }

@@ -11,11 +11,12 @@ namespace ShaderExtensions.Installers
             Container.Bind<ShaderPropertyListViewController>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<ShaderListViewController>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<ShaderDetailsViewController>().FromNewComponentAsViewController().AsSingle();
-            Container.BindFlowCoordinator<ShadersFlowCoordinator>();
+
+            Container.Bind<ShadersFlowCoordinator>().FromNewComponentOnNewGameObject(nameof(ShadersFlowCoordinator)).AsSingle();
 
             Container.BindInterfacesTo<MenuButtonManager>().AsSingle();
 
-            Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MenuCameraManager>().AsSingle();
         }
     }
 }

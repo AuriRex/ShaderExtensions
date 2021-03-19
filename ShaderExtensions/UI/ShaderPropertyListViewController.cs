@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static HMUI.TableView;
 
 namespace ShaderExtensions.UI
 {
@@ -337,7 +338,11 @@ namespace ShaderExtensions.UI
         #endregion
 
         [UIAction("#post-parse")]
-        protected void PostParse() => SetupList(null);
+        protected void PostParse() {
+            Logger.log.Debug("a");
+            SetupList(null);
+            Logger.log.Debug("b");
+        }
 
         internal void ShaderSelected(ShaderEffect sfx) => SetupList(sfx.material);
 
@@ -346,7 +351,7 @@ namespace ShaderExtensions.UI
         private void SetupList(Material mat, bool ScrollToTopOnEnable = true) {
             if (customListTableData == null) return;
             if(ScrollToTopOnEnable && customListTableData.tableView.numberOfCells >= 0)
-                customListTableData.tableView.ScrollToCellWithIdx(0,TableViewScroller.ScrollPositionType.Beginning, false);
+                customListTableData.tableView.ScrollToCellWithIdx(0, ScrollPositionType.Beginning, false);
             customListTableData.data.Clear();
             customListTableData.tableView.ClearSelection();
             _selection = -1;

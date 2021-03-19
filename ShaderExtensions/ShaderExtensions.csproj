@@ -45,6 +45,11 @@
     <DisableZipRelease>True</DisableZipRelease>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="BSML, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
@@ -162,6 +167,7 @@
     <Compile Include="Managers\ICameraManager.cs" />
     <Compile Include="Managers\MenuButtonManager.cs" />
     <Compile Include="Managers\CameraManager.cs" />
+    <Compile Include="Managers\MenuCameraManager.cs" />
     <Compile Include="Managers\ShaderAssetLoader.cs" />
     <Compile Include="Managers\ShaderCore.cs" />
     <Compile Include="Managers\ShaderEventManager.cs" />

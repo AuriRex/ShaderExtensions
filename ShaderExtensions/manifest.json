@@ -3,9 +3,9 @@
   "id": "ShaderExtensions",
   "name": "ShaderExtensions",
   "author": "AuriRex",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Add Post-Processing Shaders onto the player cameras!",
-  "gameVersion": "1.13.2",
+  "gameVersion": "1.13.4",
   "dependsOn": {
     "BSIPA": "^4.1.4",
     "SiraUtil": "^2.4.0",

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using IPA.Loader;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Zenject;
 
@@ -7,7 +9,7 @@ namespace ShaderExtensions.Managers
 {
     internal class CameraManager : ICameraManager, IInitializable, IDisposable
     {
-        private ShaderManager _shaderManager;
+        protected ShaderManager _shaderManager;
 
         [Inject]
         internal CameraManager(ShaderManager shaderManager) {
@@ -15,17 +17,17 @@ namespace ShaderExtensions.Managers
         }
 
         public Camera[] Cameras { get; private set; } = null;
-        private List<ShaderToCamOutput> _shaderToCamOutputList;
+        protected List<ShaderToCamOutput> _shaderToCamOutputList;
 
-        public void Initialize() {
+        public virtual void Initialize() {
             Logger.log.Debug("Initializing new CameraManager!");
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
             Refresh();
             _shaderManager.CameraManager = this;
         }
-        public void Dispose() {
+        public virtual void Dispose() {
             Logger.log.Debug("Disposing CameraManager!");
-            Clean();
+            //Clean();
             _shaderManager.CameraManager = null;
         }
 
@@ -43,7 +45,7 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public void AddMaterial(Material mat) {
+        public virtual void AddMaterial(Material mat) {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
                 if (!stco.Contains(mat)) {
                     stco.AddMaterial(mat);
@@ -51,13 +53,13 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public void ApplyMaterials(List<Material> matList) {
+        public virtual void ApplyMaterials(List<Material> matList) {
             foreach (Material mat in matList) {
                 AddMaterial(mat);
             }
         }
 
-        public void RemoveMaterial(Material mat) {
+        public virtual void RemoveMaterial(Material mat) {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
                 if (stco.Contains(mat)) {
                     stco.RemoveMaterial(mat);
@@ -65,18 +67,33 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public void ClearAllMaterials() {
+        public virtual void ClearAllMaterials() {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
                 stco.ClearAllMaterials();
             }
         }
 
-        public void Refresh() {
-            Cameras = Camera.allCameras;
+        public virtual void Refresh() {
+            PluginMetadata cameraTwo = PluginManager.GetPluginFromId("Camera2");
+            if (cameraTwo != null) {
+                List<Camera> cameras = new List<Camera>();
+                Type cam2Type = cameraTwo?.Assembly.GetType("Camera2.Behaviours.Cam2");
+                MonoBehaviour[] allCam2s = GameObject.FindObjectsOfType(cam2Type) as MonoBehaviour[];
+                foreach (MonoBehaviour cam2 in allCam2s) {
+                    var camera = cam2Type.GetProperty("UCamera", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(cam2, null) as Camera;
+                    if (camera != null) {
+                        cameras.Add(camera);
+                    }
+                }
+                cameras.AddRange(Camera.allCameras);
+                Cameras = cameras.ToArray();
+            } else {
+                Cameras = Camera.allCameras;
+            }
             OnCameraRefreshDone();
         }
 
-        internal void Clean() {
+        internal virtual void Clean() {
             if (Cameras != null) {
                 foreach (Camera cam in Cameras) {
                     if (cam == null) continue;

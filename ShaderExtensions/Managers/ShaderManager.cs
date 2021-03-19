@@ -23,6 +23,7 @@ namespace ShaderExtensions.Managers
                 } else {
                     if (value == null) {
                         _currentCameraManager = _menuCameraManager;
+                        _menuCameraManager.Refresh();
                         OnMenuCameraManagerReset();
                     } else {
                         _currentCameraManager = value;
