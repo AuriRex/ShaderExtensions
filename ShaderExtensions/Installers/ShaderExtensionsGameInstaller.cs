@@ -6,7 +6,8 @@ namespace ShaderExtensions.Installers
     internal class ShaderExtensionsGameInstaller : Installer<ShaderExtensionsGameInstaller>
     {
         public override void InstallBindings() {
-            Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle();
+            //Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
             Container.BindInterfacesAndSelfTo<ShaderEventManager>().AsSingle();
         }
     }

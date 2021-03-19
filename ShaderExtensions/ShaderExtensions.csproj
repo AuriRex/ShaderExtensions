@@ -167,7 +167,7 @@
     <Compile Include="Managers\ICameraManager.cs" />
     <Compile Include="Managers\MenuButtonManager.cs" />
     <Compile Include="Managers\CameraManager.cs" />
-    <Compile Include="Managers\MenuCameraManager.cs" />
+    <Compile Include="Managers\GameController.cs" />
     <Compile Include="Managers\ShaderAssetLoader.cs" />
     <Compile Include="Managers\ShaderCore.cs" />
     <Compile Include="Managers\ShaderEventManager.cs" />

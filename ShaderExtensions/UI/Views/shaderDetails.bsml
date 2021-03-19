@@ -1,5 +1,5 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <tab-selector tab-tag='new-tab' size-delta-y='7' />
+﻿<bg vertical-fit='PreferredSize' horizontal-fit='PreferredSize' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <tab-selector tab-tag='new-tab' size-delta-y='7' anchor-pos-y='-30' anchor-pos-x='-45' />
   <tab tags='new-tab' tab-name='Shader Description'>
     <horizontal pref-height='50' pref-width='90' anchor-pos-y='1' size-delta-y='50' size-delta-x='90' horizontal-fit='Unconstrained'>
       <vertical vertical-fit='Unconstrained' pad='5' bg='round-rect-panel' bg-color='#151515'>
@@ -29,12 +29,12 @@
       </vertical>
     </horizontal>
   </tab>
-  <tab tags='new-tab' tab-name='Settings'>
+  <tab tags='new-tab' tab-name='Debug Settings'>
     <horizontal pref-height='30' pref-width='60' anchor-pos-y='1' size-delta-y='30' size-delta-x='60'>
       <vertical spacing='1' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad='5' bg='round-rect-panel' bg-color='purple'>
         
-        <checkbox-setting text='Clear Effects after returning to Menu' value='clear-on-beat' apply-on-change='true' hover-hint='Boop'/>
-        <checkbox-setting text='Clear Preview Effects' value='clear-on-back-button' apply-on-change='true' hover-hint='Disable this if you want to play a map/chart with shaders selected here!'/>
+        <checkbox-setting text='Clear after returning to Menu' value='clear-on-beat' apply-on-change='true' hover-hint='Boop'/>
+        <checkbox-setting text='Clear preview effects' value='clear-on-back-button' apply-on-change='true' hover-hint='Disable this if you want to play a map/chart with shaders selected here!'/>
 
       </vertical>
     </horizontal>

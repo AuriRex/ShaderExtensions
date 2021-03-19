@@ -265,9 +265,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("num-event-minus")]
-        public void NumEventSign() {
-            NumpadValuePositive = !NumpadValuePositive;
-        }
+        public void NumEventSign() => NumpadValuePositive = !NumpadValuePositive;
 
         [UIAction("num-event-back")]
         public void NumEventBack() {
@@ -289,9 +287,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("num-event-clear")]
-        public void NumEventClear() {
-            NumpadValue = string.Empty;
-        }
+        public void NumEventClear() => NumpadValue = string.Empty;
 
         private void NumpadModalRoot_blockerClickedEvent() {
             if(!_numpad_cancelOnClickoff) {
@@ -452,9 +448,7 @@ namespace ShaderExtensions.UI
             SetupList(_currentMat, false);
         }
 
-        protected void OnCanceled() {
-            customListTableData.tableView.ClearSelection();
-        }
+        protected void OnCanceled() => customListTableData.tableView.ClearSelection();
 
         [UIAction("keyboard-enter")]
         protected void OnKeyboardEnterPressed(string text) {
@@ -498,9 +492,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("color-picker-cancel")]
-        protected void OnColorPickerCancel() {
-            customListTableData.tableView.ClearSelection();
-        }
+        protected void OnColorPickerCancel() => customListTableData.tableView.ClearSelection();
 
     }
 }

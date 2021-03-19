@@ -1,4 +1,4 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+﻿<bg vertical-fit='PreferredSize' horizontal-fit='PreferredSize' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <modal-keyboard value='keyboard-value' on-enter='keyboard-enter' clear-on-open='true' show-event='show-keyboard' hide-event='hide-keyboard' clickerino-offerino-closerino='true'>
   </modal-keyboard>
   <modal-color-picker value='color-picker-value' on-done='color-picker-done' on-cancel='color-picker-cancel' show-event='show-color-picker' hide-event='hide-color-picker' clickerino-offerino-closerino='true'>

@@ -24,23 +24,20 @@ namespace ShaderExtensions.UI
             _shaderDetailsView = shaderDetailsViewController;
             _pluginConfig = pluginConfig;
             _shaderManager = shaderManager;
-            Logger.log.Debug("const");
         }
-        protected override void InitialViewControllerWasPresented() {
-            Logger.log.Debug("InitialViewControllerWasPresented");
-        }
+
+        protected override void InitialViewControllerWasPresented() => Logger.log.Debug("InitialViewControllerWasPresented");
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
             if (firstActivation) {
                 SetTitle("Screen Space Shaders");
                 showBackButton = true;
             }
-            Logger.log.Debug("activating");
             _shaderListView.shaderSelected += _shaderDetailsView.ShaderSelected;
             _shaderListView.shaderSelected += _shaderProperyListView.ShaderSelected;
             _shaderListView.shadersCleared += _shaderProperyListView.ShaderSelectionCleared;
             ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
-            Logger.log.Debug("boop");
+            _shaderManager.CameraManager.Refresh();
         }
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) {
@@ -53,6 +50,10 @@ namespace ShaderExtensions.UI
         protected override void BackButtonWasPressed(ViewController topViewController) {
             if(_pluginConfig.ClearPreviewEffects) {
                 _shaderManager.ClearAllMaterials();
+            }
+            else
+            {
+                _shaderManager.CameraManager?.ClearAllMaterials();
             }
             _mainFlow.DismissFlowCoordinator(this, null);
         } 

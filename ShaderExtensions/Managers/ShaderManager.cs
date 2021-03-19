@@ -12,28 +12,7 @@ namespace ShaderExtensions.Managers
 
         internal Dictionary<string, Material> MaterialCache { get; private set; }
 
-        private ICameraManager _currentCameraManager;
-        private ICameraManager _menuCameraManager;
-        public ICameraManager CameraManager {
-            get => _currentCameraManager;
-            internal set {
-                if (_menuCameraManager == null) {
-                    _menuCameraManager = value;
-                    _currentCameraManager = value;
-                } else {
-                    if (value == null) {
-                        _currentCameraManager = _menuCameraManager;
-                        _menuCameraManager.Refresh();
-                        OnMenuCameraManagerReset();
-                    } else {
-                        _currentCameraManager = value;
-                        value.Refresh();
-                        (value as CameraManager).ClearAllMaterials();
-                    }
-                }
-                RefreshMaterials();
-            }
-        }
+        public ICameraManager CameraManager { get; private set; }
 
         [Inject]
         internal ShaderManager(ShaderAssetLoader shaderAssetLoader, PluginConfig pluginConfig) {
@@ -41,19 +20,16 @@ namespace ShaderExtensions.Managers
             _pluginConfig = pluginConfig;
         }
 
-        private void OnMenuCameraManagerReset() {
-            CameraManager?.ClearAllMaterials();
-            if (_pluginConfig.ClearEffectsOnLevelCompletion) {
-                MaterialCache = new Dictionary<string, Material>();
-            }
+        [Inject]
+        internal void Construct(CameraManager cameraManager)
+        {
+            CameraManager = cameraManager;
         }
 
         /// <summary>
         /// Refreshes all active cameras
         /// </summary>
-        public void RefreshCameraManager() {
-            CameraManager?.Refresh();
-        }
+        public void RefreshCameraManager() => CameraManager?.Refresh();
 
         /// <summary>
         /// Re-applies all added Materials to every rendering cameras
@@ -105,9 +81,7 @@ namespace ShaderExtensions.Managers
             return mat;
         }
 
-        public List<Material> GetAllMaterials() {
-            return new List<Material>(MaterialCache.Values);
-        }
+        public List<Material> GetAllMaterials() => new List<Material>(MaterialCache.Values);
 
         /// <summary>
         /// Removes the Material with the specified identifier id and ShaderEffect sfx
@@ -115,9 +89,7 @@ namespace ShaderExtensions.Managers
         /// <param name="id">the id to look for</param>
         /// <param name="sfx">the shader to look for</param>
         /// <returns>If the Material has been removed</returns>
-        public bool RemoveMaterial(string id, ShaderEffect sfx) {
-            return RemoveMaterial(GetFID(id, sfx));
-        }
+        public bool RemoveMaterial(string id, ShaderEffect sfx) => RemoveMaterial(GetFID(id, sfx));
 
         internal bool RemoveMaterial(string fullId) {
             if (fullId == null) return false;
@@ -126,6 +98,30 @@ namespace ShaderExtensions.Managers
                 return MaterialCache.Remove(fullId);
             }
             return false;
+        }
+
+        internal void OnGameStart()
+        {
+            Refresh();
+        }
+
+        internal void OnGameQuit()
+        {
+            if (_pluginConfig.ClearEffectsOnLevelCompletion)
+            {
+                CameraManager?.ClearAllMaterials();
+                MaterialCache = new Dictionary<string, Material>();
+            }
+        }
+
+        internal void OnMenuCamEnable()
+        {
+            OnGameQuit();
+        }
+
+        internal void OnMenuCamDisable()
+        {
+
         }
 
         /// <summary>
@@ -154,9 +150,7 @@ namespace ShaderExtensions.Managers
         /// <param name="id">the id to look for</param>
         /// <param name="sfx">the shader to look for</param>
         /// <returns>The Material or null</returns>
-        internal Material GetMaterial(string id, ShaderEffect sfx) {
-            return GetMaterial(GetFID(id, sfx));
-        }
+        internal Material GetMaterial(string id, ShaderEffect sfx) => GetMaterial(GetFID(id, sfx));
 
         private Material GetMaterial(string fullId) {
             if (MaterialCache.ContainsKey(fullId)) {

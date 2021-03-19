@@ -18,13 +18,9 @@ namespace ShaderExtensions.Managers
             _pluginConfig = pluginConfig;
         }
 
-        public void Initialize() {
-            RegisterCapabilty();
-        }
+        public void Initialize() => RegisterCapabilty();
 
-        public void Dispose() {
-            RegisterCapabilty(false);
-        }
+        public void Dispose() => RegisterCapabilty(false);
 
         internal bool ShouldEnableShaderEvents(IDifficultyBeatmap difficultyBeatmap) {
             if (difficultyBeatmap == null) return false;

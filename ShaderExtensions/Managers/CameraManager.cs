@@ -20,20 +20,16 @@ namespace ShaderExtensions.Managers
         protected List<ShaderToCamOutput> _shaderToCamOutputList;
 
         public virtual void Initialize() {
-            Logger.log.Debug("Initializing new CameraManager!");
+            Logger.log.Debug("Initializing CameraManager!");
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
-            Refresh();
-            _shaderManager.CameraManager = this;
         }
         public virtual void Dispose() {
             Logger.log.Debug("Disposing CameraManager!");
-            //Clean();
-            _shaderManager.CameraManager = null;
+            Clean();
         }
 
-        private void OnCameraRefreshDone() {
+        private void GetOrAddShaderBehaviours() {
             _shaderToCamOutputList = new List<ShaderToCamOutput>();
-
             foreach (Camera cam in Cameras) {
                 Logger.log.Debug(cam.name);
                 if (cam.name.EndsWith(".cfg")) continue;
@@ -47,6 +43,7 @@ namespace ShaderExtensions.Managers
 
         public virtual void AddMaterial(Material mat) {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
+                if (stco == null) continue;
                 if (!stco.Contains(mat)) {
                     stco.AddMaterial(mat);
                 }
@@ -61,6 +58,7 @@ namespace ShaderExtensions.Managers
 
         public virtual void RemoveMaterial(Material mat) {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
+                if (stco == null) continue;
                 if (stco.Contains(mat)) {
                     stco.RemoveMaterial(mat);
                 }
@@ -69,6 +67,7 @@ namespace ShaderExtensions.Managers
 
         public virtual void ClearAllMaterials() {
             foreach (ShaderToCamOutput stco in _shaderToCamOutputList) {
+                if (stco == null) continue;
                 stco.ClearAllMaterials();
             }
         }
@@ -90,7 +89,7 @@ namespace ShaderExtensions.Managers
             } else {
                 Cameras = Camera.allCameras;
             }
-            OnCameraRefreshDone();
+            GetOrAddShaderBehaviours();
         }
 
         internal virtual void Clean() {

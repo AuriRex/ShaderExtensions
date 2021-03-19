@@ -17,6 +17,7 @@ namespace ShaderExtensions.Installers
             Container.BindInterfacesAndSelfTo<ShaderAssetLoader>().AsSingle();
             Container.BindInterfacesAndSelfTo<ShaderManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<ShaderCore>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle().WhenInjectedInto<ShaderManager>();
         }
     }
 }
