@@ -12,7 +12,8 @@ using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
 namespace ShaderExtensions.Managers
 {
-    public class ShaderEventManager : IInitializable, IDisposable {
+    public class ShaderEventManager : IInitializable, IDisposable
+    {
         private ShaderCore _shaderCore;
         private ShaderManager _shaderManager;
         private PluginConfig _pluginConfig;
@@ -27,7 +28,8 @@ namespace ShaderExtensions.Managers
         public bool IsEnabled { get; private set; } = false;
 
         [Inject]
-        internal ShaderEventManager(DiContainer Container, ShaderCore shaderCore, ShaderManager shaderManager, PluginConfig pluginConfig, [InjectOptional] BeatmapObjectSpawnController beatmapObjectSpawnController, [InjectOptional] IDifficultyBeatmap difficultyBeatmap) {
+        internal ShaderEventManager(DiContainer Container, ShaderCore shaderCore, ShaderManager shaderManager, PluginConfig pluginConfig, [InjectOptional] BeatmapObjectSpawnController beatmapObjectSpawnController, [InjectOptional] IDifficultyBeatmap difficultyBeatmap)
+        {
             _container = Container;
 
             _shaderCore = shaderCore;
@@ -38,10 +40,12 @@ namespace ShaderExtensions.Managers
             _difficultyBeatmap = difficultyBeatmap;
         }
 
-        internal void CustomEventCallbackInit(CustomEventCallbackController customEventCallbackController) {
+        internal void CustomEventCallbackInit(CustomEventCallbackController customEventCallbackController)
+        {
             Logger.log.Debug("CustomEventCallbackController: " + customEventCallbackController);
 
-            if(!_shaderCore.ShouldEnableShaderEvents(_difficultyBeatmap)) {
+            if (!_shaderCore.ShouldEnableShaderEvents(_difficultyBeatmap))
+            {
                 IsEnabled = false;
                 Logger.log.Debug("Shader Extensions Requirement / Suggestion NOT set, disabling Shader Event Handler!");
                 return;
@@ -59,11 +63,14 @@ namespace ShaderExtensions.Managers
 
         private List<List<ShaderCommand>> _shaderCommandLists;
 
-        private void ShaderEventCallback(CustomEventData customEventData) {
+        private void ShaderEventCallback(CustomEventData customEventData)
+        {
             if (customEventData.data == null) return;
-            try {
+            try
+            {
                 TreeDict eventData;
-                switch (customEventData.type) {
+                switch (customEventData.type)
+                {
                     case EventTypeShader:
                         //Logger.log?.Debug("Shader event received!");
 
@@ -71,36 +78,45 @@ namespace ShaderExtensions.Managers
 
                         object res = Trees.At(eventData, "_shaders");
                         List<object> shaders;
-                        if (res != null) {
+                        if (res != null)
+                        {
                             shaders = res as List<object>;
-                        } else {
+                        }
+                        else
+                        {
                             shaders = new List<object>();
                         }
 
                         List<ShaderCommand> scList = new List<ShaderCommand>();
 
-                        foreach (TreeDict shader in shaders) {
+                        foreach (TreeDict shader in shaders)
+                        {
                             scList.Add(new ShaderCommand(shader));
                         }
 
-                        foreach (ShaderCommand sc in scList) {
+                        foreach (ShaderCommand sc in scList)
+                        {
 
                             ShaderEffect sfx = _shaderManager.GetShaderEffectByReferenceName(sc.ReferenceName);
 
-                            if (sfx != null) {
+                            if (sfx != null)
+                            {
 
                                 sc.ShaderEffect = sfx;
 
                                 Material mat = _shaderManager.GetMaterial(sc.ID, sfx);
 
-                                if (mat == null) {
+                                if (mat == null)
+                                {
                                     mat = _shaderManager.AddMaterial(sc.ID, sfx);
                                 }
 
                                 sc.Material = mat;
 
                                 StartEventCoroutine(sc, customEventData.time);
-                            } else {
+                            }
+                            else
+                            {
                                 Logger.log.Error($"Unknown Shader reference used: '{sc.ReferenceName}'!");
                             }
 
@@ -111,17 +127,21 @@ namespace ShaderExtensions.Managers
                         string refName;
                         eventData = new Dictionary<string, object>(customEventData.data as TreeDict);
                         clearId = Trees.At(eventData, "_clearID");
-                        if(clearId == null) {
+                        if (clearId == null)
+                        {
                             clearId = Trees.At(eventData, "_clearId");
                         }
                         refName = Trees.At(eventData, "_ref");
                         Logger.log.Debug($"ShaderClear at : {customEventData.time / 60 * _beatmapObjectSpawnController.currentBpm}");
                         Logger.log.Debug($"_clearId : {clearId}");
                         Logger.log.Debug($"_ref : {refName}");
-                        if (clearId != null) {
-                            if(clearId.Equals("*")) {
+                        if (clearId != null)
+                        {
+                            if (clearId.Equals("*"))
+                            {
                                 List<Material> removedMats = _shaderManager.ClearAllMaterials();
-                                if(removedMats.Count > 0) {
+                                if (removedMats.Count > 0)
+                                {
                                     Logger.log.Debug($"Clearing all {removedMats.Count} Materials!");
                                     StopAllCoroutinesModifyingMaterials(removedMats);
                                 }
@@ -131,18 +151,25 @@ namespace ShaderExtensions.Managers
 
                             Logger.log.Debug($"sfx reference Name : {sfx?.referenceName}");
 
-                            if (sfx != null) {
+                            if (sfx != null)
+                            {
 
-                                if(!_shaderManager.RemoveMaterial(clearId, sfx)) {
+                                if (!_shaderManager.RemoveMaterial(clearId, sfx))
+                                {
                                     Logger.log.Notice($"Tried to remove a Shader with an ID that doesn't exist: '{clearId}' at time (in beats) {customEventData.time / 60 * _beatmapObjectSpawnController.currentBpm}!");
                                 }
 
-                            } else {
+                            }
+                            else
+                            {
                                 Logger.log.Debug($"trying to remove all with clearId");
                                 List<Material> removedMats = _shaderManager.RemoveAllMaterialsStartingWithId(clearId);
-                                if (removedMats.Count == 0) {
+                                if (removedMats.Count == 0)
+                                {
                                     Logger.log.Notice($"Tried to remove all Shaders starting with an ID that doesn't exist: '{clearId}' at time (in beats) {customEventData.time / 60 * _beatmapObjectSpawnController.currentBpm}!");
-                                } else {
+                                }
+                                else
+                                {
                                     Logger.log.Debug($"Clearing {removedMats.Count} Materials with starting ID {clearId}!");
                                     StopAllCoroutinesModifyingMaterials(removedMats);
                                 }
@@ -152,15 +179,19 @@ namespace ShaderExtensions.Managers
                     default:
                         break;
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Logger.log.Error($"{nameof(ShaderEventManager)} encountered an exception at time (in beats) {customEventData.time / 60 * _beatmapObjectSpawnController.currentBpm}: {ex.Message}");
                 Logger.log.Error(ex.StackTrace);
             }
         }
 
-        internal void StartEventCoroutine(ShaderCommand shaderCommand, float startTime) {
+        internal void StartEventCoroutine(ShaderCommand shaderCommand, float startTime)
+        {
 
-            if (shaderCommand.Material == null) {
+            if (shaderCommand.Material == null)
+            {
                 Logger.log.Error("ShaderCommand with null material!");
                 return;
             }
@@ -169,7 +200,8 @@ namespace ShaderExtensions.Managers
                 float duration = sp.Duration;
                 duration = 60f * duration / _beatmapObjectSpawnController.currentBpm;
 
-                if (!shaderCommand.Material.HasProperty(sp.Property)) {
+                if (!shaderCommand.Material.HasProperty(sp.Property))
+                {
                     Logger.log.Error("ShaderCommand \"" + shaderCommand.ID + "\" wants to set a nonexistant property \"" + sp.Property + "\" for material \"" + shaderCommand.ReferenceName + "\"!");
                     return;
                 }
@@ -180,19 +212,24 @@ namespace ShaderExtensions.Managers
 
         }
 
-        private IEnumerator ShaderEventCoroutine(ShaderProperty property, float startTime, float duration, Functions easing) {
-            if (property == null) {
+        private IEnumerator ShaderEventCoroutine(ShaderProperty property, float startTime, float duration, Functions easing)
+        {
+            if (property == null)
+            {
                 Logger.log.Error("ShaderEventCoroutine received null ShaderProperty!");
                 yield return null;
             }
-            while (true) {
+            while (true)
+            {
                 float elapsedTime = _customEventCallbackController._audioTimeSource.songTime - startTime;
                 float time = Easings.Interpolate(Mathf.Min(elapsedTime / duration, 1f), easing);
 
                 PointDefinition points = property.Points;
 
-                if (points != null) {
-                    switch (property.PropertyType) {
+                if (points != null)
+                {
+                    switch (property.PropertyType)
+                    {
                         case PropertyType.Linear:
                             property.SetValue(points.InterpolateLinear(time));
                             break;
@@ -209,18 +246,25 @@ namespace ShaderExtensions.Managers
                             property.Value = points.InterpolateQuaternion(time);
                             break;
                     }
-                } else {
+                }
+                else
+                {
                     Logger.log.Error("ShaderEventCoroutine: ShaderCommand with id \"" + property.ParentCommand.ID + "\" and _ref \"" + property.ParentCommand.ReferenceName + "\" has invalid points at \"" + property.Property + "\"!");
                 }
 
-                if (elapsedTime < duration) {
+                if (elapsedTime < duration)
+                {
                     yield return null;
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
-            if(property.IsLast && property.ParentCommand.ClearAfterLastPropIsDone) {
-                if(!_shaderManager.RemoveMaterial(property.ParentCommand.ID, property.ParentCommand.ShaderEffect)) {
+            if (property.IsLast && property.ParentCommand.ClearAfterLastPropIsDone)
+            {
+                if (!_shaderManager.RemoveMaterial(property.ParentCommand.ID, property.ParentCommand.ShaderEffect))
+                {
                     Logger.log.Error($"Tried to remove a Shader with an ID that doesn't exist: '{property.ParentCommand.ID}' at time (in beats) {_customEventCallbackController._audioTimeSource.songTime / 60 * _beatmapObjectSpawnController.currentBpm}!");
                 }
                 StopAllCoroutinesModifyingMaterials(new List<Material>() { property.ParentCommand.Material });
@@ -233,12 +277,17 @@ namespace ShaderExtensions.Managers
         /// WARNING: Passing null stops EVERY Coroutine for ALL Materials!
         /// </summary>
         /// <param name="mats">The Material List</param>
-        private void StopAllCoroutinesModifyingMaterials(List<Material> mats) {
-            foreach(List<ShaderCommand> shaderCommandList in _shaderCommandLists) {
-                foreach(ShaderCommand shaderCommand in shaderCommandList) {
-                    if(mats == null || mats.Contains(shaderCommand.Material)) {
+        private void StopAllCoroutinesModifyingMaterials(List<Material> mats)
+        {
+            foreach (List<ShaderCommand> shaderCommandList in _shaderCommandLists)
+            {
+                foreach (ShaderCommand shaderCommand in shaderCommandList)
+                {
+                    if (mats == null || mats.Contains(shaderCommand.Material))
+                    {
                         shaderCommand.Properties.getProps().ForEach(sp => {
-                            if(sp.Coroutine != null) {
+                            if (sp.Coroutine != null)
+                            {
                                 SharedCoroutineStarter.instance.StopCoroutine(sp.Coroutine);
                                 sp.Coroutine = null;
                             }
@@ -248,14 +297,17 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        public void Initialize() {
+        public void Initialize()
+        {
             CustomEventCallbackController.customEventCallbackControllerInit += CustomEventCallbackInit;
             _shaderCommandLists = new List<List<ShaderCommand>>();
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             CustomEventCallbackController.customEventCallbackControllerInit -= CustomEventCallbackInit;
-            if (_customEventCallbackData != null) {
+            if (_customEventCallbackData != null)
+            {
                 _customEventCallbackController.RemoveBeatmapEventCallback(_customEventCallbackData);
             }
         }

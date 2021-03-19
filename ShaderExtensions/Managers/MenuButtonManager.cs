@@ -18,7 +18,8 @@ namespace ShaderExtensions.Managers
 
         private bool _buttonIsRegistered = false;
 
-        public MenuButtonManager(MainFlowCoordinator mainFlowCoordinator, PluginConfig pluginConfig, ShadersFlowCoordinator shadersFlowCoordinator, ShaderManager shaderManager) {
+        public MenuButtonManager(MainFlowCoordinator mainFlowCoordinator, PluginConfig pluginConfig, ShadersFlowCoordinator shadersFlowCoordinator, ShaderManager shaderManager)
+        {
             _mainFlowCoordinator = mainFlowCoordinator;
             _pluginConfig = pluginConfig;
             _shadersFlowCoordinator = shadersFlowCoordinator;
@@ -27,16 +28,20 @@ namespace ShaderExtensions.Managers
             //_clearEffectButton = new MenuButton("[SE] Clear", "Clear all camera effects", ClearAllMaterialsButton, true);
         }
 
-        public void Initialize() {
-            if(_pluginConfig.ShowMenuButton) {
+        public void Initialize()
+        {
+            if (_pluginConfig.ShowMenuButton)
+            {
                 MenuButtons.instance.RegisterButton(_menuButton);
                 //MenuButtons.instance.RegisterButton(_clearEffectButton);
                 _buttonIsRegistered = true;
             }
         }
 
-        public void Dispose() {
-            if (MenuButtons.IsSingletonAvailable && _buttonIsRegistered) {
+        public void Dispose()
+        {
+            if (MenuButtons.IsSingletonAvailable && _buttonIsRegistered)
+            {
                 MenuButtons.instance.UnregisterButton(_menuButton);
                 //MenuButtons.instance.UnregisterButton(_clearEffectButton);
             }

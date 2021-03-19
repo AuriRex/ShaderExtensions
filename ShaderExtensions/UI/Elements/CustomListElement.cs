@@ -9,10 +9,13 @@ namespace ShaderExtensions.UI.Elements
         public event PropertyChangedEventHandler? PropertyChanged;
 #nullable restore annotations
 
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
-            try {
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            try
+            {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            } catch { }
+            }
+            catch { }
         }
     }
 }

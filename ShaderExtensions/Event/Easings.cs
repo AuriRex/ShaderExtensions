@@ -62,8 +62,10 @@
         /// <summary>
         /// Interpolate using the specified function.
         /// </summary>
-        internal static float Interpolate(float p, Functions function) {
-            switch (function) {
+        internal static float Interpolate(float p, Functions function)
+        {
+            switch (function)
+            {
                 default:
                 case Functions.easeLinear: return EaseLinear(p);
                 case Functions.easeStep: return EaseStep(p);
@@ -125,10 +127,14 @@
         /// y = (1/2)((2x)^2)             ; [0, 0.5)
         /// y = -(1/2)((2x-1)*(2x-3) - 1) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutQuad(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutQuad(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 2 * p * p;
-            } else {
+            }
+            else
+            {
                 return (-2 * p * p) + (4 * p) - 1;
             }
         }
@@ -141,7 +147,8 @@
         /// <summary>
         /// Modeled after the cubic y = (x - 1)^3 + 1
         /// </summary>
-        internal static float EaseOutCubic(float p) {
+        internal static float EaseOutCubic(float p)
+        {
             float f = p - 1;
             return (f * f * f) + 1;
         }
@@ -151,10 +158,14 @@
         /// y = (1/2)((2x)^3)       ; [0, 0.5)
         /// y = (1/2)((2x-2)^3 + 2) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutCubic(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutCubic(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 4 * p * p * p;
-            } else {
+            }
+            else
+            {
                 float f = (2 * p) - 2;
                 return (0.5f * f * f * f) + 1;
             }
@@ -168,7 +179,8 @@
         /// <summary>
         /// Modeled after the quart y = 1 - (x - 1)^4
         /// </summary>
-        internal static float EaseOutQuart(float p) {
+        internal static float EaseOutQuart(float p)
+        {
             float f = p - 1;
             return (f * f * f * (1 - p)) + 1;
         }
@@ -178,10 +190,14 @@
         /// y = (1/2)((2x)^4)        ; [0, 0.5)
         /// y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutQuart(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutQuart(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 8 * p * p * p * p;
-            } else {
+            }
+            else
+            {
                 float f = p - 1;
                 return (-8 * f * f * f * f) + 1;
             }
@@ -195,7 +211,8 @@
         /// <summary>
         /// Modeled after the quint y = (x - 1)^5 + 1
         /// </summary>
-        internal static float EaseOutQuint(float p) {
+        internal static float EaseOutQuint(float p)
+        {
             float f = p - 1;
             return (f * f * f * f * f) + 1;
         }
@@ -205,10 +222,14 @@
         /// y = (1/2)((2x)^5)       ; [0, 0.5)
         /// y = (1/2)((2x-2)^5 + 2) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutQuint(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutQuint(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 16 * p * p * p * p * p;
-            } else {
+            }
+            else
+            {
                 float f = (2 * p) - 2;
                 return (0.5f * f * f * f * f * f) + 1;
             }
@@ -244,10 +265,14 @@
         /// y = (1/2)(1 - Math.Sqrt(1 - 4x^2))           ; [0, 0.5)
         /// y = (1/2)(Math.Sqrt(-(2x - 3)*(2x - 1)) + 1) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutCirc(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutCirc(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 0.5f * (1 - Math.Sqrt(1 - (4 * (p * p))));
-            } else {
+            }
+            else
+            {
                 return 0.5f * (Math.Sqrt(-((2 * p) - 3) * ((2 * p) - 1)) + 1);
             }
         }
@@ -267,14 +292,19 @@
         /// y = (1/2)2^(10(2x - 1))         ; [0,0.5)
         /// y = -(1/2)*2^(-10(2x - 1))) + 1 ; [0.5,1]
         /// </summary>
-        internal static float EaseInOutExpo(float p) {
-            if (p == 0.0 || p == 1.0) {
+        internal static float EaseInOutExpo(float p)
+        {
+            if (p == 0.0 || p == 1.0)
+            {
                 return p;
             }
 
-            if (p < 0.5f) {
+            if (p < 0.5f)
+            {
                 return 0.5f * Math.Pow(2, (20 * p) - 10);
-            } else {
+            }
+            else
+            {
                 return (-0.5f * Math.Pow(2, (-20 * p) + 10)) + 1;
             }
         }
@@ -294,10 +324,14 @@
         /// y = (1/2)*sin(13pi/2*(2*x))*Math.Pow(2, 10 * ((2*x) - 1))      ; [0,0.5)
         /// y = (1/2)*(sin(-13pi/2*((2x-1)+1))*Math.Pow(2,-10(2*x-1)) + 2) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutElastic(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutElastic(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 0.5f * Math.Sin(13 * HALFPI * (2 * p)) * Math.Pow(2, 10 * ((2 * p) - 1));
-            } else {
+            }
+            else
+            {
                 return 0.5f * ((Math.Sin(-13 * HALFPI * (2 * p)) * Math.Pow(2, -10 * ((2 * p) - 1))) + 2);
             }
         }
@@ -310,7 +344,8 @@
         /// <summary>
         /// Modeled after overshooting cubic y = 1-((1-x)^3-(1-x)*sin((1-x)*pi))
         /// </summary>
-        internal static float EaseOutBack(float p) {
+        internal static float EaseOutBack(float p)
+        {
             float f = 1 - p;
             return 1 - ((f * f * f) - (f * Math.Sin(f * PI)));
         }
@@ -320,11 +355,15 @@
         /// y = (1/2)*((2x)^3-(2x)*sin(2*x*pi))           ; [0, 0.5)
         /// y = (1/2)*(1-((1-x)^3-(1-x)*sin((1-x)*pi))+1) ; [0.5, 1]
         /// </summary>
-        internal static float EaseInOutBack(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutBack(float p)
+        {
+            if (p < 0.5f)
+            {
                 float f = 2 * p;
                 return 0.5f * ((f * f * f) - (f * Math.Sin(f * PI)));
-            } else {
+            }
+            else
+            {
                 float f = 1 - ((2 * p) - 1);
                 return (0.5f * (1 - ((f * f * f) - (f * Math.Sin(f * PI))))) + 0.5f;
             }
@@ -332,22 +371,34 @@
 
         internal static float EaseInBounce(float p) => 1 - EaseOutBounce(1 - p);
 
-        internal static float EaseOutBounce(float p) {
-            if (p < 4 / 11.0f) {
+        internal static float EaseOutBounce(float p)
+        {
+            if (p < 4 / 11.0f)
+            {
                 return 121 * p * p / 16.0f;
-            } else if (p < 8 / 11.0f) {
+            }
+            else if (p < 8 / 11.0f)
+            {
                 return (363 / 40.0f * p * p) - (99 / 10.0f * p) + (17 / 5.0f);
-            } else if (p < 9 / 10.0f) {
+            }
+            else if (p < 9 / 10.0f)
+            {
                 return (4356 / 361.0f * p * p) - (35442 / 1805.0f * p) + (16061 / 1805.0f);
-            } else {
+            }
+            else
+            {
                 return (54 / 5.0f * p * p) - (513 / 25.0f * p) + (268 / 25.0f);
             }
         }
 
-        internal static float EaseInOutBounce(float p) {
-            if (p < 0.5f) {
+        internal static float EaseInOutBounce(float p)
+        {
+            if (p < 0.5f)
+            {
                 return 0.5f * EaseInBounce(p * 2);
-            } else {
+            }
+            else
+            {
                 return (0.5f * EaseOutBounce((p * 2) - 1)) + 0.5f;
             }
         }

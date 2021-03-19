@@ -19,7 +19,8 @@ namespace ShaderExtensions.UI
         private int _customPropertyCount = 0;
 
         [Inject]
-        public void Construct(PluginConfig pluginConfig, ShaderListViewController shaderListViewController) {
+        public void Construct(PluginConfig pluginConfig, ShaderListViewController shaderListViewController)
+        {
             _pluginConfig = pluginConfig;
             _shaderListViewController = shaderListViewController;
             Logger.log.Debug("const");
@@ -32,22 +33,26 @@ namespace ShaderExtensions.UI
         private ImageView _shaderIcon = null!;
 
         [UIValue("clear-on-beat")]
-        protected bool ClearOnBeat {
+        protected bool ClearOnBeat
+        {
             get => _pluginConfig.ClearEffectsOnLevelCompletion;
             set => _pluginConfig.ClearEffectsOnLevelCompletion = value;
         }
 
         [UIValue("clear-on-back-button")]
-        protected bool ClearOnBackButton {
+        protected bool ClearOnBackButton
+        {
             get => _pluginConfig.ClearPreviewEffects;
             set => _pluginConfig.ClearPreviewEffects = value;
         }
 
         private string _shadername = string.Empty;
         [UIValue("name")]
-        protected string ShaderName {
+        protected string ShaderName
+        {
             get => _shadername;
-            set {
+            set
+            {
                 _shadername = value;
                 NotifyPropertyChanged(nameof(ShaderName));
             }
@@ -55,9 +60,11 @@ namespace ShaderExtensions.UI
 
         private string _authorName = string.Empty;
         [UIValue("author")]
-        protected string AuthorName {
+        protected string AuthorName
+        {
             get => _authorName;
-            set {
+            set
+            {
                 _authorName = value;
                 NotifyPropertyChanged(nameof(AuthorName));
             }
@@ -65,9 +72,11 @@ namespace ShaderExtensions.UI
 
         private string _shaderReferenceName = string.Empty;
         [UIValue("shader-reference-name")]
-        protected string ShaderReferenceName {
+        protected string ShaderReferenceName
+        {
             get => _shaderReferenceName;
-            set {
+            set
+            {
                 _shaderReferenceName = value;
                 NotifyPropertyChanged(nameof(ShaderReferenceName));
             }
@@ -75,23 +84,28 @@ namespace ShaderExtensions.UI
 
         private string _shaderPropertyCountText = string.Empty;
         [UIValue("shader-property-count")]
-        protected string ShaderPropertyCountText {
+        protected string ShaderPropertyCountText
+        {
             get => _shaderPropertyCountText;
-            set {
+            set
+            {
                 _shaderPropertyCountText = value;
                 NotifyPropertyChanged(nameof(ShaderPropertyCountText));
             }
         }
 
-        [UIAction("#post-parse")] 
-        protected void PostParse() {
+        [UIAction("#post-parse")]
+        protected void PostParse()
+        {
             Logger.log.Debug("e");
             SetupDetails(null);
             Logger.log.Debug("f");
         }
 
-        private void SetupDetails(ShaderEffect sfx) {
-            if (sfx == null) {
+        private void SetupDetails(ShaderEffect sfx)
+        {
+            if (sfx == null)
+            {
                 _shaderIcon.sprite = SEUtilities.GetDefaultShaderIcon();
                 shaderDescription.SetText("Select a Shader!");
                 return;
@@ -103,20 +117,24 @@ namespace ShaderExtensions.UI
             //_usesPreviousFrameData = false;
             _customPropertyCount = 0;
 
-            if (mat != null) {
+            if (mat != null)
+            {
                 int propCount = mat.shader.GetPropertyCount();
                 _customPropertyCount = propCount;
                 ShaderPropertyType spt;
                 string propName = "";
 
-                for (int i = 0; i < propCount; i++) {
+                for (int i = 0; i < propCount; i++)
+                {
                     spt = mat.shader.GetPropertyType(i);
                     propName = mat.shader.GetPropertyName(i);
-                    if (propName.Equals("_MainTex")) {
+                    if (propName.Equals("_MainTex"))
+                    {
                         _customPropertyCount--;
                         continue;
                     }
-                    if (propName.Equals("_PrevMainTex")) {
+                    if (propName.Equals("_PrevMainTex"))
+                    {
                         _customPropertyCount--;
                         //_usesPreviousFrameData = true;
                         continue;

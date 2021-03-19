@@ -8,7 +8,8 @@ namespace ShaderExtensions.Managers
         private ShaderManager _shaderManager;
 
         [Inject]
-        internal GameController(ShaderManager shaderManager){
+        internal GameController(ShaderManager shaderManager)
+        {
             _shaderManager = shaderManager;
         }
 

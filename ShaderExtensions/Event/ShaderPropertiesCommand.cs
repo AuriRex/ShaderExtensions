@@ -10,10 +10,12 @@ namespace ShaderExtensions.Event
 
         private List<ShaderProperty> _propList;
 
-        public ShaderPropertiesCommand(List<object> list, ShaderCommand parent) {
+        public ShaderPropertiesCommand(List<object> list, ShaderCommand parent)
+        {
             _propList = new List<ShaderProperty>();
 
-            foreach (TreeDict d in list) {
+            foreach (TreeDict d in list)
+            {
 
                 string property = "" + Trees.At(d, "_prop");
 
@@ -23,9 +25,12 @@ namespace ShaderExtensions.Event
 
                 dynamic tmp = Trees.At(d, "_duration");
 
-                try {
+                try
+                {
                     duration = (float) tmp;
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     duration = -1;
                 }
 
@@ -33,7 +38,8 @@ namespace ShaderExtensions.Event
                 Functions easing = Functions.easeLinear;
 
                 string easingString = Trees.At(d, "_easing");
-                if (easingString != null) {
+                if (easingString != null)
+                {
                     easing = (Functions) Enum.Parse(typeof(Functions), easingString);
                 }
 

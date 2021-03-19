@@ -17,7 +17,8 @@ namespace ShaderExtensions.UI
         private ShaderManager _shaderManager;
 
         [Inject]
-        public void Construct(MainFlowCoordinator mainFlow, ShaderListViewController shaderListViewController, ShaderPropertyListViewController shaderPropertyListViewController, ShaderDetailsViewController shaderDetailsViewController, PluginConfig pluginConfig, ShaderManager shaderManager) {
+        public void Construct(MainFlowCoordinator mainFlow, ShaderListViewController shaderListViewController, ShaderPropertyListViewController shaderPropertyListViewController, ShaderDetailsViewController shaderDetailsViewController, PluginConfig pluginConfig, ShaderManager shaderManager)
+        {
             _mainFlow = mainFlow;
             _shaderListView = shaderListViewController;
             _shaderProperyListView = shaderPropertyListViewController;
@@ -28,8 +29,10 @@ namespace ShaderExtensions.UI
 
         protected override void InitialViewControllerWasPresented() => Logger.log.Debug("InitialViewControllerWasPresented");
 
-        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
-            if (firstActivation) {
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        {
+            if (firstActivation)
+            {
                 SetTitle("Screen Space Shaders");
                 showBackButton = true;
             }
@@ -40,15 +43,18 @@ namespace ShaderExtensions.UI
             _shaderManager.CameraManager.Refresh();
         }
 
-        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) {
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
+        {
             _shaderListView.shaderSelected -= _shaderDetailsView.ShaderSelected;
             _shaderListView.shaderSelected -= _shaderProperyListView.ShaderSelected;
             _shaderListView.shadersCleared -= _shaderProperyListView.ShaderSelectionCleared;
             base.DidDeactivate(removedFromHierarchy, screenSystemDisabling);
         }
 
-        protected override void BackButtonWasPressed(ViewController topViewController) {
-            if(_pluginConfig.ClearPreviewEffects) {
+        protected override void BackButtonWasPressed(ViewController topViewController)
+        {
+            if (_pluginConfig.ClearPreviewEffects)
+            {
                 _shaderManager.ClearAllMaterials();
             }
             else
@@ -56,7 +62,7 @@ namespace ShaderExtensions.UI
                 _shaderManager.CameraManager?.ClearAllMaterials();
             }
             _mainFlow.DismissFlowCoordinator(this, null);
-        } 
+        }
 
 
     }

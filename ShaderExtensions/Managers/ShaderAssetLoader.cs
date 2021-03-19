@@ -12,19 +12,22 @@ namespace ShaderExtensions.Managers
     {
         private PluginConfig _pluginConfig;
 
-        internal ShaderAssetLoader(PluginConfig pluginConfig) {
+        internal ShaderAssetLoader(PluginConfig pluginConfig)
+        {
             _pluginConfig = pluginConfig;
         }
 
         public void Initialize() => LoadShaders();
 
-        public void Dispose() {
+        public void Dispose()
+        {
 
         }
 
         IEnumerable<string> shaderFiles = Enumerable.Empty<string>();
 
-        static ShaderEffect LoadShaderEffectAssetBundleFromPath(string path) {
+        static ShaderEffect LoadShaderEffectAssetBundleFromPath(string path)
+        {
             AssetBundle bundle = AssetBundle.LoadFromFile(path);
             var loadAsset = bundle.LoadAsset<Material>("Assets/ShaderEffect.mat");
             var shaderEffectMetadataGOPrefab = bundle.LoadAsset<GameObject>("Assets/ShaderEffectMetadata.prefab");
@@ -41,10 +44,13 @@ namespace ShaderExtensions.Managers
 
         internal List<ShaderEffect> ShaderEffectList { get; private set; } = new List<ShaderEffect>();
 
-        public ShaderEffect GetShaderEffectByReferenceName(string name) {
+        public ShaderEffect GetShaderEffectByReferenceName(string name)
+        {
             if (name == null) return null;
-            foreach (ShaderEffect sfx in ShaderEffectList) {
-                if (sfx != null) {
+            foreach (ShaderEffect sfx in ShaderEffectList)
+            {
+                if (sfx != null)
+                {
                     if (sfx.referenceName.Equals(name))
                         return sfx;
                 }
@@ -52,10 +58,13 @@ namespace ShaderExtensions.Managers
             return null;
         }
 
-        public ShaderEffect GetShaderEffectByMaterial(Material mat) {
+        public ShaderEffect GetShaderEffectByMaterial(Material mat)
+        {
             if (mat == null) return null;
-            foreach(ShaderEffect sfx in ShaderEffectList) {
-                if(sfx != null) {
+            foreach (ShaderEffect sfx in ShaderEffectList)
+            {
+                if (sfx != null)
+                {
                     if (sfx.material.shader.Equals(mat.shader))
                         return sfx;
                 }
@@ -63,22 +72,27 @@ namespace ShaderExtensions.Managers
             return null;
         }
 
-        public void LoadShaders() {
+        public void LoadShaders()
+        {
             Directory.CreateDirectory(Plugin.PluginAssetPath);
 
             shaderFiles = Directory.GetFiles(Plugin.PluginAssetPath, "*.bsfx");
 
             ShaderEffectList = new List<ShaderEffect>();
 
-            foreach (string sh in shaderFiles) {
+            foreach (string sh in shaderFiles)
+            {
                 ShaderEffect shaderEffect = null;
 
-                try {
+                try
+                {
                     shaderEffect = LoadShaderEffectAssetBundleFromPath(sh);
                     Logger.log.Info("Loading Shader: " + sh);
                     LogShaderFX(shaderEffect);
                     ShaderEffectList.Add(shaderEffect);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Logger.log.Error("Error loading shader \"" + sh + "\"! - " + ex.Message);
                     Logger.log.Error(ex.StackTrace);
                 }
@@ -87,7 +101,8 @@ namespace ShaderExtensions.Managers
 
         }
 
-        internal void Reload() {
+        internal void Reload()
+        {
 
             Logger.log.Debug("Reloading the ShaderAssetLoader");
 
@@ -95,7 +110,8 @@ namespace ShaderExtensions.Managers
             Initialize();
         }
 
-        public static void LogShaderFX(ShaderEffect shaderEffect) {
+        public static void LogShaderFX(ShaderEffect shaderEffect)
+        {
             Logger.log?.Info("ShaderEffect.material: " + shaderEffect.material);
             Logger.log?.Info("ShaderEffect.referenceName: " + shaderEffect.referenceName);
             Logger.log?.Info("ShaderEffect.name: " + shaderEffect.name);

@@ -19,9 +19,11 @@ namespace ShaderExtensions.Util
         /// <param name="lerpDuration"></param>
         /// <param name="onDone">Method to execute after it's done animating.</param>
         /// <returns></returns>
-        public static IEnumerator ScrollIndicatorAnimator(float startValue, float endValue, VerticalScrollIndicator verticalScrollIndicator, float lerpDuration = 0.3f, Action onDone = null) {
+        public static IEnumerator ScrollIndicatorAnimator(float startValue, float endValue, VerticalScrollIndicator verticalScrollIndicator, float lerpDuration = 0.3f, Action onDone = null)
+        {
             float timeElapsed = 0f;
-            while (timeElapsed < lerpDuration) {
+            while (timeElapsed < lerpDuration)
+            {
                 verticalScrollIndicator.progress = Mathf.Lerp(startValue, endValue, Easings.EaseOutCubic(timeElapsed / lerpDuration));
                 timeElapsed += Time.deltaTime;
                 yield return null;
@@ -37,22 +39,27 @@ namespace ShaderExtensions.Util
         /// <param name="tableView"></param>
         /// <param name="verticalScrollIndicator"></param>
         /// <param name="coroutine"></param>
-        public static void ScrollTheScrollIndicator(bool up, TableView tableView, VerticalScrollIndicator verticalScrollIndicator, Coroutine coroutine) {
+        public static void ScrollTheScrollIndicator(bool up, TableView tableView, VerticalScrollIndicator verticalScrollIndicator, Coroutine coroutine)
+        {
             Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
 
             float rangeUpper;
             float pageSize = range.Item2 - range.Item1;
             float numOfCells = tableView.numberOfCells;
 
-            if (up) {
+            if (up)
+            {
                 rangeUpper = Mathf.Max(0, range.Item2 - pageSize);
-            } else {
+            }
+            else
+            {
                 rangeUpper = Mathf.Min(numOfCells, range.Item2 + pageSize);
             }
 
             float progress = (rangeUpper - pageSize) / (numOfCells - pageSize);
 
-            if (coroutine != null) {
+            if (coroutine != null)
+            {
                 tableView.StopCoroutine(coroutine);
             }
 
@@ -68,7 +75,8 @@ namespace ShaderExtensions.Util
         /// <param name="tableView"></param>
         /// <param name="verticalScrollIndicator"></param>
         /// <param name="doTheWaitThing">if it should wait for 10 ms (for bsml to initialize things)</param>
-        public static async void UpdateScrollIndicator(TableView tableView, VerticalScrollIndicator verticalScrollIndicator, bool doTheWaitThing = false) {
+        public static async void UpdateScrollIndicator(TableView tableView, VerticalScrollIndicator verticalScrollIndicator, bool doTheWaitThing = false)
+        {
 
             if (doTheWaitThing)
                 await SiraUtil.Utilities.AwaitSleep(10);
@@ -89,8 +97,10 @@ namespace ShaderExtensions.Util
         /// <summary>
         /// Loads and caches the default icon for Shader files
         /// </summary>
-        public static Sprite GetDefaultShaderIcon() {
-            if (_shaderSprite != null) {
+        public static Sprite GetDefaultShaderIcon()
+        {
+            if (_shaderSprite != null)
+            {
                 return _shaderSprite;
             }
 
@@ -105,8 +115,10 @@ namespace ShaderExtensions.Util
         /// <summary>
         /// Loads and caches the default icon for Shader files
         /// </summary>
-        public static Sprite GetDefaultTexture2DIcon() {
-            if (_texture2dSprite != null) {
+        public static Sprite GetDefaultTexture2DIcon()
+        {
+            if (_texture2dSprite != null)
+            {
                 return _texture2dSprite;
             }
 
@@ -121,8 +133,10 @@ namespace ShaderExtensions.Util
         /// <summary>
         /// Loads and caches the default icon for material properties of the type Float
         /// </summary>
-        public static Sprite GetDefaultFloatIcon() {
-            if (_floatSprite != null) {
+        public static Sprite GetDefaultFloatIcon()
+        {
+            if (_floatSprite != null)
+            {
                 return _floatSprite;
             }
 
@@ -137,8 +151,10 @@ namespace ShaderExtensions.Util
         /// <summary>
         /// Loads and caches the default icon for material properties of the type Range
         /// </summary>
-        public static Sprite GetDefaultRangeIcon() {
-            if (_rangeSprite != null) {
+        public static Sprite GetDefaultRangeIcon()
+        {
+            if (_rangeSprite != null)
+            {
                 return _rangeSprite;
             }
 
@@ -158,23 +174,28 @@ namespace ShaderExtensions.Util
         /// Loads and caches the default icon for material properties of the type Vector2 / vector3 / vector4
         /// </summary>
         /// <param name="type">2, 3 or 4 - 3 is default</param>
-        public static Sprite GetDefaultVectorIcon(int type) {
-            switch(type) {
+        public static Sprite GetDefaultVectorIcon(int type)
+        {
+            switch (type)
+            {
                 case 2:
-                    if (_vector2Sprite != null) {
+                    if (_vector2Sprite != null)
+                    {
                         return _vector2Sprite;
                     }
                     _vector2Sprite = Sprite.Create(_vector2Tex2D, new Rect(0.0f, 0.0f, _vector2Tex2D.width, _vector2Tex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
                     return _vector2Sprite;
                 case 3:
                 default:
-                    if (_vector3Sprite != null) {
+                    if (_vector3Sprite != null)
+                    {
                         return _vector3Sprite;
                     }
                     _vector3Sprite = Sprite.Create(_vector3Tex2D, new Rect(0.0f, 0.0f, _vector3Tex2D.width, _vector3Tex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
                     return _vector3Sprite;
                 case 4:
-                    if (_vector4Sprite != null) {
+                    if (_vector4Sprite != null)
+                    {
                         return _vector4Sprite;
                     }
                     _vector4Sprite = Sprite.Create(_vector4Tex2D, new Rect(0.0f, 0.0f, _vector4Tex2D.width, _vector4Tex2D.height), new Vector2(0.5f, 0.5f), 100.0f);
@@ -186,10 +207,13 @@ namespace ShaderExtensions.Util
         /// Loads a Texture2D from byte[]
         /// </summary>
         /// <param name="file"></param>
-        public static Texture2D LoadTextureRaw(byte[] file) {
-            if (file.Length > 0) {
+        public static Texture2D LoadTextureRaw(byte[] file)
+        {
+            if (file.Length > 0)
+            {
                 Texture2D texture = new Texture2D(2, 2);
-                if (texture.LoadImage(file)) {
+                if (texture.LoadImage(file))
+                {
                     return texture;
                 }
             }
@@ -208,7 +232,8 @@ namespace ShaderExtensions.Util
         /// </summary>
         /// <param name="assembly">Assembly to load from</param>
         /// <param name="resourcePath">Path to resource</param>
-        public static byte[] GetResource(Assembly assembly, string resourcePath) {
+        public static byte[] GetResource(Assembly assembly, string resourcePath)
+        {
             Stream stream = assembly.GetManifestResourceStream(resourcePath);
             byte[] data = new byte[stream.Length];
             stream.Read(data, 0, (int) stream.Length);

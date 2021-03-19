@@ -20,20 +20,24 @@ namespace ShaderExtensions.Event
 
         public Material Material { get; internal set; }
 
-        public ShaderCommand(TreeDict dict) {
+        public ShaderCommand(TreeDict dict)
+        {
 
             ReferenceName = Trees.At(dict, "_ref");
-            if (ReferenceName == null) {
+            if (ReferenceName == null)
+            {
                 ReferenceName = "Error";
             }
 
             ID = Trees.At(dict, "_id");
-            if (ID == null) {
+            if (ID == null)
+            {
                 ID = ReferenceName;
             }
 
             dynamic tmp = Trees.At(dict, "_clearAfterDone");
-            if (tmp != null && tmp.GetType() == typeof(bool)) {
+            if (tmp != null && tmp.GetType() == typeof(bool))
+            {
                 ClearAfterLastPropIsDone = tmp;
             }
 
@@ -41,9 +45,12 @@ namespace ShaderExtensions.Event
 
             object ret = Trees.At(dict, "_props");
             List<object> props;
-            if (ret != null) {
+            if (ret != null)
+            {
                 props = ret as List<object>;
-            } else {
+            }
+            else
+            {
                 props = new List<object>();
             }
 
@@ -51,14 +58,16 @@ namespace ShaderExtensions.Event
 
             ShaderProperty longest = null;
             Properties.getProps().ForEach(sp => {
-                if(sp.Duration > (longest?.Duration ?? 0)) {
+                if (sp.Duration > (longest?.Duration ?? 0))
+                {
                     longest = sp;
                 }
             });
-            if(longest != null) {
+            if (longest != null)
+            {
                 longest.IsLast = true;
             }
-                
+
         }
 
     }

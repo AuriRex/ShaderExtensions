@@ -6,7 +6,8 @@ using Zenject;
 
 namespace ShaderExtensions.Managers
 {
-    public class ShaderManager : IInitializable, IDisposable {
+    public class ShaderManager : IInitializable, IDisposable
+    {
         private ShaderAssetLoader _shaderAssetLoader;
         private PluginConfig _pluginConfig;
 
@@ -15,16 +16,14 @@ namespace ShaderExtensions.Managers
         public ICameraManager CameraManager { get; private set; }
 
         [Inject]
-        internal ShaderManager(ShaderAssetLoader shaderAssetLoader, PluginConfig pluginConfig) {
+        internal ShaderManager(ShaderAssetLoader shaderAssetLoader, PluginConfig pluginConfig)
+        {
             _shaderAssetLoader = shaderAssetLoader;
             _pluginConfig = pluginConfig;
         }
 
         [Inject]
-        internal void Construct(CameraManager cameraManager)
-        {
-            CameraManager = cameraManager;
-        }
+        internal void Construct(CameraManager cameraManager) => CameraManager = cameraManager;
 
         /// <summary>
         /// Refreshes all active cameras
@@ -34,14 +33,17 @@ namespace ShaderExtensions.Managers
         /// <summary>
         /// Re-applies all added Materials to every rendering cameras
         /// </summary>
-        public void Refresh() {
+        public void Refresh()
+        {
             RefreshCameraManager();
             CameraManager?.ClearAllMaterials();
             RefreshMaterials();
         }
 
-        private void RefreshMaterials() {
-            foreach (Material mat in MaterialCache.Values) {
+        private void RefreshMaterials()
+        {
+            foreach (Material mat in MaterialCache.Values)
+            {
                 CameraManager?.AddMaterial(mat);
             }
         }
@@ -68,13 +70,17 @@ namespace ShaderExtensions.Managers
         /// <param name="id">the id assigned</param>
         /// <param name="sfx">the shader used</param>
         /// <returns>The created Material</returns>
-        public Material AddMaterial(string id, ShaderEffect sfx) {
+        public Material AddMaterial(string id, ShaderEffect sfx)
+        {
             string fullId = GetFID(id, sfx);
             Material mat;
-            if (!MaterialCache.ContainsKey(fullId)) {
+            if (!MaterialCache.ContainsKey(fullId))
+            {
                 mat = new Material(sfx.material);
                 MaterialCache.Add(fullId, mat);
-            } else {
+            }
+            else
+            {
                 return GetMaterial(id, sfx);
             }
             CameraManager?.AddMaterial(mat);
@@ -91,19 +97,18 @@ namespace ShaderExtensions.Managers
         /// <returns>If the Material has been removed</returns>
         public bool RemoveMaterial(string id, ShaderEffect sfx) => RemoveMaterial(GetFID(id, sfx));
 
-        internal bool RemoveMaterial(string fullId) {
+        internal bool RemoveMaterial(string fullId)
+        {
             if (fullId == null) return false;
-            if (MaterialCache.TryGetValue(fullId, out Material mat)) {
+            if (MaterialCache.TryGetValue(fullId, out Material mat))
+            {
                 CameraManager?.RemoveMaterial(mat);
                 return MaterialCache.Remove(fullId);
             }
             return false;
         }
 
-        internal void OnGameStart()
-        {
-            Refresh();
-        }
+        internal void OnGameStart() => Refresh();
 
         internal void OnGameQuit()
         {
@@ -114,10 +119,7 @@ namespace ShaderExtensions.Managers
             }
         }
 
-        internal void OnMenuCamEnable()
-        {
-            OnGameQuit();
-        }
+        internal void OnMenuCamEnable() => OnGameQuit();
 
         internal void OnMenuCamDisable()
         {
@@ -129,15 +131,19 @@ namespace ShaderExtensions.Managers
         /// </summary>
         /// <param name="id">the id to look for</param>
         /// <returns>A List of materials that have been removed</returns>
-        public List<Material> RemoveAllMaterialsStartingWithId(string id) {
+        public List<Material> RemoveAllMaterialsStartingWithId(string id)
+        {
             Stack<string> removeStack = new Stack<string>();
-            foreach (KeyValuePair<string, Material> entry in MaterialCache) {
-                if(entry.Key.StartsWith(id, StringComparison.InvariantCulture)) {
+            foreach (KeyValuePair<string, Material> entry in MaterialCache)
+            {
+                if (entry.Key.StartsWith(id, StringComparison.InvariantCulture))
+                {
                     removeStack.Push(entry.Key);
                 }
             }
             List<Material> removedMaterials = new List<Material>(removeStack.Count);
-            while(removeStack.Count > 0) {
+            while (removeStack.Count > 0)
+            {
                 removedMaterials.Add(GetMaterial(removeStack.Peek()));
                 RemoveMaterial(removeStack.Pop());
             }
@@ -152,9 +158,12 @@ namespace ShaderExtensions.Managers
         /// <returns>The Material or null</returns>
         internal Material GetMaterial(string id, ShaderEffect sfx) => GetMaterial(GetFID(id, sfx));
 
-        private Material GetMaterial(string fullId) {
-            if (MaterialCache.ContainsKey(fullId)) {
-                if (MaterialCache.TryGetValue(fullId, out Material mat)) {
+        private Material GetMaterial(string fullId)
+        {
+            if (MaterialCache.ContainsKey(fullId))
+            {
+                if (MaterialCache.TryGetValue(fullId, out Material mat))
+                {
                     return mat;
                 }
             }
@@ -165,7 +174,8 @@ namespace ShaderExtensions.Managers
         /// Clears all Materials
         /// </summary>
         /// <returns>All the removed Materials</returns>
-        public List<Material> ClearAllMaterials() {
+        public List<Material> ClearAllMaterials()
+        {
             CameraManager?.ClearAllMaterials();
             List<Material> oldMaterials = new List<Material>(MaterialCache.Values);
             MaterialCache = new Dictionary<string, Material>();

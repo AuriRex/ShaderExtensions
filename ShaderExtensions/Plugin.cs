@@ -21,7 +21,8 @@ namespace ShaderExtensions
         internal const string HARMONY_ID = "com.aurirex.shaderextensions";
 
         [Init]
-        public Plugin(IPALogger logger, Config config, Zenjector zenjector) {
+        public Plugin(IPALogger logger, Config config, Zenjector zenjector)
+        {
             Logger.log = logger;
             zenjector.OnApp<ShaderExtensionsCoreInstaller>().WithParameters(config.Generated<PluginConfig>());
             zenjector.OnMenu<ShaderExtensionsMenuInstaller>();
@@ -29,12 +30,14 @@ namespace ShaderExtensions
         }
 
         [OnEnable]
-        public void OnEnable() {
+        public void OnEnable()
+        {
 
         }
 
         [OnDisable]
-        public void OnDisable() {
+        public void OnDisable()
+        {
 
         }
     }

@@ -60,9 +60,11 @@ namespace ShaderExtensions.UI
 
         private float _rangeSliderValue = 0;
         [UIValue("range-slider-value")]
-        protected float RangeSliderValue {
+        protected float RangeSliderValue
+        {
             get => _rangeSliderValue;
-            set {
+            set
+            {
                 _rangeSliderValue = value;
                 RangeSliderText = value.ToString();
                 parserParams.EmitEvent("range-slider-get");
@@ -71,9 +73,11 @@ namespace ShaderExtensions.UI
 
         private string _rangeSliderText = string.Empty;
         [UIValue("range-slider-text")]
-        protected string RangeSliderText {
+        protected string RangeSliderText
+        {
             get => _rangeSliderText;
-            set {
+            set
+            {
                 _rangeSliderText = value;
                 NotifyPropertyChanged(nameof(RangeSliderText));
             }
@@ -81,9 +85,11 @@ namespace ShaderExtensions.UI
 
         private float _rangeSliderMin = 0;
         [UIValue("range-slider-min")]
-        protected float RangeSliderMin {
+        protected float RangeSliderMin
+        {
             get => _rangeSliderMin;
-            set {
+            set
+            {
                 _rangeSliderMin = value;
                 NotifyPropertyChanged(nameof(RangeSliderMin));
             }
@@ -91,9 +97,11 @@ namespace ShaderExtensions.UI
 
         private float _rangeSliderMax = 1;
         [UIValue("range-slider-max")]
-        protected float RangeSliderMax {
+        protected float RangeSliderMax
+        {
             get => _rangeSliderMax;
-            set {
+            set
+            {
                 _rangeSliderMax = value;
                 NotifyPropertyChanged(nameof(RangeSliderMax));
             }
@@ -101,22 +109,26 @@ namespace ShaderExtensions.UI
 
         private string _rangePropertyName = string.Empty;
         [UIValue("range-property-name")]
-        public string RangePropertyName {
+        public string RangePropertyName
+        {
             get => _rangePropertyName;
-            set {
+            set
+            {
                 _rangePropertyName = value;
                 NotifyPropertyChanged(nameof(RangePropertyName));
             }
         }
 
         [UIAction("range-use-num")]
-        public void RangeUseNumpad() {
+        public void RangeUseNumpad()
+        {
             CloseRangeModal();
             OpenNumpad(RangePropertyName, RangeSliderValue, OnFloatValueEnter, _range_currentCancelCallback);
         }
 
         [UIAction("range-event-enter")]
-        public void RangeEventEnter() {
+        public void RangeEventEnter()
+        {
             Logger.log.Debug($"RangeSliderValue: {RangeSliderValue}");
             _range_currentCallback(RangeSliderValue);
             CloseRangeModal();
@@ -128,11 +140,13 @@ namespace ShaderExtensions.UI
         private CancelCallback _range_currentCancelCallback;
 
         public void OpenRangeModal(string description, float initialValue, float minValue, float maxValue, FloatValueEnterCallback callback, CancelCallback cancelCallback) => OpenRangeModal(description, initialValue, minValue, maxValue, callback, cancelCallback, true);
-        public void OpenRangeModal(string description, float initialValue, float minValue, float maxValue, FloatValueEnterCallback callback, CancelCallback cancelCallback, bool cancelOnClickoff) {
-            if(!_range_blockerClickedEventIsRegistered) {
+        public void OpenRangeModal(string description, float initialValue, float minValue, float maxValue, FloatValueEnterCallback callback, CancelCallback cancelCallback, bool cancelOnClickoff)
+        {
+            if (!_range_blockerClickedEventIsRegistered)
+            {
                 rangeModalRoot.blockerClickedEvent += RangeModalRoot_blockerClickedEvent;
                 _range_blockerClickedEventIsRegistered = true;
-            }   
+            }
             _range_cancelOnClickoff = cancelOnClickoff;
             _range_currentCallback = callback;
             _range_currentCancelCallback = cancelCallback;
@@ -145,17 +159,23 @@ namespace ShaderExtensions.UI
             parserParams.EmitEvent("show-range-modal");
         }
 
-        private void RangeModalRoot_blockerClickedEvent() {
-            if (!_range_cancelOnClickoff) {
+        private void RangeModalRoot_blockerClickedEvent()
+        {
+            if (!_range_cancelOnClickoff)
+            {
                 RangeEventEnter();
-            } else {
+            }
+            else
+            {
                 _range_currentCancelCallback();
             }
         }
 
-        public void CloseRangeModal() {
+        public void CloseRangeModal()
+        {
             parserParams.EmitEvent("hide-range-modal");
-            if(_range_blockerClickedEventIsRegistered) {
+            if (_range_blockerClickedEventIsRegistered)
+            {
                 rangeModalRoot.blockerClickedEvent -= RangeModalRoot_blockerClickedEvent;
                 _range_blockerClickedEventIsRegistered = false;
             }
@@ -170,9 +190,11 @@ namespace ShaderExtensions.UI
 
         private string _numpadPropertyName = string.Empty;
         [UIValue("numpad-property-name")]
-        protected string NumpadPropertyName {
+        protected string NumpadPropertyName
+        {
             get => _numpadPropertyName;
-            set {
+            set
+            {
                 _numpadPropertyName = value;
                 NotifyPropertyChanged(nameof(NumpadPropertyName));
             }
@@ -180,9 +202,11 @@ namespace ShaderExtensions.UI
 
         private string _numpadValue = string.Empty;
         [UIValue("numpad-value")]
-        protected string NumpadValue {
+        protected string NumpadValue
+        {
             get => _numpadValue;
-            set {
+            set
+            {
                 _numpadValue = value;
                 NotifyPropertyChanged(nameof(NumpadValue));
             }
@@ -190,9 +214,11 @@ namespace ShaderExtensions.UI
 
         private string _numpadSign = string.Empty;
         [UIValue("numpad-sign")]
-        protected string NumpadSign {
+        protected string NumpadSign
+        {
             get => _numpadSign;
-            set {
+            set
+            {
                 _numpadSign = value;
                 NotifyPropertyChanged(nameof(NumpadSign));
             }
@@ -200,18 +226,22 @@ namespace ShaderExtensions.UI
 
         private string _numpadSignButton = "-";
         [UIValue("numpad-sign-button")]
-        protected string NumpadSignButton {
+        protected string NumpadSignButton
+        {
             get => _numpadSignButton;
-            set {
+            set
+            {
                 _numpadSignButton = value;
                 NotifyPropertyChanged(nameof(NumpadSignButton));
             }
         }
 
         private bool _isNumpadValuePositive;
-        public bool NumpadValuePositive {
+        public bool NumpadValuePositive
+        {
             get => _isNumpadValuePositive;
-            set {
+            set
+            {
                 _isNumpadValuePositive = value;
                 NumpadSign = value ? string.Empty : "-";
                 NumpadSignButton = value ? "-" : "+";
@@ -243,22 +273,35 @@ namespace ShaderExtensions.UI
         [UIAction("num-event-heart")]
         public void NumEventHeart() => Logger.log.Notice("You're a cutie! ;)  <3");
 
-        private void NumpadAddCharacter(char c) {
-            if (c == '.') {
-                if(NumpadValue.Length == 0) {
+        private void NumpadAddCharacter(char c)
+        {
+            if (c == '.')
+            {
+                if (NumpadValue.Length == 0)
+                {
                     NumpadValue = "0.";
-                } else if (!NumpadValue.Contains('.')) {
+                }
+                else if (!NumpadValue.Contains('.'))
+                {
                     NumpadValue += c;
                 }
-            } else if (c == '0') {
-                if (NumpadValue.Length == 0 || NumpadValue.Length > 1 || (NumpadValue.Length == 1 && NumpadValue.ElementAt(0) != '0')) {
+            }
+            else if (c == '0')
+            {
+                if (NumpadValue.Length == 0 || NumpadValue.Length > 1 || (NumpadValue.Length == 1 && NumpadValue.ElementAt(0) != '0'))
+                {
                     NumpadValue += c;
                 }
-            } else {
+            }
+            else
+            {
                 // 123456789
-                if(NumpadValue.Length == 1 && NumpadValue.ElementAt(0) == '0') {
+                if (NumpadValue.Length == 1 && NumpadValue.ElementAt(0) == '0')
+                {
                     NumpadValue = c.ToString();
-                } else {
+                }
+                else
+                {
                     NumpadValue += c;
                 }
             }
@@ -268,19 +311,25 @@ namespace ShaderExtensions.UI
         public void NumEventSign() => NumpadValuePositive = !NumpadValuePositive;
 
         [UIAction("num-event-back")]
-        public void NumEventBack() {
+        public void NumEventBack()
+        {
             string val = NumpadValue;
-            if(val.Length > 0) {
+            if (val.Length > 0)
+            {
                 NumpadValue = val.Substring(0, val.Length - 1);
             }
         }
 
         [UIAction("num-event-enter")]
-        public void NumEventEnter() {
+        public void NumEventEnter()
+        {
             string val = NumpadValue;
-            if(float.TryParse(NumpadValuePositive ? val : '-'+val, out float result)) {
+            if (float.TryParse(NumpadValuePositive ? val : '-' + val, out float result))
+            {
                 _numpad_currentCallback(result);
-            } else {
+            }
+            else
+            {
                 _numpad_currentCallback(0.5f);
             }
             CloseNumpad();
@@ -289,10 +338,14 @@ namespace ShaderExtensions.UI
         [UIAction("num-event-clear")]
         public void NumEventClear() => NumpadValue = string.Empty;
 
-        private void NumpadModalRoot_blockerClickedEvent() {
-            if(!_numpad_cancelOnClickoff) {
+        private void NumpadModalRoot_blockerClickedEvent()
+        {
+            if (!_numpad_cancelOnClickoff)
+            {
                 NumEventEnter();
-            } else {
+            }
+            else
+            {
                 _numpad_currentCancelCallback();
             }
         }
@@ -303,17 +356,22 @@ namespace ShaderExtensions.UI
         private CancelCallback _numpad_currentCancelCallback;
 
         public void OpenNumpad(string description, float initialValue, FloatValueEnterCallback callback, CancelCallback cancelCallback) => OpenNumpad(description, initialValue, callback, cancelCallback, true);
-        public void OpenNumpad(string description, float initialValue, FloatValueEnterCallback callback, CancelCallback cancelCallback, bool cancelOnClickoff) {
-            if(!_numpad_blockerClickedEventIsRegistered) {
+        public void OpenNumpad(string description, float initialValue, FloatValueEnterCallback callback, CancelCallback cancelCallback, bool cancelOnClickoff)
+        {
+            if (!_numpad_blockerClickedEventIsRegistered)
+            {
                 numpadModalRoot.blockerClickedEvent += NumpadModalRoot_blockerClickedEvent;
                 _numpad_blockerClickedEventIsRegistered = true;
             }
             _numpad_cancelOnClickoff = cancelOnClickoff;
             string val = initialValue.ToString();
-            if(val.StartsWith("-")) {
+            if (val.StartsWith("-"))
+            {
                 NumpadValuePositive = false;
                 val = val.Replace("-", string.Empty);
-            } else {
+            }
+            else
+            {
                 NumpadValuePositive = true;
             }
             NumpadValue = val;
@@ -323,9 +381,11 @@ namespace ShaderExtensions.UI
             parserParams.EmitEvent("show-numpad-modal");
         }
 
-        public void CloseNumpad() {
+        public void CloseNumpad()
+        {
             parserParams.EmitEvent("hide-numpad-modal");
-            if(_numpad_blockerClickedEventIsRegistered) {
+            if (_numpad_blockerClickedEventIsRegistered)
+            {
                 numpadModalRoot.blockerClickedEvent -= NumpadModalRoot_blockerClickedEvent;
                 _numpad_blockerClickedEventIsRegistered = false;
             }
@@ -334,7 +394,8 @@ namespace ShaderExtensions.UI
         #endregion
 
         [UIAction("#post-parse")]
-        protected void PostParse() {
+        protected void PostParse()
+        {
             Logger.log.Debug("a");
             SetupList(null);
             Logger.log.Debug("b");
@@ -344,9 +405,10 @@ namespace ShaderExtensions.UI
 
         internal void ShaderSelectionCleared() => SetupList(null);
 
-        private void SetupList(Material mat, bool ScrollToTopOnEnable = true) {
+        private void SetupList(Material mat, bool ScrollToTopOnEnable = true)
+        {
             if (customListTableData == null) return;
-            if(ScrollToTopOnEnable && customListTableData.tableView.numberOfCells >= 0)
+            if (ScrollToTopOnEnable && customListTableData.tableView.numberOfCells >= 0)
                 customListTableData.tableView.ScrollToCellWithIdx(0, ScrollPositionType.Beginning, false);
             customListTableData.data.Clear();
             customListTableData.tableView.ClearSelection();
@@ -359,38 +421,50 @@ namespace ShaderExtensions.UI
             parserParams.EmitEvent("hide-keyboard");
             CloseRangeModal();
 
-            if (mat != null) {
+            if (mat != null)
+            {
                 int propCount = mat.shader.GetPropertyCount();
 
                 ShaderPropertyType spt;
                 string propName;
 
-                for (int i = 0; i < propCount; i++) {
+                for (int i = 0; i < propCount; i++)
+                {
                     spt = mat.shader.GetPropertyType(i);
                     propName = mat.shader.GetPropertyName(i);
                     if (propName.Equals("_MainTex") || propName.Equals("_PrevMainTex")) continue;
 
-                    if (spt == ShaderPropertyType.Float || spt == ShaderPropertyType.Range) {
+                    if (spt == ShaderPropertyType.Float || spt == ShaderPropertyType.Range)
+                    {
                         CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName + " : " + mat.GetFloat(propName), spt.ToString(), spt == ShaderPropertyType.Float ? SEUtilities.GetDefaultFloatIcon() : SEUtilities.GetDefaultRangeIcon());
                         customListTableData.data.Add(customCellInfo);
-                    } else if (spt == ShaderPropertyType.Color) {
+                    }
+                    else if (spt == ShaderPropertyType.Color)
+                    {
                         Texture2D tex = new Texture2D(1, 1);
                         tex.SetPixel(0, 0, mat.GetColor(propName));
                         tex.Apply();
                         Sprite icon = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
                         CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), icon);
                         customListTableData.data.Add(customCellInfo);
-                    } else if (spt == ShaderPropertyType.Texture) {
+                    }
+                    else if (spt == ShaderPropertyType.Texture)
+                    {
                         Texture2D tex = mat.GetTexture(propName) as Texture2D;
                         Sprite icon;
-                        if (tex != null) {
+                        if (tex != null)
+                        {
                             icon = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
-                        } else {
+                        }
+                        else
+                        {
                             icon = SEUtilities.GetDefaultTexture2DIcon();
                         }
                         CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), icon);
                         customListTableData.data.Add(customCellInfo);
-                    } else {
+                    }
+                    else
+                    {
                         // Vector
                         CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(propName, spt.ToString(), SEUtilities.GetDefaultVectorIcon(4));
                         customListTableData.data.Add(customCellInfo);
@@ -407,26 +481,35 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("shader-prop-select")]
-        protected void Select(TableView _, int row) {
+        protected void Select(TableView _, int row)
+        {
             _selection = row;
 
-            if (_currentMat != null) {
+            if (_currentMat != null)
+            {
                 string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
                 Logger.log.Debug("Selected Property: " + propName);
-                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float) {
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float)
+                {
                     float currentValue = _currentMat.GetFloat(propName);
                     OpenNumpad(propName, currentValue, OnFloatValueEnter, OnCanceled);
-                } else if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
+                }
+                else if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range)
+                {
                     float currentValue = _currentMat.GetFloat(propName);
 
                     Vector2 rangeLimits = _currentMat.shader.GetPropertyRangeLimits(propID);
 
                     OpenRangeModal(propName, currentValue, rangeLimits.x, rangeLimits.y, OnFloatValueEnter, OnCanceled);
-                } else if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
+                }
+                else if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color)
+                {
                     colorPickerValue = _currentMat.GetColor(propName);
                     parserParams.EmitEvent("show-color-picker");
-                } else {
+                }
+                else
+                {
                     keyboardValue = string.Empty;
                 }
 
@@ -434,13 +517,16 @@ namespace ShaderExtensions.UI
 
         }
 
-        protected void OnFloatValueEnter(float val) {
+        protected void OnFloatValueEnter(float val)
+        {
             if (_selection <= -1) return;
 
-            if (_currentMat != null) {
+            if (_currentMat != null)
+            {
                 string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
-                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range)
+                {
                     _currentMat.SetFloat(propName, val);
                 }
             }
@@ -451,21 +537,29 @@ namespace ShaderExtensions.UI
         protected void OnCanceled() => customListTableData.tableView.ClearSelection();
 
         [UIAction("keyboard-enter")]
-        protected void OnKeyboardEnterPressed(string text) {
+        protected void OnKeyboardEnterPressed(string text)
+        {
             if (_selection <= -1) return;
 
-            if (_currentMat != null) {
+            if (_currentMat != null)
+            {
                 string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
-                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range) {
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Float || _currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Range)
+                {
                     float value = 1;
-                    try {
+                    try
+                    {
                         value = float.Parse(text);
-                    } catch (Exception) {
+                    }
+                    catch (Exception)
+                    {
                         value = 1;
                     }
                     _currentMat.SetFloat(propName, value);
-                } else {
+                }
+                else
+                {
                     // Todo?
                 }
 
@@ -475,14 +569,17 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("color-picker-done")]
-        protected void OnColorPickerDone(Color col) {
+        protected void OnColorPickerDone(Color col)
+        {
             if (_selection <= -1) return;
 
-            if (_currentMat != null) {
+            if (_currentMat != null)
+            {
 
                 string propName = _properties.Keys.ToArray()[_selection];
                 int propID = _properties[propName];
-                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color) {
+                if (_currentMat.shader.GetPropertyType(propID) == ShaderPropertyType.Color)
+                {
                     _currentMat.SetColor(propName, col);
                 }
 

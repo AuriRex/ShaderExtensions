@@ -26,7 +26,8 @@ namespace ShaderExtensions.UI
         private int _selection = -1;
 
         [Inject]
-        public void Construct(ShaderAssetLoader shaderAssetLoader, ShaderManager shaderManager) {
+        public void Construct(ShaderAssetLoader shaderAssetLoader, ShaderManager shaderManager)
+        {
             _shaderAssetLoader = shaderAssetLoader;
             _shaderManager = shaderManager;
         }
@@ -49,7 +50,8 @@ namespace ShaderExtensions.UI
         protected void ScrollDown() => SEUtilities.ScrollTheScrollIndicator(false, customListTableData.tableView, scrollIndicator, _scrollIndicatorCoroutine);
 
         [UIAction("shader-select")]
-        protected void Select(TableView _, int row) {
+        protected void Select(TableView _, int row)
+        {
             _selection = row;
             ShaderEffect sfx = _shaderAssetLoader.ShaderEffectList[_selection];
             Logger.log.Info("Selected: " + sfx.name + " by " + sfx.author);
@@ -57,14 +59,16 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("active-shader-select")]
-        protected void ActiveShaderStackSelect(TableView _, ActiveShaderElement ase) {
+        protected void ActiveShaderStackSelect(TableView _, ActiveShaderElement ase)
+        {
             Logger.log.Debug($"selcted ase: {ase}");
             _shaderManager.RemoveMaterial(ase.ID);
             SetupActiveShaderStackList();
         }
 
         [UIAction("reload-shaders")]
-        protected void ReloadShaders() {
+        protected void ReloadShaders()
+        {
             _shaderAssetLoader.Reload();
             SetupShaderList();
             _shaderManager.RefreshCameraManager();
@@ -74,8 +78,10 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("add-shader")]
-        protected void AddShader() {
-            if (_selection > -1) {
+        protected void AddShader()
+        {
+            if (_selection > -1)
+            {
                 _shaderManager.RefreshCameraManager();
                 _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[_selection]);
                 SetupActiveShaderStackList();
@@ -83,8 +89,10 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("select-shader")]
-        protected void SelectShader() {
-            if (_selection > -1) {
+        protected void SelectShader()
+        {
+            if (_selection > -1)
+            {
                 _shaderManager.RefreshCameraManager();
                 _shaderManager.ClearAllMaterials();
                 _shaderManager.AddMaterial("preview", _shaderAssetLoader.ShaderEffectList[_selection]);
@@ -93,25 +101,31 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("clear-shader")]
-        protected void ClearShader() {
+        protected void ClearShader()
+        {
             _shaderManager.RefreshCameraManager();
             _shaderManager.ClearAllMaterials();
             SetupActiveShaderStackList();
         }
 
         [UIAction("#post-parse")]
-        protected void PostParse() {
+        protected void PostParse()
+        {
             Logger.log.Debug("c");
             SetupShaderList();
             SetupActiveShaderStackList();
             Logger.log.Debug("d");
         }
 
-        protected void SetupShaderList() {
+        protected void SetupShaderList()
+        {
             customListTableData.data.Clear();
-            if (_spriteCache != null) {
+            if (_spriteCache != null)
+            {
                 _spriteCache.Clear();
-            } else {
+            }
+            else
+            {
                 _spriteCache = new Dictionary<Texture2D, Sprite>();
             }
 
@@ -120,12 +134,16 @@ namespace ShaderExtensions.UI
 
             List<ShaderEffect> sfxList = _shaderAssetLoader.ShaderEffectList;
 
-            foreach (ShaderEffect sfx in sfxList) {
+            foreach (ShaderEffect sfx in sfxList)
+            {
                 Sprite icon = SEUtilities.GetDefaultShaderIcon();
 
-                if (sfx.previewImage != null && _spriteCache.TryGetValue(sfx.previewImage, out Sprite image)) {
+                if (sfx.previewImage != null && _spriteCache.TryGetValue(sfx.previewImage, out Sprite image))
+                {
                     icon = image;
-                } else if (sfx.previewImage != null) {
+                }
+                else if (sfx.previewImage != null)
+                {
                     icon = Sprite.Create(sfx.previewImage, new Rect(0.0f, 0.0f, sfx.previewImage.width, sfx.previewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
                     _spriteCache.Add(sfx.previewImage, icon);
                 }
@@ -138,11 +156,13 @@ namespace ShaderExtensions.UI
             SEUtilities.UpdateScrollIndicator(customListTableData.tableView, scrollIndicator, true);
         }
 
-        protected void SetupActiveShaderStackList() {
+        protected void SetupActiveShaderStackList()
+        {
             shaderStackList.data.Clear();
             Dictionary<string, Material> matCache = _shaderManager.MaterialCache;
 
-            foreach (string id in matCache.Keys) {
+            foreach (string id in matCache.Keys)
+            {
 
                 matCache.TryGetValue(id, out Material mat);
 
@@ -163,9 +183,11 @@ namespace ShaderExtensions.UI
             shaderStackList.tableView.ReloadData();
         }
 
-        public Sprite GetPreviewImage(ShaderEffect sfx) {
+        public Sprite GetPreviewImage(ShaderEffect sfx)
+        {
             if (sfx == null || sfx.previewImage == null) return SEUtilities.GetDefaultShaderIcon();
-            if (_spriteCache.TryGetValue(sfx.previewImage, out Sprite image)) {
+            if (_spriteCache.TryGetValue(sfx.previewImage, out Sprite image))
+            {
                 return image;
             }
             return Util.SEUtilities.GetDefaultShaderIcon();

@@ -8,11 +8,13 @@ namespace ShaderExtensions.Installers
     {
         private readonly PluginConfig _pluginConfig;
 
-        public ShaderExtensionsCoreInstaller(PluginConfig pluginConfig) {
+        public ShaderExtensionsCoreInstaller(PluginConfig pluginConfig)
+        {
             _pluginConfig = pluginConfig;
         }
 
-        public override void InstallBindings() {
+        public override void InstallBindings()
+        {
             Container.BindInstance(_pluginConfig).AsSingle();
             Container.BindInterfacesAndSelfTo<ShaderAssetLoader>().AsSingle();
             Container.BindInterfacesAndSelfTo<ShaderManager>().AsSingle();

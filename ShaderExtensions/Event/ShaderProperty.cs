@@ -16,13 +16,15 @@ namespace ShaderExtensions.Event
 
         public bool IsLast { get; internal set; } = false;
 
-        public ShaderProperty(string property, float duration, dynamic value, Functions easing, ShaderCommand parent) : base(PropertyType.Linear) {
+        public ShaderProperty(string property, float duration, dynamic value, Functions easing, ShaderCommand parent) : base(PropertyType.Linear)
+        {
 
             this.Property = property;
             this.Duration = duration;
             this.Easing = easing;
             this.ParentCommand = parent;
-            if (value is string) {
+            if (value is string)
+            {
                 this.Value = value;
             }
             Points = PointDefinition.DynamicToPointData(value);

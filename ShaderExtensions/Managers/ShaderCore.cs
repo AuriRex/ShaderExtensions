@@ -14,7 +14,8 @@ namespace ShaderExtensions.Managers
 
         public bool EnableShaderEvents { get; private set; } = false;
 
-        internal ShaderCore(PluginConfig pluginConfig) {
+        internal ShaderCore(PluginConfig pluginConfig)
+        {
             _pluginConfig = pluginConfig;
         }
 
@@ -22,26 +23,35 @@ namespace ShaderExtensions.Managers
 
         public void Dispose() => RegisterCapabilty(false);
 
-        internal bool ShouldEnableShaderEvents(IDifficultyBeatmap difficultyBeatmap) {
+        internal bool ShouldEnableShaderEvents(IDifficultyBeatmap difficultyBeatmap)
+        {
             if (difficultyBeatmap == null) return false;
-            if(difficultyBeatmap.beatmapData is CustomBeatmapData customBeatmapData) {
+            if (difficultyBeatmap.beatmapData is CustomBeatmapData customBeatmapData)
+            {
                 IEnumerable<string> requirements = ((List<object>) Trees.at(customBeatmapData.beatmapCustomData, "_requirements"))?.Cast<string>();
                 EnableShaderEvents = requirements?.Contains(Plugin.CAPABILITY) ?? false;
-                if (!EnableShaderEvents) {
+                if (!EnableShaderEvents)
+                {
                     IEnumerable<string> suggestions = ((List<object>) Trees.at(customBeatmapData.beatmapCustomData, "_suggestions"))?.Cast<string>();
                     EnableShaderEvents = suggestions?.Contains(Plugin.CAPABILITY) ?? false;
                 }
-            } else {
+            }
+            else
+            {
                 EnableShaderEvents = false;
             }
             return EnableShaderEvents;
         }
 
-        internal void RegisterCapabilty(bool register = true) {
-            if(register) {
+        internal void RegisterCapabilty(bool register = true)
+        {
+            if (register)
+            {
                 Logger.log.Info($"Registering the {Plugin.CAPABILITY} capabilty!");
                 SongCore.Collections.RegisterCapability(Plugin.CAPABILITY);
-            } else {
+            }
+            else
+            {
                 Logger.log.Info($"Deregistering the {Plugin.CAPABILITY} capabilty!");
                 SongCore.Collections.DeregisterizeCapability(Plugin.CAPABILITY);
             }
