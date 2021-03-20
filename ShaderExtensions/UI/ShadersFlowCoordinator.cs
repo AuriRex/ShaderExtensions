@@ -27,8 +27,6 @@ namespace ShaderExtensions.UI
             _shaderManager = shaderManager;
         }
 
-        protected override void InitialViewControllerWasPresented() => Logger.log.Debug("InitialViewControllerWasPresented");
-
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             if (firstActivation)
@@ -40,7 +38,7 @@ namespace ShaderExtensions.UI
             _shaderListView.shaderSelected += _shaderProperyListView.ShaderSelected;
             _shaderListView.shadersCleared += _shaderProperyListView.ShaderSelectionCleared;
             ProvideInitialViewControllers(_shaderListView, _shaderDetailsView, _shaderProperyListView);
-            _shaderManager.CameraManager.Refresh();
+            _shaderManager.Refresh();
         }
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)

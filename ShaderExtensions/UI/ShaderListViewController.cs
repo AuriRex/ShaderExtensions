@@ -32,6 +32,15 @@ namespace ShaderExtensions.UI
             _shaderManager = shaderManager;
         }
 
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        {
+            if (shaderStackList != null)
+            {
+                SetupActiveShaderStackList();
+            }
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+        }
+
         [UIComponent("shader-list")]
         protected CustomListTableData customListTableData = null;
 
@@ -111,10 +120,8 @@ namespace ShaderExtensions.UI
         [UIAction("#post-parse")]
         protected void PostParse()
         {
-            Logger.log.Debug("c");
             SetupShaderList();
             SetupActiveShaderStackList();
-            Logger.log.Debug("d");
         }
 
         protected void SetupShaderList()
@@ -159,6 +166,8 @@ namespace ShaderExtensions.UI
         protected void SetupActiveShaderStackList()
         {
             shaderStackList.data.Clear();
+            shaderStackList.tableView.ClearSelection();
+
             Dictionary<string, Material> matCache = _shaderManager.MaterialCache;
 
             foreach (string id in matCache.Keys)

@@ -23,7 +23,6 @@ namespace ShaderExtensions.UI
         {
             _pluginConfig = pluginConfig;
             _shaderListViewController = shaderListViewController;
-            Logger.log.Debug("const");
         }
 
         [UIComponent("shader-description")]
@@ -95,12 +94,7 @@ namespace ShaderExtensions.UI
         }
 
         [UIAction("#post-parse")]
-        protected void PostParse()
-        {
-            Logger.log.Debug("e");
-            SetupDetails(null);
-            Logger.log.Debug("f");
-        }
+        protected void PostParse() => SetupDetails(null);
 
         private void SetupDetails(ShaderEffect sfx)
         {

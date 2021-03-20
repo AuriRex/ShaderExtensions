@@ -394,12 +394,7 @@ namespace ShaderExtensions.UI
         #endregion
 
         [UIAction("#post-parse")]
-        protected void PostParse()
-        {
-            Logger.log.Debug("a");
-            SetupList(null);
-            Logger.log.Debug("b");
-        }
+        protected void PostParse() => SetupList(null);
 
         internal void ShaderSelected(ShaderEffect sfx) => SetupList(sfx.material);
 
