@@ -1,4 +1,5 @@
 ﻿using HMUI;
+using IPA.Loader;
 using ShaderExtensions.Event;
 using System;
 using System.Collections;
@@ -239,5 +240,16 @@ namespace ShaderExtensions.Util
             stream.Read(data, 0, (int) stream.Length);
             return data;
         }
+
+        public static IEnumerator DoAfter(float time, Action action)
+        {
+            float start = Time.fixedTime;
+            while (start + time > Time.fixedTime)
+                yield return null;
+            action?.Invoke();
+            yield break;
+        }
+
+        public static bool AnyCameraModInstalled() => PluginManager.GetPluginFromId("Camera2") != null ? true : (PluginManager.GetPluginFromId("CameraPlus") != null);
     }
 }

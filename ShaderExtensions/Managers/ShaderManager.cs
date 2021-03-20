@@ -108,7 +108,20 @@ namespace ShaderExtensions.Managers
             return false;
         }
 
-        internal void OnGameStart() => Refresh();
+        internal void OnGameStart()
+        {
+            if (SEUtilities.AnyCameraModInstalled())
+            {
+                Refresh();
+            }
+            else
+            {
+                // We have to wait a bit for the Smooth Camera to init
+                SharedCoroutineStarter.instance.StartCoroutine(SEUtilities.DoAfter(0.1f, () => {
+                    Refresh();
+                }));
+            }
+        }
 
         internal void OnGameQuit()
         {
