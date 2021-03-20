@@ -44,16 +44,12 @@
             sampler2D _MainTex;
             sampler2D _PrevMainTex;
             float _freeze;
-
             
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 
-                float2 invuv;
-                invuv.x = i.uv.x;
-                invuv.y = 1-i.uv.y;
-                fixed4 fFrame = tex2D(_PrevMainTex, UnityStereoScreenSpaceUVAdjust(invuv, _MainTex_ST));
+                fixed4 fFrame = tex2D(_PrevMainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
                 col.rgb = _freeze * col.rgb + (1 - _freeze)*(fFrame.rgb);
                 return col;
             }

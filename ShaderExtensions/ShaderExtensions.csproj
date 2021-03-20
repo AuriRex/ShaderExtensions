@@ -157,6 +157,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BandaidShaderRenderer.cs" />
     <Compile Include="Event\Easings.cs" />
     <Compile Include="Event\ShaderCommand.cs" />
     <Compile Include="Event\ShaderPropertiesCommand.cs" />
@@ -179,7 +180,6 @@
     <Compile Include="UI\Elements\CustomListElement.cs" />
     <Compile Include="Util\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShaderToCamOutput.cs" />
     <Compile Include="UI\ShaderListViewController.cs" />
     <Compile Include="UI\ShaderDetailsViewController.cs" />
     <Compile Include="UI\ShaderPropertyListViewController.cs" />

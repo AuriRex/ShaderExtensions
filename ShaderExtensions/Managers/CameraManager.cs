@@ -18,12 +18,12 @@ namespace ShaderExtensions.Managers
         }
 
         public Camera[] Cameras { get; private set; } = null;
-        protected List<ShaderToCamOutput> _shaderToCamOutputList;
+        protected List<BandaidShaderRenderer> _shaderRendererList;
 
         public virtual void Initialize()
         {
             Logger.log.Debug("Initializing CameraManager!");
-            _shaderToCamOutputList = new List<ShaderToCamOutput>();
+            _shaderRendererList = new List<BandaidShaderRenderer>();
         }
         public virtual void Dispose()
         {
@@ -33,28 +33,28 @@ namespace ShaderExtensions.Managers
 
         private void GetOrAddShaderBehaviours()
         {
-            _shaderToCamOutputList = new List<ShaderToCamOutput>();
+            _shaderRendererList = new List<BandaidShaderRenderer>();
             foreach (Camera cam in Cameras)
             {
                 Logger.log.Debug(cam.name);
                 if (cam.name.EndsWith(".cfg")) continue;
-                ShaderToCamOutput stco = cam.gameObject.GetComponent<ShaderToCamOutput>();
-                if (stco == null)
+                var shaderRenderer = cam.gameObject.GetComponent<BandaidShaderRenderer>();
+                if (shaderRenderer == null)
                 {
-                    stco = cam.gameObject.AddComponent<ShaderToCamOutput>();
+                    shaderRenderer = cam.gameObject.AddComponent<BandaidShaderRenderer>();
                 }
-                _shaderToCamOutputList.Add(stco);
+                _shaderRendererList.Add(shaderRenderer);
             }
         }
 
         public virtual void AddMaterial(Material mat)
         {
-            foreach (ShaderToCamOutput stco in _shaderToCamOutputList)
+            foreach (var shaderRenderer in _shaderRendererList)
             {
-                if (stco == null) continue;
-                if (!stco.Contains(mat))
+                if (shaderRenderer == null) continue;
+                if (!shaderRenderer.Contains(mat))
                 {
-                    stco.AddMaterial(mat);
+                    shaderRenderer.AddMaterial(mat);
                 }
             }
         }
@@ -69,22 +69,22 @@ namespace ShaderExtensions.Managers
 
         public virtual void RemoveMaterial(Material mat)
         {
-            foreach (ShaderToCamOutput stco in _shaderToCamOutputList)
+            foreach (var shaderRenderer in _shaderRendererList)
             {
-                if (stco == null) continue;
-                if (stco.Contains(mat))
+                if (shaderRenderer == null) continue;
+                if (shaderRenderer.Contains(mat))
                 {
-                    stco.RemoveMaterial(mat);
+                    shaderRenderer.RemoveMaterial(mat);
                 }
             }
         }
 
         public virtual void ClearAllMaterials()
         {
-            foreach (ShaderToCamOutput stco in _shaderToCamOutputList)
+            foreach (var shaderRenderer in _shaderRendererList)
             {
-                if (stco == null) continue;
-                stco.ClearAllMaterials();
+                if (shaderRenderer == null) continue;
+                shaderRenderer.ClearAllMaterials();
             }
         }
 
@@ -121,10 +121,10 @@ namespace ShaderExtensions.Managers
                 foreach (Camera cam in Cameras)
                 {
                     if (cam == null) continue;
-                    ShaderToCamOutput stco = cam.gameObject.GetComponent<ShaderToCamOutput>();
-                    if (stco != null)
+                    var shaderRenderer = cam.gameObject.GetComponent<BandaidShaderRenderer>();
+                    if (shaderRenderer != null)
                     {
-                        UnityEngine.Object.Destroy(stco);
+                        UnityEngine.Object.Destroy(shaderRenderer);
                     }
                 }
             }
