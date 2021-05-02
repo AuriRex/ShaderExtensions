@@ -16,7 +16,7 @@ namespace ShaderExtensions.Event
 
         public ShaderPropertiesCommand Properties { get; private set; }
 
-        public ShaderEffect ShaderEffect { get; internal set; }
+        public ShaderEffectData ShaderEffectData { get; internal set; }
 
         public Material Material { get; internal set; }
 

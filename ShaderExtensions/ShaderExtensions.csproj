@@ -176,6 +176,7 @@
     <Compile Include="ShaderEffect.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="ShaderEffectData.cs" />
     <Compile Include="UI\Elements\ActiveShaderElement.cs" />
     <Compile Include="UI\Elements\CustomListElement.cs" />
     <Compile Include="Util\PluginConfig.cs" />

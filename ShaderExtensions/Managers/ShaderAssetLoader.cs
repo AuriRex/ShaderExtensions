@@ -26,46 +26,43 @@ namespace ShaderExtensions.Managers
 
         IEnumerable<string> shaderFiles = Enumerable.Empty<string>();
 
-        static ShaderEffect LoadShaderEffectAssetBundleFromPath(string path)
+        static ShaderEffectData LoadShaderEffectAssetBundleFromPath(string path)
         {
             AssetBundle bundle = AssetBundle.LoadFromFile(path);
             var loadAsset = bundle.LoadAsset<Material>("Assets/ShaderEffect.mat");
             var shaderEffectMetadataGOPrefab = bundle.LoadAsset<GameObject>("Assets/ShaderEffectMetadata.prefab");
-            Logger.log.Info("shaderEffectMetadataGOPrefab: " + shaderEffectMetadataGOPrefab);
             GameObject shaderEffectMetadataGO = UnityEngine.Object.Instantiate(shaderEffectMetadataGOPrefab);
-            Logger.log.Info("shaderEffectMetadataGO: " + shaderEffectMetadataGO);
             ShaderEffect shaderEffect = shaderEffectMetadataGO.GetComponent<ShaderEffect>();
-            Logger.log.Info("shaderEffect: " + shaderEffect);
-            GameObject.DontDestroyOnLoad(shaderEffectMetadataGO);
+            ShaderEffectData data = new ShaderEffectData(shaderEffect);
+            GameObject.Destroy(shaderEffectMetadataGO);
             bundle.Unload(false);
-            //GameObject.DestroyImmediate(shaderEffectMetadataGO);
-            return shaderEffect;
+            return data;
         }
 
-        internal List<ShaderEffect> ShaderEffectList { get; private set; } = new List<ShaderEffect>();
+        internal List<ShaderEffectData> ShaderEffectList { get; private set; } = new List<ShaderEffectData>();
 
-        public ShaderEffect GetShaderEffectByReferenceName(string name)
+        public ShaderEffectData GetShaderEffectByReferenceName(string name)
         {
             if (name == null) return null;
-            foreach (ShaderEffect sfx in ShaderEffectList)
+            foreach (ShaderEffectData sfx in ShaderEffectList)
             {
                 if (sfx != null)
                 {
-                    if (sfx.referenceName.Equals(name))
+                    if (sfx.ReferenceName.Equals(name))
                         return sfx;
                 }
             }
             return null;
         }
 
-        public ShaderEffect GetShaderEffectByMaterial(Material mat)
+        public ShaderEffectData GetShaderEffectByMaterial(Material mat)
         {
             if (mat == null) return null;
-            foreach (ShaderEffect sfx in ShaderEffectList)
+            foreach (ShaderEffectData sfx in ShaderEffectList)
             {
                 if (sfx != null)
                 {
-                    if (sfx.material.shader.Equals(mat.shader))
+                    if (sfx.Material.shader.Equals(mat.shader))
                         return sfx;
                 }
             }
@@ -78,11 +75,11 @@ namespace ShaderExtensions.Managers
 
             shaderFiles = Directory.GetFiles(Plugin.PluginAssetPath, "*.bsfx");
 
-            ShaderEffectList = new List<ShaderEffect>();
+            ShaderEffectList = new List<ShaderEffectData>();
 
             foreach (string sh in shaderFiles)
             {
-                ShaderEffect shaderEffect = null;
+                ShaderEffectData shaderEffect = null;
 
                 try
                 {
@@ -110,15 +107,15 @@ namespace ShaderExtensions.Managers
             Initialize();
         }
 
-        public static void LogShaderFX(ShaderEffect shaderEffect)
+        public static void LogShaderFX(ShaderEffectData shaderEffect)
         {
-            Logger.log?.Info("ShaderEffect.material: " + shaderEffect.material);
-            Logger.log?.Info("ShaderEffect.referenceName: " + shaderEffect.referenceName);
-            Logger.log?.Info("ShaderEffect.name: " + shaderEffect.name);
-            Logger.log?.Info("ShaderEffect.author: " + shaderEffect.author);
-            Logger.log?.Info("ShaderEffect.description: " + shaderEffect.description);
-            Logger.log?.Info("ShaderEffect.isScreenSpace: " + shaderEffect.isScreenSpace);
-            Logger.log?.Info("ShaderEffect.previewImage: " + shaderEffect.previewImage);
+            Logger.log?.Debug("ShaderEffect.material: " + shaderEffect.Material);
+            Logger.log?.Debug("ShaderEffect.referenceName: " + shaderEffect.ReferenceName);
+            Logger.log?.Debug("ShaderEffect.name: " + shaderEffect.Name);
+            Logger.log?.Debug("ShaderEffect.author: " + shaderEffect.Author);
+            Logger.log?.Debug("ShaderEffect.description: " + shaderEffect.Description);
+            Logger.log?.Debug("ShaderEffect.isScreenSpace: " + shaderEffect.IsScreenSpace);
+            Logger.log?.Debug("ShaderEffect.previewImage: " + shaderEffect.PreviewImage);
         }
 
     }

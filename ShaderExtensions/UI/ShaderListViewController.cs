@@ -16,7 +16,7 @@ namespace ShaderExtensions.UI
     [HotReload(RelativePathToLayout = @"Views\shaderList.bsml")]
     class ShaderListViewController : BSMLAutomaticViewController
     {
-        public event Action<ShaderEffect> shaderSelected;
+        public event Action<ShaderEffectData> shaderSelected;
         public event Action shadersCleared;
 
         private ShaderAssetLoader _shaderAssetLoader;
@@ -62,8 +62,8 @@ namespace ShaderExtensions.UI
         protected void Select(TableView _, int row)
         {
             _selection = row;
-            ShaderEffect sfx = _shaderAssetLoader.ShaderEffectList[_selection];
-            Logger.log.Info("Selected: " + sfx.name + " by " + sfx.author);
+            ShaderEffectData sfx = _shaderAssetLoader.ShaderEffectList[_selection];
+            Logger.log.Info("Selected: " + sfx.Name + " by " + sfx.Author);
             shaderSelected?.Invoke(sfx);
         }
 
@@ -139,23 +139,23 @@ namespace ShaderExtensions.UI
             _selection = -1;
             shadersCleared?.Invoke();
 
-            List<ShaderEffect> sfxList = _shaderAssetLoader.ShaderEffectList;
+            List<ShaderEffectData> sfxList = _shaderAssetLoader.ShaderEffectList;
 
-            foreach (ShaderEffect sfx in sfxList)
+            foreach (ShaderEffectData sfx in sfxList)
             {
                 Sprite icon = SEUtilities.GetDefaultShaderIcon();
 
-                if (sfx.previewImage != null && _spriteCache.TryGetValue(sfx.previewImage, out Sprite image))
+                if (sfx.PreviewImage != null && _spriteCache.TryGetValue(sfx.PreviewImage, out Sprite image))
                 {
                     icon = image;
                 }
-                else if (sfx.previewImage != null)
+                else if (sfx.PreviewImage != null)
                 {
-                    icon = Sprite.Create(sfx.previewImage, new Rect(0.0f, 0.0f, sfx.previewImage.width, sfx.previewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
-                    _spriteCache.Add(sfx.previewImage, icon);
+                    icon = Sprite.Create(sfx.PreviewImage, new Rect(0.0f, 0.0f, sfx.PreviewImage.width, sfx.PreviewImage.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    _spriteCache.Add(sfx.PreviewImage, icon);
                 }
 
-                CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.name, sfx.author, icon);
+                CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.Name, sfx.Author, icon);
                 customListTableData.data.Add(customCellInfo);
             }
 
@@ -175,7 +175,7 @@ namespace ShaderExtensions.UI
 
                 matCache.TryGetValue(id, out Material mat);
 
-                ShaderEffect sfx = _shaderManager.GetShaderEffectByMaterial(mat);
+                ShaderEffectData sfx = _shaderManager.GetShaderEffectByMaterial(mat);
 
                 if (sfx == null) continue;
 
@@ -186,16 +186,16 @@ namespace ShaderExtensions.UI
                 }
 
                 //CustomListTableData.CustomCellInfo customCellInfo = new CustomListTableData.CustomCellInfo(sfx.name, sfx.author, icon);*/
-                shaderStackList.data.Add(new ActiveShaderElement(sfx.referenceName, id));
+                shaderStackList.data.Add(new ActiveShaderElement(sfx.ReferenceName, id));
             }
 
             shaderStackList.tableView.ReloadData();
         }
 
-        public Sprite GetPreviewImage(ShaderEffect sfx)
+        public Sprite GetPreviewImage(ShaderEffectData sfx)
         {
-            if (sfx == null || sfx.previewImage == null) return SEUtilities.GetDefaultShaderIcon();
-            if (_spriteCache.TryGetValue(sfx.previewImage, out Sprite image))
+            if (sfx == null || sfx.PreviewImage == null) return SEUtilities.GetDefaultShaderIcon();
+            if (_spriteCache.TryGetValue(sfx.PreviewImage, out Sprite image))
             {
                 return image;
             }

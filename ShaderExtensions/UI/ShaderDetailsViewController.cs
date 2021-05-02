@@ -15,7 +15,7 @@ namespace ShaderExtensions.UI
         private PluginConfig _pluginConfig;
         private ShaderListViewController _shaderListViewController;
 
-        private ShaderEffect _currentShaderEffect;
+        private ShaderEffectData _currentShaderEffect;
         private int _customPropertyCount = 0;
 
         [Inject]
@@ -96,7 +96,7 @@ namespace ShaderExtensions.UI
         [UIAction("#post-parse")]
         protected void PostParse() => SetupDetails(null);
 
-        private void SetupDetails(ShaderEffect sfx)
+        private void SetupDetails(ShaderEffectData sfx)
         {
             if (sfx == null)
             {
@@ -105,7 +105,7 @@ namespace ShaderExtensions.UI
                 return;
             }
 
-            Material mat = sfx.material;
+            Material mat = sfx.Material;
             _currentShaderEffect = sfx;
 
             //_usesPreviousFrameData = false;
@@ -137,16 +137,16 @@ namespace ShaderExtensions.UI
                 }
             }
 
-            ShaderName = sfx.name;
-            AuthorName = sfx.author;
-            ShaderReferenceName = "<color=#901212>" + sfx.referenceName;
+            ShaderName = sfx.Name;
+            AuthorName = sfx.Author;
+            ShaderReferenceName = "<color=#901212>" + sfx.ReferenceName;
             ShaderPropertyCountText = "Property count : " + _customPropertyCount;
             _shaderIcon.sprite = _shaderListViewController.GetPreviewImage(_currentShaderEffect);
-            shaderDescription.SetText(sfx.description);
+            shaderDescription.SetText(sfx.Description);
 
         }
 
-        internal void ShaderSelected(ShaderEffect sfx) => SetupDetails(sfx);
+        internal void ShaderSelected(ShaderEffectData sfx) => SetupDetails(sfx);
 
         internal void ShaderSelectionCleared() => SetupDetails(null);
     }

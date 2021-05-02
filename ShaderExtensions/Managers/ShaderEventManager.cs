@@ -97,12 +97,12 @@ namespace ShaderExtensions.Managers
                         foreach (ShaderCommand sc in scList)
                         {
 
-                            ShaderEffect sfx = _shaderManager.GetShaderEffectByReferenceName(sc.ReferenceName);
+                            ShaderEffectData sfx = _shaderManager.GetShaderEffectByReferenceName(sc.ReferenceName);
 
                             if (sfx != null)
                             {
 
-                                sc.ShaderEffect = sfx;
+                                sc.ShaderEffectData = sfx;
 
                                 Material mat = _shaderManager.GetMaterial(sc.ID, sfx);
 
@@ -147,9 +147,9 @@ namespace ShaderExtensions.Managers
                                 }
                                 break;
                             }
-                            ShaderEffect sfx = _shaderManager.GetShaderEffectByReferenceName(refName);
+                            ShaderEffectData sfx = _shaderManager.GetShaderEffectByReferenceName(refName);
 
-                            Logger.log.Debug($"sfx reference Name : {sfx?.referenceName}");
+                            Logger.log.Debug($"sfx reference Name : {sfx?.ReferenceName}");
 
                             if (sfx != null)
                             {
@@ -263,7 +263,7 @@ namespace ShaderExtensions.Managers
             }
             if (property.IsLast && property.ParentCommand.ClearAfterLastPropIsDone)
             {
-                if (!_shaderManager.RemoveMaterial(property.ParentCommand.ID, property.ParentCommand.ShaderEffect))
+                if (!_shaderManager.RemoveMaterial(property.ParentCommand.ID, property.ParentCommand.ShaderEffectData))
                 {
                     Logger.log.Error($"Tried to remove a Shader with an ID that doesn't exist: '{property.ParentCommand.ID}' at time (in beats) {_customEventCallbackController._audioTimeSource.songTime / 60 * _beatmapObjectSpawnController.currentBpm}!");
                 }

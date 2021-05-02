@@ -53,16 +53,16 @@ namespace ShaderExtensions.Managers
         /// </summary>
         /// <param name="name">the ShaderEffect reference name to look up</param>
         /// <returns>The ShaderEffect with given reference name or null</returns>
-        public ShaderEffect GetShaderEffectByReferenceName(string name) => _shaderAssetLoader.GetShaderEffectByReferenceName(name);
+        public ShaderEffectData GetShaderEffectByReferenceName(string name) => _shaderAssetLoader.GetShaderEffectByReferenceName(name);
 
         /// <summary>
         /// Finds the ShaderEffect with the given material from all loaded shader files 
         /// </summary>
         /// <param name="mat">the ShaderEffects Material</param>
         /// <returns>The ShaderEffect with given reference name or null</returns>
-        public ShaderEffect GetShaderEffectByMaterial(Material mat) => _shaderAssetLoader.GetShaderEffectByMaterial(mat);
+        public ShaderEffectData GetShaderEffectByMaterial(Material mat) => _shaderAssetLoader.GetShaderEffectByMaterial(mat);
 
-        private string GetFID(string id, ShaderEffect sfx) => id + "_" + sfx.referenceName;
+        private string GetFID(string id, ShaderEffectData sfx) => id + "_" + sfx.ReferenceName;
 
         /// <summary>
         /// Adds a Material based of the ShaderEffect sfx with the specified identifier id 
@@ -70,13 +70,13 @@ namespace ShaderExtensions.Managers
         /// <param name="id">the id assigned</param>
         /// <param name="sfx">the shader used</param>
         /// <returns>The created Material</returns>
-        public Material AddMaterial(string id, ShaderEffect sfx)
+        public Material AddMaterial(string id, ShaderEffectData sfx)
         {
             string fullId = GetFID(id, sfx);
             Material mat;
             if (!MaterialCache.ContainsKey(fullId))
             {
-                mat = new Material(sfx.material);
+                mat = new Material(sfx.Material);
                 MaterialCache.Add(fullId, mat);
             }
             else
@@ -95,7 +95,7 @@ namespace ShaderExtensions.Managers
         /// <param name="id">the id to look for</param>
         /// <param name="sfx">the shader to look for</param>
         /// <returns>If the Material has been removed</returns>
-        public bool RemoveMaterial(string id, ShaderEffect sfx) => RemoveMaterial(GetFID(id, sfx));
+        public bool RemoveMaterial(string id, ShaderEffectData sfx) => RemoveMaterial(GetFID(id, sfx));
 
         internal bool RemoveMaterial(string fullId)
         {
@@ -110,33 +110,20 @@ namespace ShaderExtensions.Managers
 
         internal void OnGameStart()
         {
-            if (SEUtilities.AnyCameraModInstalled())
-            {
+            // We have to wait a bit for the default Game Cameras to init
+            SharedCoroutineStarter.instance.StartCoroutine(SEUtilities.DoAfter(0.1f, () => {
                 Refresh();
-            }
-            else
-            {
-                // We have to wait a bit for the Smooth Camera to init
-                SharedCoroutineStarter.instance.StartCoroutine(SEUtilities.DoAfter(0.1f, () => {
-                    Refresh();
-                }));
-            }
+            }));
         }
 
         internal void OnGameQuit()
         {
+            CameraManager?.ClearAllMaterials();
+            
             if (_pluginConfig.ClearEffectsOnLevelCompletion)
             {
-                CameraManager?.ClearAllMaterials();
                 MaterialCache = new Dictionary<string, Material>();
             }
-        }
-
-        internal void OnMenuCamEnable() => OnGameQuit();
-
-        internal void OnMenuCamDisable()
-        {
-
         }
 
         /// <summary>
@@ -169,7 +156,7 @@ namespace ShaderExtensions.Managers
         /// <param name="id">the id to look for</param>
         /// <param name="sfx">the shader to look for</param>
         /// <returns>The Material or null</returns>
-        internal Material GetMaterial(string id, ShaderEffect sfx) => GetMaterial(GetFID(id, sfx));
+        internal Material GetMaterial(string id, ShaderEffectData sfx) => GetMaterial(GetFID(id, sfx));
 
         private Material GetMaterial(string fullId)
         {
