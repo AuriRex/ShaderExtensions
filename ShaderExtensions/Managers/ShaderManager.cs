@@ -110,6 +110,8 @@ namespace ShaderExtensions.Managers
 
         internal void OnGameStart()
         {
+            
+            //Refresh();
             // We have to wait a bit for the default Game Cameras to init
             SharedCoroutineStarter.instance.StartCoroutine(SEUtilities.DoAfter(0.1f, () => {
                 Refresh();
@@ -122,7 +124,8 @@ namespace ShaderExtensions.Managers
             
             if (_pluginConfig.ClearEffectsOnLevelCompletion)
             {
-                MaterialCache = new Dictionary<string, Material>();
+                //MaterialCache = new Dictionary<string, Material>();
+                MaterialCache.Clear();
             }
         }
 
@@ -178,7 +181,8 @@ namespace ShaderExtensions.Managers
         {
             CameraManager?.ClearAllMaterials();
             List<Material> oldMaterials = new List<Material>(MaterialCache.Values);
-            MaterialCache = new Dictionary<string, Material>();
+            //MaterialCache = new Dictionary<string, Material>();
+            MaterialCache.Clear();
             return oldMaterials;
         }
 

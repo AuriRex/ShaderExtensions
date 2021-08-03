@@ -1,4 +1,4 @@
-﻿using NoodleExtensions.Animation;
+﻿using Heck.Animation;
 
 namespace ShaderExtensions.Event
 {
@@ -27,7 +27,7 @@ namespace ShaderExtensions.Event
             {
                 this.Value = value;
             }
-            Points = PointDefinition.DynamicToPointData(value);
+            Points = PointDefinition.ListToPointData(value);
             //Logger.log.Debug("ShaderProperty: Points: " + Points);
         }
 

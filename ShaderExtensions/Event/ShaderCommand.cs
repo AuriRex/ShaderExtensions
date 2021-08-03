@@ -1,6 +1,7 @@
 ﻿using CustomJSONData;
 using System.Collections.Generic;
 using UnityEngine;
+using static ShaderExtensions.Managers.ShaderEventManager;
 using TreeDict = System.Collections.Generic.IDictionary<string, object>;
 
 namespace ShaderExtensions.Event

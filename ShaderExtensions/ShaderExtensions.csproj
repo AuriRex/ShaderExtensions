@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderExtensions</RootNamespace>
     <AssemblyName>ShaderExtensions</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <DebugType>portable</DebugType>
     <BeatSaberDir>$(ProjectDir)Refs</BeatSaberDir>
@@ -18,6 +18,7 @@
     <ReferencePath>$(SolutionDir)Refs</ReferencePath>
     <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
     <PathMap>$(AppOutputBase)=X:\$(AssemblyName)\</PathMap>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,14 +61,14 @@
       <HintPath>$(BeatSaberDir)\Plugins\CustomJSONData.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Heck, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Plugins\Heck.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Microsoft.CSharp.dll</HintPath>
       <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="NoodleExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-      <HintPath>$(BeatSaberDir)\Plugins\NoodleExtensions.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SiraUtil, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -158,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BandaidShaderRenderer.cs" />
-    <Compile Include="Event\Easings.cs" />
     <Compile Include="Event\ShaderCommand.cs" />
     <Compile Include="Event\ShaderPropertiesCommand.cs" />
     <Compile Include="Event\ShaderProperty.cs" />
@@ -195,13 +195,7 @@
     <None Include=".gitignore" />
     <EmbeddedResource Include="UI\Views\shaderList.bsml" />
     <EmbeddedResource Include="UI\Views\shaderPropertyList.bsml" />
-    <EmbeddedResource Include="UI\ShaderPropertyListViewController.bsml">
-      <DependentUpon>ShaderPropertyListViewController.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\Views\shaderDetails.bsml" />
-    <EmbeddedResource Include="UI\ShaderPropertyListViewController - Copy.bsml">
-      <DependentUpon>ShaderDetailsViewController.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Icons\Shader.png" />

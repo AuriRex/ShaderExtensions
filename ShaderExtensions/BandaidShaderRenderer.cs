@@ -17,7 +17,7 @@ public class BandaidShaderRenderer : MonoBehaviour
 
     public void ClearAllMaterials()
     {
-        _materialList = new List<Material>();
+        _materialList.Clear();
     }
 
     public void AddMaterial(Material material)
@@ -59,7 +59,8 @@ public class BandaidShaderRenderer : MonoBehaviour
 
         if (!_previousFrame)
         {
-            _previousFrame = new RenderTexture(source.width, source.height, source.depth, source.format, 0);
+            //_previousFrame = new RenderTexture(source.width, source.height, source.depth, source.format, 0);
+            _previousFrame = RenderTexture.GetTemporary(source.width, source.height, source.depth, source.format, RenderTextureReadWrite.Default, 1, source.memorylessMode, source.vrUsage);
         }
 
         if (!_temporary)

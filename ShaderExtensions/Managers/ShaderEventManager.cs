@@ -1,6 +1,6 @@
 ﻿using CustomJSONData;
 using CustomJSONData.CustomBeatmap;
-using NoodleExtensions.Animation;
+using Heck.Animation;
 using ShaderExtensions.Event;
 using ShaderExtensions.Util;
 using System;
@@ -14,6 +14,16 @@ namespace ShaderExtensions.Managers
 {
     public class ShaderEventManager : IInitializable, IDisposable
     {
+        public class Trees
+        {
+            public static dynamic At(TreeDict customData, string pointName)
+            {
+                if (customData.TryGetValue(pointName, out dynamic value))
+                    return value;
+                return null;
+            }
+        }
+
         private ShaderCore _shaderCore;
         private ShaderManager _shaderManager;
         private PluginConfig _pluginConfig;
@@ -221,7 +231,7 @@ namespace ShaderExtensions.Managers
             }
             while (true)
             {
-                float elapsedTime = _customEventCallbackController._audioTimeSource.songTime - startTime;
+                float elapsedTime = _customEventCallbackController.AudioTimeSource.songTime - startTime;
                 float time = Easings.Interpolate(Mathf.Min(elapsedTime / duration, 1f), easing);
 
                 PointDefinition points = property.Points;
@@ -265,7 +275,7 @@ namespace ShaderExtensions.Managers
             {
                 if (!_shaderManager.RemoveMaterial(property.ParentCommand.ID, property.ParentCommand.ShaderEffectData))
                 {
-                    Logger.log.Error($"Tried to remove a Shader with an ID that doesn't exist: '{property.ParentCommand.ID}' at time (in beats) {_customEventCallbackController._audioTimeSource.songTime / 60 * _beatmapObjectSpawnController.currentBpm}!");
+                    Logger.log.Error($"Tried to remove a Shader with an ID that doesn't exist: '{property.ParentCommand.ID}' at time (in beats) {_customEventCallbackController.AudioTimeSource.songTime / 60 * _beatmapObjectSpawnController.currentBpm}!");
                 }
                 StopAllCoroutinesModifyingMaterials(new List<Material>() { property.ParentCommand.Material });
                 Logger.log.Debug($"Material removed after last property stopped animating! ID: {property.ParentCommand.ID} - ref: {property.ParentCommand.ReferenceName}");
@@ -299,13 +309,13 @@ namespace ShaderExtensions.Managers
 
         public void Initialize()
         {
-            CustomEventCallbackController.customEventCallbackControllerInit += CustomEventCallbackInit;
+            CustomEventCallbackController.didInitEvent += CustomEventCallbackInit;
             _shaderCommandLists = new List<List<ShaderCommand>>();
         }
 
         public void Dispose()
         {
-            CustomEventCallbackController.customEventCallbackControllerInit -= CustomEventCallbackInit;
+            CustomEventCallbackController.didInitEvent -= CustomEventCallbackInit;
             if (_customEventCallbackData != null)
             {
                 _customEventCallbackController.RemoveBeatmapEventCallback(_customEventCallbackData);
