@@ -1,4 +1,4 @@
-﻿using Heck.Animation;
+﻿/*using Heck.Animation;
 
 namespace ShaderExtensions.Event
 {
@@ -34,4 +34,4 @@ namespace ShaderExtensions.Event
         public void SetValue(float val) => ParentCommand.Material.SetFloat(Property, val);
 
     }
-}
+}*/

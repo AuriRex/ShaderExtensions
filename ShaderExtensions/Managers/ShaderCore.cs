@@ -4,7 +4,7 @@ using ShaderExtensions.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static ShaderExtensions.Managers.ShaderEventManager;
+//using static ShaderExtensions.Managers.ShaderEventManager;
 using Zenject;
 
 namespace ShaderExtensions.Managers
@@ -26,7 +26,8 @@ namespace ShaderExtensions.Managers
 
         internal bool ShouldEnableShaderEvents(IDifficultyBeatmap difficultyBeatmap)
         {
-            if (difficultyBeatmap == null) return false;
+            return false;
+            /*if (difficultyBeatmap == null) return false;
             if (difficultyBeatmap.beatmapData is CustomBeatmapData customBeatmapData)
             {
                 IEnumerable<string> requirements = ((List<object>) Trees.At(customBeatmapData.beatmapCustomData, "_requirements"))?.Cast<string>();
@@ -41,11 +42,12 @@ namespace ShaderExtensions.Managers
             {
                 EnableShaderEvents = false;
             }
-            return EnableShaderEvents;
+            return EnableShaderEvents;*/
         }
 
         internal void RegisterCapabilty(bool register = true)
         {
+            return;
             if (register)
             {
                 Logger.log.Info($"Registering the {Plugin.CAPABILITY} capabilty!");

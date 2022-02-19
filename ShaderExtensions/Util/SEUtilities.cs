@@ -1,7 +1,7 @@
 ﻿using Heck.Animation;
 using HMUI;
 using IPA.Loader;
-using ShaderExtensions.Event;
+//using ShaderExtensions.Event;
 using System;
 using System.Collections;
 using System.IO;
@@ -81,7 +81,7 @@ namespace ShaderExtensions.Util
         {
 
             if (doTheWaitThing)
-                await SiraUtil.Utilities.AwaitSleep(10);
+                await SiraUtil.Extras.Utilities.AwaitSleep(10);
 
             Tuple<int, int> range = tableView.GetVisibleCellsIdRange();
 

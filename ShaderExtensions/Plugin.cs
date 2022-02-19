@@ -24,9 +24,13 @@ namespace ShaderExtensions
         public Plugin(IPALogger logger, Config config, Zenjector zenjector)
         {
             Logger.log = logger;
-            zenjector.OnApp<ShaderExtensionsCoreInstaller>().WithParameters(config.Generated<PluginConfig>());
-            zenjector.OnMenu<ShaderExtensionsMenuInstaller>();
-            zenjector.OnGame<ShaderExtensionsGameInstaller>(false).ShortCircuitForTutorial();
+            zenjector.Install<ShaderExtensionsCoreInstaller>(Location.App, config.Generated<PluginConfig>());
+            zenjector.Install<ShaderExtensionsMenuInstaller>(Location.Menu);
+            zenjector.Install<ShaderExtensionsGameInstaller>(Location.Singleplayer | Location.CampaignPlayer | Location.MultiPlayer);
+
+            //zenjector.OnApp<ShaderExtensionsCoreInstaller>().WithParameters(config.Generated<PluginConfig>());
+            //zenjector.OnMenu<ShaderExtensionsMenuInstaller>();
+            //zenjector.OnGame<ShaderExtensionsGameInstaller>(false).ShortCircuitForTutorial();
         }
 
         [OnEnable]

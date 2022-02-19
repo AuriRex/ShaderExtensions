@@ -9,7 +9,7 @@ namespace ShaderExtensions.Installers
         {
             //Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
-            Container.BindInterfacesAndSelfTo<ShaderEventManager>().AsSingle();
+            //Container.BindInterfacesAndSelfTo<ShaderEventManager>().AsSingle();
         }
     }
 }
